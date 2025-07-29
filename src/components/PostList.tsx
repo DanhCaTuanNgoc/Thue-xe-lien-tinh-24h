@@ -1,13 +1,5 @@
 import React from 'react';
-
-export type Post = {
-  id: string;
-  title: string;
-  content?: string;
-  image?: string;
-  created_at?: string;
-  author?: string;
-};
+import type { Post } from '../lib/models/post';
 
 interface PostListProps {
   posts: Post[];
