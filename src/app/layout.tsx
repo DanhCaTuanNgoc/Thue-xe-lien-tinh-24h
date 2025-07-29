@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Link from 'next/link';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,11 +24,57 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+    <html lang="vi">
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-black min-h-screen flex flex-col`}>
+        {/* Header */}
+        <header className="w-full shadow bg-white sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto flex items-center justify-between py-3 px-4">
+            <div className="flex items-center gap-3">
+              <img src="/globe.svg" alt="Logo" className="h-10 w-10" />
+              <span className="text-xl font-bold text-blue-700">THUÊ XE VIP 24H</span>
+            </div>
+            <nav className="flex gap-6 text-base font-medium">
+              <Link href="/" className="hover:text-blue-700 transition">Trang chủ</Link>
+              <Link href="/cars" className="hover:text-blue-700 transition">Bảng giá thuê xe</Link>
+              <Link href="/posts" className="hover:text-blue-700 transition">Bài viết</Link>
+            </nav>
+            <div className="hidden md:flex items-center gap-2 bg-yellow-400 px-4 py-2 rounded shadow font-bold text-lg text-red-700">
+              <span>Hotline:</span>
+              <a href="tel:0563572572" className="underline">0563 572 572</a>
+            </div>
+          </div>
+        </header>
+        {/* Hotline mobile */}
+        <div className="md:hidden flex justify-center bg-yellow-400 py-2 text-red-700 font-bold text-lg sticky top-[56px] z-40">
+          <span>Hotline: <a href="tel:0563572572" className="underline">0563 572 572</a></span>
+        </div>
+        {/* Main content */}
+        <main className="flex-1 w-full max-w-7xl mx-auto px-2 md:px-4 py-6">
+          {children}
+        </main>
+        {/* Footer */}
+        <footer className="w-full bg-gray-100 border-t mt-8">
+          <div className="max-w-7xl mx-auto py-6 px-4 flex flex-col md:flex-row justify-between gap-4 text-gray-700 text-sm">
+            <div>
+              <div className="font-bold text-blue-700 text-lg mb-1">THUÊ XE VIP 24H</div>
+              <div>Địa chỉ: 32 Nguyễn Thái Bình, P.Nguyễn Thái Bình, Quận 1, Hồ Chí Minh</div>
+              <div>185 Thống Nhất Mới, Phường 8, Vũng Tàu, Bà Rịa - Vũng Tàu</div>
+            </div>
+            <div>
+              <div className="font-bold">Hotline:</div>
+              <a href="tel:0563572572" className="text-red-700 font-bold text-lg">0563 572 572</a>
+            </div>
+            <div>
+              <div className="font-bold">Loại xe:</div>
+              <div>Hợp đồng 4/7/16/29 chỗ đời mới</div>
+            </div>
+            <div>
+              <div className="font-bold">Dịch vụ:</div>
+              <div>Thuê xe riêng, Limousine, Tour du lịch</div>
+            </div>
+          </div>
+          <div className="text-center text-xs text-gray-500 pb-2">© {new Date().getFullYear()} THUÊ XE VIP 24H. All rights reserved.</div>
+        </footer>
       </body>
     </html>
   );
