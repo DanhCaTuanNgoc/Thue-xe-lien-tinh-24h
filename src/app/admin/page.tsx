@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { fetchCars, addCar, updateCar, deleteCar } from '../../lib/repositories/carApi';
 import { fetchPosts, addPost, updatePost, deletePost } from '../../lib/repositories/postApi';
-import type { Car } from '../../components/CarList';
-import type { Post } from '../../components/PostList';
+import type { Car } from '../../lib/models/car';
+import type { Post } from '../../lib/models/post';
 
 const ADMIN_PASSWORD = 'admin123';
 
