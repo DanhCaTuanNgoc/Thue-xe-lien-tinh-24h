@@ -1,5 +1,5 @@
 import { supabase } from '../supabaseClient';
-import type { Car } from '../../components/CarList';
+import type { Car } from '../../lib/models/car';
 
 export async function fetchCars(): Promise<Car[]> {
   const { data, error } = await supabase

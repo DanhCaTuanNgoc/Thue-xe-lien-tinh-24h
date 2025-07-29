@@ -3,7 +3,7 @@
 import CarList from '../../components/CarList';
 import { fetchCars } from '../../lib/repositories/carApi';
 import React, { useEffect, useState } from 'react';
-import type { Car } from '../../components/CarList';
+import type { Car } from '../../lib/models/car';
 
 export default function Home() {
   const [cars, setCars] = useState<Car[]>([]);

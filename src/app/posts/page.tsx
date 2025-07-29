@@ -3,7 +3,7 @@
 import PostList from '../../components/PostList';
 import { fetchPosts } from '../../lib/repositories/postApi';
 import React, { useEffect, useState } from 'react';
-import type { Post } from '../../components/PostList';
+import type { Post } from '../../lib/models/post';
 
 export default function PostsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
