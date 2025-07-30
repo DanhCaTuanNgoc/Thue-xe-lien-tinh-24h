@@ -257,7 +257,7 @@ export default function RootLayout({
                   </div>
                   <div>
                      <div className="font-bold">Loại xe:</div>
-                     <div>Hợp đồng 4/7 chỗ đời mới</div>
+                     <div>Hợp đồng 4/7/16 chỗ đời mới</div>
                   </div>
                   <div>
                      <div className="font-bold">Dịch vụ:</div>

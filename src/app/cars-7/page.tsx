@@ -7,7 +7,7 @@ export default function Home() {
    return (
       <>
          {/* Banner Section */}
-         <section className="relative w-full md:h-[350px] overflow-hidden">
+         <section className="relative w-full h-[280px] sm:h-[300px] md:h-[350px] lg:h-[400px] overflow-hidden">
             <Image
                src="/banner.jpg"
                alt="Banner thuê xe"
