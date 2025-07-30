@@ -221,9 +221,11 @@ export default function Home() {
                         <p>• Thời gian: 1 ngày</p>
                         <p>• Xe 4 và 7 chỗ đời mới</p>
                      </div>
-                     <button className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer">
-                        Xem ngay
-                     </button>
+                     <Link href="/cars-4" passHref legacyBehavior>
+                        <a className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer block text-center">
+                           Xem ngay
+                        </a>
+                     </Link>
                   </div>
                </div>
 
@@ -254,9 +256,11 @@ export default function Home() {
                         <p>• Thời gian: 2 ngày</p>
                         <p>• Xe 4 và 7 chỗ đời mới</p>
                      </div>
-                     <button className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer">
-                        Xem ngay
-                     </button>
+                     <Link href="/cars-4" passHref legacyBehavior>
+                        <a className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer block text-center">
+                           Xem ngay
+                        </a>
+                     </Link>
                   </div>
                </div>
 
@@ -287,9 +291,11 @@ export default function Home() {
                         <p>• Thời gian: 1 ngày</p>
                         <p>• Xe 4 và 7 chỗ đời mới</p>
                      </div>
-                     <button className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer">
-                        Xem ngay
-                     </button>
+                     <Link href="/cars-4" passHref legacyBehavior>
+                        <a className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer block text-center">
+                           Xem ngay
+                        </a>
+                     </Link>
                   </div>
                </div>
 
@@ -320,9 +326,11 @@ export default function Home() {
                         <p>• Thời gian: 1 ngày</p>
                         <p>• Xe 4 và 7 chỗ đời mới</p>
                      </div>
-                     <button className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer">
-                        Xem ngay
-                     </button>
+                     <Link href="/cars-4" passHref legacyBehavior>
+                        <a className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer block text-center">
+                           Xem ngay
+                        </a>
+                     </Link>
                   </div>
                </div>
             </div>
