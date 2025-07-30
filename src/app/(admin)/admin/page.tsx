@@ -117,8 +117,7 @@ export default function AdminPage() {
     setLoading(true);
     try {
       // Combine images with existing image URL
-      const allImages = postForm.image ? [postForm.image, ...postImages] : postImages;
-      const imageUrls = allImages.join('|');
+      const imageUrls = postImages.join('|');
       
       const postData = {
         ...postForm,
@@ -253,12 +252,6 @@ export default function AdminPage() {
                     onChange={e=>setCarForm(f=>({...f,end_location:e.target.value}))}
                   />
                   <input 
-                    placeholder="Thời gian" 
-                    className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500" 
-                    value={carForm.time||''} 
-                    onChange={e=>setCarForm(f=>({...f,time:e.target.value}))}
-                  />
-                  <input 
                     type="number" 
                     placeholder="Quãng đường (km)" 
                     className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500" 
@@ -319,7 +312,6 @@ export default function AdminPage() {
                         <div className="text-sm text-slate-600 mt-1">
                           {car.car_type} • {car.distance}km • {car.price?.toLocaleString()} VNĐ
                         </div>
-                        {car.time && <div className="text-sm text-slate-500">⏰ {car.time}</div>}
                       </div>
                       <div className="flex gap-2">
                         <button 
