@@ -195,7 +195,7 @@ export default function Home() {
                <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                   <div className="h-48 relative overflow-hidden">
                      <Image
-                        src="/nuibaden.jfif"
+                        src="/nuibaden.jpg"
                         alt="Núi Bà Đen"
                         width={400}
                         height={200}
@@ -299,7 +299,7 @@ export default function Home() {
                <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                   <div className="h-48 relative overflow-hidden">
                      <Image
-                        src="/nhatrang.jfif"
+                        src="/nhatrang.jpg"
                         alt="Nha Trang"
                         width={400}
                         height={200}
