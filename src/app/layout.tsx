@@ -25,14 +25,21 @@ export default function RootLayout({
       <html lang="vi">
          <body className={`${inter.className} overflow-x-hidden overscroll-none`}>
             {/* Header */}
-            <header className="w-full shadow bg-white sticky top-0 z-50">
+            <header className="w-full shadjphow bg-white sticky top-0 z-50">
                <div className="w-full flex items-center justify-between py-3 px-4 md:px-25">
                   <Link href="/" className="flex items-center gap-3 transition-opacity">
-                     <img
-                        src="/globe.svg"
-                        alt="Logo"
-                        className="h-8 w-8 md:h-10 md:w-10 text-blue-500"
-                     />
+                     <span className="relative flex items-center">
+                        <img
+                           src="/icon.jpg"
+                           alt="Logo"
+                           className="h-10 w-10 md:h-10 md:w-10 text-blue-500"
+                           style={{
+                              transform: 'scale(1.5)',
+                              zIndex: 1,
+                              position: 'relative',
+                           }}
+                        />
+                     </span>
                      <span className="text-lg md:text-xl font-bold text-black">
                         Thuexelientinh<span className="text-red-700">24H</span>
                      </span>
