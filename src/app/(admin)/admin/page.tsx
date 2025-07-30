@@ -50,6 +50,44 @@ export default function AdminPage() {
     }
   }, [authenticated, tab]);
 
+  // Car handlers
+  const handleCarSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      if (editingCarId) {
+        await updateCar(editingCarId, carForm);
+      } else {
+        await addCar(carForm as Omit<Car, 'id'>);
+      }
+      setCarForm({});
+      setEditingCarId(null);
+      setCars(await fetchCars());
+    } catch (err) {
+      alert('Lỗi thao tác xe!');
+    } finally {
+      setLoading(false);
+    }
+  };
+  //car edit  
+  const handleCarEdit = (car: Car) => {
+    setCarForm(car);
+    setEditingCarId(car.id);
+  };
+  //car delete
+  const handleCarDelete = async (id: string) => {
+    if (!window.confirm('Xóa xe này?')) return;
+    setLoading(true);
+    try {
+      await deleteCar(id);
+      setCars(await fetchCars());
+    } catch {
+      alert('Lỗi xóa xe!');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Image upload handler
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -75,49 +113,14 @@ export default function AdminPage() {
     setPostImages(prev => prev.filter((_, i) => i !== index));
   };
 
-  // Car handlers
-  const handleCarSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      if (editingCarId) {
-        await updateCar(editingCarId, carForm);
-      } else {
-        await addCar(carForm as Omit<Car, 'id'>);
-      }
-      setCarForm({});
-      setEditingCarId(null);
-      setCars(await fetchCars());
-    } catch (err) {
-      alert('Lỗi thao tác xe!');
-    } finally {
-      setLoading(false);
-    }
-  };
-  const handleCarEdit = (car: Car) => {
-    setCarForm(car);
-    setEditingCarId(car.id);
-  };
-  const handleCarDelete = async (id: string) => {
-    if (!window.confirm('Xóa xe này?')) return;
-    setLoading(true);
-    try {
-      await deleteCar(id);
-      setCars(await fetchCars());
-    } catch {
-      alert('Lỗi xóa xe!');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   // Post handlers
   const handlePostSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
       // Combine images with existing image URL
-      const imageUrls = postImages.join('|');
+      const allImages = postForm.image ? [postForm.image, ...postImages] : postImages;
+      const imageUrls = allImages.join('|');
       
       const postData = {
         ...postForm,
@@ -139,6 +142,7 @@ export default function AdminPage() {
       setLoading(false);
     }
   };
+  //post edit
   const handlePostEdit = (post: Post) => {
     setPostForm(post);
     setEditingPostId(post.id);
@@ -150,6 +154,7 @@ export default function AdminPage() {
       setPostImages([]);
     }
   };
+  //post delete
   const handlePostDelete = async (id: string) => {
     if (!window.confirm('Xóa bài viết này?')) return;
     setLoading(true);
@@ -163,6 +168,7 @@ export default function AdminPage() {
     }
   };
 
+  // Admin login
   if (!authenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-100 to-blue-50 flex items-center justify-center p-4">
@@ -195,6 +201,7 @@ export default function AdminPage() {
     );
   }
 
+  // Admin dashboard
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 to-blue-50 p-4">
       <div className="max-w-7xl mx-auto">
@@ -226,6 +233,7 @@ export default function AdminPage() {
           </div>
         </div>
 
+        {/* Car tab */}
         {tab === 'car' ? (
           <div className="space-y-6">
             {/* Form thêm/sửa xe ở trên */}
@@ -340,6 +348,7 @@ export default function AdminPage() {
             </div>
           </div>
         ) : (
+          // Post tab
           <div className="space-y-6">
             {/* Form thêm/sửa bài viết ở trên */}
             <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
