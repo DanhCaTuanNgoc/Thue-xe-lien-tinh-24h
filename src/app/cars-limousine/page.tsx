@@ -24,7 +24,7 @@ export default function Home() {
                         BẢNG GIÁ THUÊ XE LIMOUSINE
                      </h1>
                      <p className="text-sm sm:text-base md:text-xl lg:text-2xl font-semibold mb-3 sm:mb-4 drop-shadow-lg leading-tight">
-                        Chỉ <span className="text-red-500 font-bold">850.000đ</span> Có
+                        Chỉ từ<span className="text-red-500 font-bold">850.000đ</span> Có
                         Ngay Xe Limousine
                      </p>
                      <div className="flex justify-center">

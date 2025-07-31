@@ -190,25 +190,25 @@ export default function RootLayout({
                         <div className="absolute top-full left-0 mt-2 w-40 xl:w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform scale-95 group-hover:scale-100 z-50">
                            <div className="py-2">
                               <Link
-                                 href="/cars-4"
+                                 href="/cars/cars-4"
                                  className="block px-3 xl:px-4 py-2 text-sm xl:text-base text-gray-800 hover:bg-red-50 hover:text-red-600 transition-colors"
                               >
                                  Xe 4 chỗ
                               </Link>
                               <Link
-                                 href="/cars-7"
+                                 href="/cars/cars-7"
                                  className="block px-3 xl:px-4 py-2 text-sm xl:text-base text-gray-800 hover:bg-red-50 hover:text-red-600 transition-colors"
                               >
                                  Xe 7 chỗ
                               </Link>
                               <Link
-                                 href="/cars-16"
+                                 href="/cars/cars-16"
                                  className="block px-3 xl:px-4 py-2 text-sm xl:text-base text-gray-800 hover:bg-red-50 hover:text-red-600 transition-colors"
                               >
                                  Xe 16 chỗ
                               </Link>
                               <Link
-                                 href="/cars-limousine"
+                                 href="/cars/cars-limousine"
                                  className="block px-3 xl:px-4 py-2 text-sm xl:text-base text-gray-800 hover:bg-red-50 hover:text-red-600 transition-colors"
                               >
                                  Xe Limousine
@@ -334,28 +334,28 @@ export default function RootLayout({
                                  </div>
                                  <div className="pl-4 space-y-2">
                                     <Link
-                                       href="/cars-4"
+                                       href="/cars/cars-4"
                                        onClick={closeMobileMenu}
                                        className="block py-2 px-4 text-gray-700 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
                                     >
                                        Xe 4 chỗ
                                     </Link>
                                     <Link
-                                       href="/cars-7"
+                                       href="/cars/cars-7"
                                        onClick={closeMobileMenu}
                                        className="block py-2 px-4 text-gray-700 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
                                     >
                                        Xe 16 chỗ
                                     </Link>
                                     <Link
-                                       href="/cars-16"
+                                       href="/cars/cars-16"
                                        onClick={closeMobileMenu}
                                        className="block py-2 px-4 text-gray-700 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
                                     >
                                        Xe 7 chỗ
                                     </Link>
                                     <Link
-                                       href="/cars-limousine"
+                                       href="/cars/cars-limousine"
                                        onClick={closeMobileMenu}
                                        className="block py-2 px-4 text-gray-700 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
                                     >
@@ -411,7 +411,7 @@ export default function RootLayout({
             {/* Footer */}
             <footer className="w-full bg-gray-100 border-t">
                <div className="max-w-7xl mx-auto py-6 px-4 flex flex-col md:flex-row justify-between gap-4 text-gray-700 text-sm">
-                  <div className='w-s'>
+                  <div className="w-s">
                      <div className="font-bold text-blue-700 text-lg mb-1">
                         <span className="text-xl font-bold text-black">
                            Thuexelientinh<span className="text-red-700">24H</span>

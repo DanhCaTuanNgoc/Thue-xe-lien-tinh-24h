@@ -1,9 +1,26 @@
-'use client'
-
-import Link from 'next/link'
+import { createClient } from '@supabase/supabase-js'
 import Image from 'next/image'
+import CarSearchClient from './CarSearchClient'
 
-export default function Home() {
+const supabase = createClient(
+   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+)
+
+export default async function CarTypePage({ params }: { params: { slug: string } }) {
+   // Fetch dữ liệu từ Supabase
+   const { data, error } = await supabase
+      .from('car_types')
+      .select('*')
+      .eq('slug', params.slug)
+      .single()
+
+   if (error || !data) {
+      return (
+         <div className="text-center py-20 text-red-600">Không tìm thấy danh mục xe!</div>
+      )
+   }
+
    return (
       <>
          {/* Banner Section */}
@@ -21,16 +38,23 @@ export default function Home() {
                <div className="bg-[rgba(0,0,0,0.5)] rounded-lg sm:rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8 max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-2xl mx-auto">
                   <div className="text-center text-white">
                      <h1 className="text-[20px] sm:text-[25px] md:text-[35px] lg:text-[47px] font-bold mb-2 sm:mb-3 md:mb-4 drop-shadow-lg leading-tight">
-                        BẢNG GIÁ THUÊ XE 4 CHỖ
+                        {data.title || `BẢNG GIÁ THUÊ ${data.name?.toUpperCase()}`}
                      </h1>
                      <p className="text-sm sm:text-base md:text-xl lg:text-2xl font-semibold mb-3 sm:mb-4 drop-shadow-lg leading-tight">
-                        Chỉ từ <span className="text-red-500 font-bold">850.000đ</span> Có
-                        Ngay Xe 4 Chỗ
+                        {data.description || (
+                           <>
+                              Chỉ từ{' '}
+                              <span className="text-red-500 font-bold">
+                                 {data.description_price}
+                              </span>{' '}
+                              Có Ngay {data.name}
+                           </>
+                        )}
                      </p>
                      <div className="flex justify-center">
                         <a
                            className="bg-red-600 hover:bg-red-700 text-white font-bold py-1.5 sm:py-2 px-3 sm:px-4 rounded-md sm:rounded-lg text-xs sm:text-sm md:text-base transition-colors duration-300 shadow-lg flex items-center gap-1 sm:gap-2 cursor-pointer"
-                           href="https://zalo.me/0978971421"
+                           href={data.contact_url || 'https://zalo.me/0978971421'}
                            target="_blank"
                         >
                            <svg
@@ -51,13 +75,13 @@ export default function Home() {
          <section className="max-w-5xl mx-auto pt-4 md:pt-8 !pb-0">
             <div className="text-left border-b border-gray-300 max-w">
                <h1 className="text-[20px] md:text-[30px] font-bold text-black mb-2 pl-4">
-                  Bảng giá thuê xe 4 chỗ mới nhất
+                  {`Bảng giá thuê ${data.name?.toLowerCase()} mới nhất`}
                </h1>
             </div>
             <div className="max-w mt-4 text-center items-center flex justify-center">
                <Image
-                  src="/xe4cho.jpg"
-                  alt="xelimousine "
+                  src={data.img_url}
+                  alt={data.name}
                   width={650}
                   height={800}
                   className="max-w-full h-auto rounded-lg shadow-lg"
@@ -66,112 +90,7 @@ export default function Home() {
          </section>
          {/* Search Section */}
          <section className="max-w-5xl mx-auto pt-4 md:pt-8 pb-4">
-            <form
-               className="flex flex-col md:flex-row gap-4 items-center justify-between bg-gray-50 rounded-lg p-4 shadow"
-               onSubmit={(e) => e.preventDefault()}
-            >
-               {/* Địa điểm */}
-               <div className="flex flex-col w-full md:w-1/4">
-                  <label
-                     htmlFor="search-location"
-                     className="font-semibold mb-1 text-gray-700"
-                  >
-                     Địa điểm
-                  </label>
-                  <input
-                     id="search-location"
-                     name="location"
-                     type="text"
-                     placeholder="VD: Vũng Tàu, Biên Hòa..."
-                     className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px] text-black bg-white"
-                  />
-               </div>
-               {/* Khoảng cách */}
-               <div className="flex flex-col w-full md:w-1/4">
-                  <label
-                     htmlFor="search-distance-min"
-                     className="font-semibold mb-1 text-gray-700"
-                  >
-                     Khoảng cách (Km)
-                  </label>
-                  <div className="flex gap-2">
-                     <input
-                        id="search-distance-min"
-                        name="distanceMin"
-                        type="number"
-                        min={0}
-                        placeholder="VD: 10"
-                        className="border border-gray-300 rounded px-3 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px] text-black bg-white"
-                     />
-                     <input
-                        id="search-distance-max"
-                        name="distanceMax"
-                        type="number"
-                        min={0}
-                        placeholder="VD: 100"
-                        className="border border-gray-300 rounded px-3 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px] text-black bg-white"
-                     />
-                  </div>
-               </div>
-               {/* Khoảng giá */}
-               <div className="flex flex-col w-full md:w-1/4">
-                  <label
-                     htmlFor="search-price-min"
-                     className="font-semibold mb-1 text-gray-700"
-                  >
-                     Khoảng giá (VNĐ)
-                  </label>
-                  <div className="flex gap-2">
-                     <input
-                        id="search-price-min"
-                        name="priceMin"
-                        type="number"
-                        min={0}
-                        className="border border-gray-300 rounded px-3 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px] text-black bg-white"
-                     />
-                     <input
-                        id="search-price-max"
-                        name="priceMax"
-                        type="number"
-                        min={0}
-                        className="border border-gray-300 rounded px-3 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px] text-black bg-white"
-                     />
-                  </div>
-               </div>
-               {/* Nút tìm kiếm */}
-               <div className="flex items-end w-full md:w-auto">
-                  <button
-                     type="submit"
-                     className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg transition-colors duration-300 shadow flex items-center justify-center gap-2 cursor-pointer w-full md:w-auto"
-                  >
-                     <svg
-                        className="w-5 h-5 text-white"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                        viewBox="0 0 24 24"
-                     >
-                        <circle
-                           cx="11"
-                           cy="11"
-                           r="7"
-                           stroke="currentColor"
-                           strokeWidth="2"
-                        />
-                        <line
-                           x1="21"
-                           y1="21"
-                           x2="16.65"
-                           y2="16.65"
-                           stroke="currentColor"
-                           strokeWidth="2"
-                           strokeLinecap="round"
-                        />
-                     </svg>
-                     Tìm kiếm
-                  </button>
-               </div>
-            </form>
+            <CarSearchClient slug={params.slug} />
          </section>
          {/* Price Section */}
          <section className="max-w-5xl mx-auto bg-white rounded-lg">
