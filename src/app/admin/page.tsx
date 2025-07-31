@@ -19,7 +19,7 @@ export default function AdminPage() {
    const [password, setPassword] = useState('')
    const [error, setError] = useState('')
    // Tabs
-   const [tab, setTab] = useState<'car' | 'post'>('car')
+   const [tab, setTab] = useState<'car' | 'post' | 'carType'>('car')
    // Car state
    const [cars, setCars] = useState<Car[]>([])
    const [carForm, setCarForm] = useState<Partial<Omit<Car, 'id'>>>({})
@@ -126,40 +126,53 @@ export default function AdminPage() {
 
    if (!authenticated) {
       return (
-         <main className="max-w-xs mx-auto py-16">
-            <h1 className="text-xl font-bold mb-4">Đăng nhập Admin</h1>
-            <form onSubmit={handleLogin} className="flex flex-col gap-3">
-               <input
-                  type="password"
-                  placeholder="Mật khẩu admin"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="border rounded px-3 py-2"
-               />
-               <button type="submit" className="bg-blue-600 text-white rounded px-3 py-2">
-                  Đăng nhập
-               </button>
-               {error && <div className="text-red-500 text-sm">{error}</div>}
-            </form>
+         <main className="flex items-center justify-center min-h-screen">
+            <div className="w-full max-w-xs">
+               <h1 className="text-xl font-bold mb-4 text-center text-black">
+                  Đăng nhập Admin
+               </h1>
+               <form onSubmit={handleLogin} className="flex flex-col gap-3">
+                  <input
+                     type="password"
+                     placeholder="Mật khẩu admin"
+                     value={password}
+                     onChange={(e) => setPassword(e.target.value)}
+                     className="border rounded px-3 py-2 text-black"
+                  />
+                  <button
+                     type="submit"
+                     className="bg-blue-600 text-white rounded px-3 py-2"
+                  >
+                     Đăng nhập
+                  </button>
+                  {error && (
+                     <div className="text-red-500 text-sm text-center">{error}</div>
+                  )}
+               </form>
+            </div>
          </main>
       )
    }
 
    return (
-      <main className="max-w-3xl mx-auto py-8 px-4">
-         <h1 className="text-2xl font-bold mb-6">Quản trị hệ thống</h1>
+      <main className="max-w-3xl mx-auto py-8 px-4 bg-white text-black">
+         <h1 className="text-2xl font-bold mb-6 text-black text-center">Quản trị hệ thống</h1>
          <div className="flex gap-4 mb-6">
             <button
-               className={`px-4 py-2 rounded ${
-                  tab === 'car' ? 'bg-blue-600 text-white' : 'bg-gray-200'
+               className={`px-4 py-2 rounded font-semibold border ${
+                  tab === 'car'
+                     ? 'bg-blue-100 text-black border-blue-400'
+                     : 'bg-gray-100 text-black border-gray-300'
                }`}
                onClick={() => setTab('car')}
             >
                Quản lý xe
             </button>
             <button
-               className={`px-4 py-2 rounded ${
-                  tab === 'post' ? 'bg-blue-600 text-white' : 'bg-gray-200'
+               className={`px-4 py-2 rounded font-semibold border ${
+                  tab === 'post'
+                     ? 'bg-blue-100 text-black border-blue-400'
+                     : 'bg-gray-100 text-black border-gray-300'
                }`}
                onClick={() => setTab('post')}
             >
@@ -168,26 +181,30 @@ export default function AdminPage() {
          </div>
          {tab === 'car' ? (
             <section>
-               <h2 className="font-semibold mb-2">Danh sách xe</h2>
+               <h2 className="font-semibold mb-2 text-black">Danh sách xe</h2>
                <div className="grid gap-2 mb-4">
                   {cars.map((car) => (
                      <div
                         key={car.id}
-                        className="border rounded p-2 flex flex-col sm:flex-row sm:items-center gap-2"
+                        className="border border-gray-300 rounded p-2 flex flex-col sm:flex-row sm:items-center gap-2 bg-white text-black"
                      >
-                        <div className="flex-1">
-                           <b>{car.start_location}</b> → <b>{car.end_location}</b> |{' '}
-                           {car.car_type} | {car.price?.toLocaleString()} VNĐ
+                        <div className="flex-1 text-black">
+                           <b className="text-black">{car.start_location}</b> →{' '}
+                           <b className="text-black">{car.end_location}</b> |{' '}
+                           <span className="text-black">{car.car_type}</span> |{' '}
+                           <span className="text-black">
+                              {car.price?.toLocaleString()} VNĐ
+                           </span>
                         </div>
                         <div className="flex gap-2">
                            <button
-                              className="px-2 py-1 bg-yellow-400 rounded"
+                              className="px-2 py-1 bg-yellow-300 text-black rounded border border-yellow-400 hover:bg-yellow-400"
                               onClick={() => handleCarEdit(car)}
                            >
                               Sửa
                            </button>
                            <button
-                              className="px-2 py-1 bg-red-500 text-white rounded"
+                              className="px-2 py-1 bg-red-200 text-black rounded border border-red-400 hover:bg-red-300"
                               onClick={() => handleCarDelete(car.id)}
                            >
                               Xóa
@@ -198,15 +215,15 @@ export default function AdminPage() {
                </div>
                <form
                   onSubmit={handleCarSubmit}
-                  className="border rounded p-4 grid gap-2 bg-gray-50"
+                  className="border border-gray-300 rounded p-4 grid gap-2 bg-gray-50 text-black"
                >
-                  <h3 className="font-semibold">
+                  <h3 className="font-semibold text-black">
                      {editingCarId ? 'Sửa xe' : 'Thêm xe mới'}
                   </h3>
                   <input
                      required
                      placeholder="Điểm đi"
-                     className="border rounded px-2 py-1"
+                     className="border border-gray-300 rounded px-2 py-1 text-black bg-white"
                      value={carForm.start_location || ''}
                      onChange={(e) =>
                         setCarForm((f) => ({ ...f, start_location: e.target.value }))
@@ -215,7 +232,7 @@ export default function AdminPage() {
                   <input
                      required
                      placeholder="Điểm đến"
-                     className="border rounded px-2 py-1"
+                     className="border border-gray-300 rounded px-2 py-1 text-black bg-white"
                      value={carForm.end_location || ''}
                      onChange={(e) =>
                         setCarForm((f) => ({ ...f, end_location: e.target.value }))
@@ -223,14 +240,14 @@ export default function AdminPage() {
                   />
                   <input
                      placeholder="Thời gian"
-                     className="border rounded px-2 py-1"
+                     className="border border-gray-300 rounded px-2 py-1 text-black bg-white"
                      value={carForm.time || ''}
                      onChange={(e) => setCarForm((f) => ({ ...f, time: e.target.value }))}
                   />
                   <input
                      type="number"
                      placeholder="Quãng đường (km)"
-                     className="border rounded px-2 py-1"
+                     className="border border-gray-300 rounded px-2 py-1 text-black bg-white"
                      value={carForm.distance || ''}
                      onChange={(e) =>
                         setCarForm((f) => ({ ...f, distance: Number(e.target.value) }))
@@ -238,7 +255,7 @@ export default function AdminPage() {
                   />
                   <input
                      placeholder="Loại xe"
-                     className="border rounded px-2 py-1"
+                     className="border border-gray-300 rounded px-2 py-1 text-black bg-white"
                      value={carForm.car_type || ''}
                      onChange={(e) =>
                         setCarForm((f) => ({ ...f, car_type: e.target.value }))
@@ -247,7 +264,7 @@ export default function AdminPage() {
                   <input
                      type="number"
                      placeholder="Giá (VNĐ)"
-                     className="border rounded px-2 py-1"
+                     className="border border-gray-300 rounded px-2 py-1 text-black bg-white"
                      value={carForm.price || ''}
                      onChange={(e) =>
                         setCarForm((f) => ({ ...f, price: Number(e.target.value) }))
@@ -256,7 +273,7 @@ export default function AdminPage() {
                   <div className="flex gap-2">
                      <button
                         type="submit"
-                        className="bg-blue-600 text-white rounded px-3 py-1"
+                        className="bg-blue-500 text-white rounded px-3 py-1 hover:bg-blue-600"
                         disabled={loading}
                      >
                         {editingCarId ? 'Cập nhật' : 'Thêm mới'}
@@ -264,7 +281,7 @@ export default function AdminPage() {
                      {editingCarId && (
                         <button
                            type="button"
-                           className="bg-gray-400 rounded px-3 py-1"
+                           className="bg-gray-300 text-black rounded px-3 py-1 border border-gray-400 hover:bg-gray-400"
                            onClick={() => {
                               setCarForm({})
                               setEditingCarId(null)
@@ -278,27 +295,31 @@ export default function AdminPage() {
             </section>
          ) : (
             <section>
-               <h2 className="font-semibold mb-2">Danh sách bài viết</h2>
+               <h2 className="font-semibold mb-2 text-black">Danh sách bài viết</h2>
                <div className="grid gap-2 mb-4">
                   {posts.map((post) => (
                      <div
                         key={post.id}
-                        className="border rounded p-2 flex flex-col sm:flex-row sm:items-center gap-2"
+                        className="border border-gray-300 rounded p-2 flex flex-col sm:flex-row sm:items-center gap-2 bg-white text-black"
                      >
-                        <div className="flex-1">
-                           <b>{post.title}</b> | {post.author}{' '}
-                           {post.created_at &&
-                              `- ${new Date(post.created_at).toLocaleDateString()}`}
+                        <div className="flex-1 text-black">
+                           <b className="text-black">{post.title}</b> |{' '}
+                           <span className="text-black">{post.author}</span>{' '}
+                           {post.created_at && (
+                              <span className="text-black">
+                                 - {new Date(post.created_at).toLocaleDateString()}
+                              </span>
+                           )}
                         </div>
                         <div className="flex gap-2">
                            <button
-                              className="px-2 py-1 bg-yellow-400 rounded"
+                              className="px-2 py-1 bg-yellow-300 text-black rounded border border-yellow-400 hover:bg-yellow-400"
                               onClick={() => handlePostEdit(post)}
                            >
                               Sửa
                            </button>
                            <button
-                              className="px-2 py-1 bg-red-500 text-white rounded"
+                              className="px-2 py-1 bg-red-200 text-black rounded border border-red-400 hover:bg-red-300"
                               onClick={() => handlePostDelete(post.id)}
                            >
                               Xóa
@@ -309,15 +330,15 @@ export default function AdminPage() {
                </div>
                <form
                   onSubmit={handlePostSubmit}
-                  className="border rounded p-4 grid gap-2 bg-gray-50"
+                  className="border border-gray-300 rounded p-4 grid gap-2 bg-gray-50 text-black"
                >
-                  <h3 className="font-semibold">
+                  <h3 className="font-semibold text-black">
                      {editingPostId ? 'Sửa bài viết' : 'Thêm bài viết mới'}
                   </h3>
                   <input
                      required
                      placeholder="Tiêu đề"
-                     className="border rounded px-2 py-1"
+                     className="border border-gray-300 rounded px-2 py-1 text-black bg-white"
                      value={postForm.title || ''}
                      onChange={(e) =>
                         setPostForm((f) => ({ ...f, title: e.target.value }))
@@ -325,7 +346,7 @@ export default function AdminPage() {
                   />
                   <textarea
                      placeholder="Nội dung"
-                     className="border rounded px-2 py-1"
+                     className="border border-gray-300 rounded px-2 py-1 text-black bg-white"
                      value={postForm.content || ''}
                      onChange={(e) =>
                         setPostForm((f) => ({ ...f, content: e.target.value }))
@@ -333,7 +354,7 @@ export default function AdminPage() {
                   />
                   <input
                      placeholder="URL ảnh"
-                     className="border rounded px-2 py-1"
+                     className="border border-gray-300 rounded px-2 py-1 text-black bg-white"
                      value={postForm.image || ''}
                      onChange={(e) =>
                         setPostForm((f) => ({ ...f, image: e.target.value }))
@@ -341,7 +362,7 @@ export default function AdminPage() {
                   />
                   <input
                      placeholder="Tác giả"
-                     className="border rounded px-2 py-1"
+                     className="border border-gray-300 rounded px-2 py-1 text-black bg-white"
                      value={postForm.author || ''}
                      onChange={(e) =>
                         setPostForm((f) => ({ ...f, author: e.target.value }))
@@ -350,7 +371,7 @@ export default function AdminPage() {
                   <div className="flex gap-2">
                      <button
                         type="submit"
-                        className="bg-blue-600 text-white rounded px-3 py-1"
+                        className="bg-blue-500 text-white rounded px-3 py-1 hover:bg-blue-600"
                         disabled={loading}
                      >
                         {editingPostId ? 'Cập nhật' : 'Thêm mới'}
@@ -358,7 +379,7 @@ export default function AdminPage() {
                      {editingPostId && (
                         <button
                            type="button"
-                           className="bg-gray-400 rounded px-3 py-1"
+                           className="bg-gray-300 text-black rounded px-3 py-1 border border-gray-400 hover:bg-gray-400"
                            onClick={() => {
                               setPostForm({})
                               setEditingPostId(null)

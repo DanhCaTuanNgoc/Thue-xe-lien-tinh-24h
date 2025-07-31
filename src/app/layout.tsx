@@ -30,9 +30,9 @@ export default function RootLayout({
                   <Link href="/" className="flex items-center gap-3 transition-opacity">
                      <span className="relative flex items-center">
                         <img
-                           src="/icon.jpg"
+                           src="/car-icon.png"
                            alt="Logo"
-                           className="h-10 w-10 md:h-10 md:w-10 text-blue-500"
+                           className="h-10 w-12 md:h-10 md:w-12 text-blue-500"
                            style={{
                               transform: 'scale(1.5)',
                               zIndex: 1,
@@ -46,10 +46,10 @@ export default function RootLayout({
                   </Link>
 
                   {/* Desktop Navigation */}
-                  <nav className="hidden md:flex gap-6 text-base font-medium gap-15">
+                  <nav className="hidden lg:flex gap-4 xl:gap-15 text-sm xl:text-base font-medium">
                      <Link
                         href="/"
-                        className="relative text-black hover:text-red-700 transition group"
+                        className="relative text-black hover:text-red-700 transition group whitespace-nowrap"
                      >
                         Trang chủ
                         <span className="absolute left-0 -bottom-1 w-full h-0.5 bg-red-700 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
@@ -57,10 +57,10 @@ export default function RootLayout({
 
                      {/* Dropdown Menu */}
                      <div className="relative group">
-                        <button className="relative text-black hover:text-red-700 transition group flex items-center gap-1">
-                           Bảng giá thuê xe
+                        <button className="relative text-black hover:text-red-700 transition group flex items-center gap-1 whitespace-nowrap">
+                           <span className="text-sm xl:text-base">Bảng giá thuê xe</span>
                            <svg
-                              className="w-4 h-4 transition-transform group-hover:rotate-180"
+                              className="w-3 h-3 xl:w-4 xl:h-4 transition-transform group-hover:rotate-180"
                               fill="currentColor"
                               viewBox="0 0 20 20"
                            >
@@ -74,19 +74,31 @@ export default function RootLayout({
                         </button>
 
                         {/* Dropdown Content */}
-                        <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform scale-95 group-hover:scale-100 z-50">
+                        <div className="absolute top-full left-0 mt-2 w-40 xl:w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform scale-95 group-hover:scale-100 z-50">
                            <div className="py-2">
                               <Link
                                  href="/cars-4"
-                                 className="block px-4 py-2 text-gray-800 hover:bg-red-50 hover:text-red-600 transition-colors"
+                                 className="block px-3 xl:px-4 py-2 text-sm xl:text-base text-gray-800 hover:bg-red-50 hover:text-red-600 transition-colors"
                               >
                                  Xe 4 chỗ
                               </Link>
                               <Link
                                  href="/cars-7"
-                                 className="block px-4 py-2 text-gray-800 hover:bg-red-50 hover:text-red-600 transition-colors"
+                                 className="block px-3 xl:px-4 py-2 text-sm xl:text-base text-gray-800 hover:bg-red-50 hover:text-red-600 transition-colors"
                               >
                                  Xe 7 chỗ
+                              </Link>
+                              <Link
+                                 href="/cars-16"
+                                 className="block px-3 xl:px-4 py-2 text-sm xl:text-base text-gray-800 hover:bg-red-50 hover:text-red-600 transition-colors"
+                              >
+                                 Xe 16 chỗ
+                              </Link>
+                              <Link
+                                 href="/cars-limousine"
+                                 className="block px-3 xl:px-4 py-2 text-sm xl:text-base text-gray-800 hover:bg-red-50 hover:text-red-600 transition-colors"
+                              >
+                                 Xe Limousine
                               </Link>
                            </div>
                         </div>
@@ -94,28 +106,42 @@ export default function RootLayout({
 
                      <Link
                         href="/posts"
-                        className="relative text-black hover:text-red-700 transition group"
+                        className="relative text-black hover:text-red-700 transition group whitespace-nowrap"
                      >
-                        Bài viết
+                        <span className="text-sm xl:text-base">Bài viết</span>
                         <span className="absolute left-0 -bottom-1 w-full h-0.5 bg-red-700 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
                      </Link>
                   </nav>
 
                   {/* Desktop Hotline */}
-                  <div className="hidden md:flex items-center gap-0 py-2 bg-red-600 px-4 text-white font-bold text-lg rounded-xl shadow-md mx-2 border border-red-700">
-                     <span className="mr-1 flex items-center gap-1">Hotline:</span>
+                  <div className="hidden md:flex items-center gap-2 py-1.5 xl:py-2 bg-gradient-to-r from-red-600 to-red-700 px-3 xl:px-4 text-white font-bold text-base xl:text-xl rounded-xl shadow-md mx-2 border border-red-700 hover:shadow-lg hover:shadow-red-500/50 transition-all duration-300 relative overflow-hidden group">
+                     <div className="flex items-center gap-2 relative z-10">
+                        <div className="relative">
+                           <svg
+                              className="w-4 h-4 xl:w-5 xl:h-5 animate-pulse text-white"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                           >
+                              <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                           </svg>
+                           <div className="absolute inset-0 w-4 h-4 xl:w-5 xl:h-5 rounded-full ring-2 ring-red-400 animate-ping"></div>
+                        </div>
+                        <span className="text-sm xl:text-base">Hotline:</span>
+                     </div>
                      <a
                         href="tel:0978971421"
-                        className="underline underline-offset-4 decoration-2 hover:text-yellow-200 transition-colors duration-200"
+                        className="underline underline-offset-4 decoration-2 hover:text-yellow-200 transition-colors duration-200 text-sm xl:text-base font-bold relative z-10"
                      >
                         0978 971 421
                      </a>
+                     {/* Animated background effect */}
+                     <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
 
                   {/* Mobile Hamburger Button */}
                   <button
                      onClick={toggleMobileMenu}
-                     className="md:hidden flex flex-col justify-center items-center w-8 h-8 space-y-1"
+                     className="lg:hidden flex flex-col justify-center items-center w-8 h-8 space-y-1"
                      aria-label="Toggle mobile menu"
                   >
                      <span
@@ -138,7 +164,7 @@ export default function RootLayout({
 
                {/* Mobile Menu Drawer */}
                <div
-                  className={`md:hidden fixed inset-0 z-50 ${
+                  className={`lg:hidden fixed inset-0 z-50 ${
                      isMobileMenuOpen ? 'block' : 'hidden'
                   }`}
                >
@@ -159,7 +185,7 @@ export default function RootLayout({
                            </span>
                            <button
                               onClick={closeMobileMenu}
-                              className="p-2 hover:bg-gray-100 rounded-full"
+                              className="p-2 hover:bg-gray-100 rounded-full text-black cursor-pointer"
                            >
                               <svg
                                  className="w-6 h-6"
@@ -206,7 +232,21 @@ export default function RootLayout({
                                        onClick={closeMobileMenu}
                                        className="block py-2 px-4 text-gray-700 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
                                     >
+                                       Xe 16 chỗ
+                                    </Link>
+                                    <Link
+                                       href="/cars-16"
+                                       onClick={closeMobileMenu}
+                                       className="block py-2 px-4 text-gray-700 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                                    >
                                        Xe 7 chỗ
+                                    </Link>
+                                    <Link
+                                       href="/cars-limousine"
+                                       onClick={closeMobileMenu}
+                                       className="block py-2 px-4 text-gray-700 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                                    >
+                                       Xe Limousine
                                     </Link>
                                  </div>
                               </div>
@@ -223,15 +263,29 @@ export default function RootLayout({
 
                         {/* Mobile Hotline */}
                         <div className="p-4 border-t">
-                           <div className="bg-red-600 text-white p-4 rounded-lg text-center">
-                              <div className="font-bold mb-2">Hotline:</div>
+                           <div className="bg-gradient-to-r from-red-600 to-red-700 text-white p-4 rounded-lg text-center hover:shadow-lg hover:shadow-red-500/50 transition-all duration-300 relative overflow-hidden group">
+                              <div className="font-bold mb-2 flex items-center justify-center gap-2 relative z-10">
+                                 <div className="relative">
+                                    <svg
+                                       className="w-5 h-5 animate-pulse text-white"
+                                       fill="currentColor"
+                                       viewBox="0 0 20 20"
+                                    >
+                                       <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                                    </svg>
+                                    <div className="absolute inset-0 w-5 h-5 rounded-full ring-2 ring-red-400 animate-ping"></div>
+                                 </div>
+                                 <span>Hotline:</span>
+                              </div>
                               <a
                                  href="tel:0978971421"
-                                 className="text-xl font-bold underline hover:text-yellow-200 transition-colors"
+                                 className="text-xl font-bold underline hover:text-yellow-200 transition-colors relative z-10"
                                  onClick={closeMobileMenu}
                               >
                                  0978 971 421
                               </a>
+                              {/* Animated background effect */}
+                              <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                            </div>
                         </div>
                      </div>

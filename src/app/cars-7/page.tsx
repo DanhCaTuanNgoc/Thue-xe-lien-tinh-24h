@@ -17,19 +17,19 @@ export default function Home() {
                priority
             />
             {/* Overlay content */}
-            <div className="absolute inset-0 flex items-center justify-center p-4">
-               <div className="bg-[rgba(0,0,0,0.4)] rounded-2xl p-6 md:p-8 max-w-2xl mx-auto">
-                  <div className="text-center text-white align-center">
-                     <h1 className="text-[35px] md:text-[47px] font-bold mb-4 drop-shadow-lg">
+            <div className="absolute inset-0 flex items-center justify-center p-2 sm:p-3 md:p-4">
+               <div className="bg-[rgba(0,0,0,0.5)] rounded-lg sm:rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8 max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-2xl mx-auto">
+                  <div className="text-center text-white">
+                     <h1 className="text-[20px] sm:text-[25px] md:text-[35px] lg:text-[47px] font-bold mb-2 sm:mb-3 md:mb-4 drop-shadow-lg leading-tight">
                         BẢNG GIÁ THUÊ XE 7 CHỖ
                      </h1>
-                     <p className="text-xl md:text-2xl font-semibold mb-4 drop-shadow-lg">
+                     <p className="text-sm sm:text-base md:text-xl lg:text-2xl font-semibold mb-3 sm:mb-4 drop-shadow-lg leading-tight">
                         Chỉ <span className="text-red-500 font-bold">950.000đ</span> Có
                         Ngay Xe 7 Chỗ
                      </p>
                      <div className="flex justify-center">
                         <a
-                           className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg text-sm md:text-base transition-colors duration-300 shadow-lg flex items-center gap-2 cursor-pointer"
+                           className="bg-red-600 hover:bg-red-700 text-white font-bold py-1.5 sm:py-2 px-3 sm:px-4 rounded-md sm:rounded-lg text-xs sm:text-sm md:text-base transition-colors duration-300 shadow-lg flex items-center gap-1 sm:gap-2 cursor-pointer"
                            href="https://zalo.me/0978971421"
                            target="_blank"
                         >
@@ -48,9 +48,9 @@ export default function Home() {
             </div>
          </section>
          {/* Title  */}
-         <section className="max-w-5xl mx-auto p-4 md:p-8 !pb-0">
+         <section className="max-w-5xl mx-auto pt-4 md:pt-8 !pb-0">
             <div className="text-left border-b border-gray-300 max-w">
-               <h1 className="text-[20px] md:text-[30px] font-bold text-black mb-2">
+               <h1 className="text-[20px] md:text-[30px] font-bold text-black mb-2 pl-4">
                   Bảng giá thuê xe 7 chỗ mới nhất
                </h1>
             </div>
@@ -65,7 +65,7 @@ export default function Home() {
             </div> */}
          </section>
          {/* Search Section */}
-         <section className="max-w-5xl mx-auto p-0 md:p-8">
+         <section className="max-w-5xl mx-auto pt-4 md:pt-8 pb-4">
             <form
                className="flex flex-col md:flex-row gap-4 items-center justify-between bg-gray-50 rounded-lg p-4 shadow"
                onSubmit={(e) => e.preventDefault()}
@@ -83,7 +83,7 @@ export default function Home() {
                      name="location"
                      type="text"
                      placeholder="VD: Vũng Tàu, Biên Hòa..."
-                     className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px]"
+                     className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px] text-black bg-white"
                   />
                </div>
                {/* Khoảng cách */}
@@ -101,7 +101,7 @@ export default function Home() {
                         type="number"
                         min={0}
                         placeholder="VD: 10"
-                        className="border border-gray-300 rounded px-3 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px]"
+                        className="border border-gray-300 rounded px-3 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px] text-black bg-white"
                      />
                      <input
                         id="search-distance-max"
@@ -109,7 +109,7 @@ export default function Home() {
                         type="number"
                         min={0}
                         placeholder="VD: 100"
-                        className="border border-gray-300 rounded px-3 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px]"
+                        className="border border-gray-300 rounded px-3 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px] text-black bg-white"
                      />
                   </div>
                </div>
@@ -127,14 +127,14 @@ export default function Home() {
                         name="priceMin"
                         type="number"
                         min={0}
-                        className="border border-gray-300 rounded px-3 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px]"
+                        className="border border-gray-300 rounded px-3 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px] text-black bg-white"
                      />
                      <input
                         id="search-price-max"
                         name="priceMax"
                         type="number"
                         min={0}
-                        className="border border-gray-300 rounded px-3 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px]"
+                        className="border border-gray-300 rounded px-3 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px] text-black bg-white"
                      />
                   </div>
                </div>
@@ -142,7 +142,7 @@ export default function Home() {
                <div className="flex items-end w-full md:w-auto">
                   <button
                      type="submit"
-                     className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg transition-colors duration-300 shadow flex items-center gap-2"
+                     className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg transition-colors duration-300 shadow flex items-center justify-center gap-2 cursor-pointer w-full md:w-auto"
                   >
                      <svg
                         className="w-5 h-5 text-white"
@@ -187,7 +187,7 @@ export default function Home() {
                         </th>
                         <th className="px-4 py-2 border-b font-bold text-center">Km</th>
                         <th className="px-4 py-2 border-b font-bold text-center">
-                           Xe 4 chỗ
+                           Xe 7 chỗ
                         </th>
                      </tr>
                   </thead>

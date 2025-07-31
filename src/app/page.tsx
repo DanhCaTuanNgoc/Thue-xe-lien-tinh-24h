@@ -9,7 +9,7 @@ export default function Home() {
    const slides = [
       {
          image: '/banner.jpg',
-         title: 'Đặt vé Hồ Chí Minh <=> Núi Bà Đen',
+         title: 'Thuê xe Sài Gòn <=> Vũng Tàu',
          subtitle: 'Chỉ 850.000đ Có Ngay Xe 4 Chỗ',
          price: '850.000đ',
          buttonText: 'Đặt nhanh - Tư vấn miễn phí',
@@ -26,9 +26,9 @@ export default function Home() {
       },
       {
          image: '/banner3.jpg',
-         title: 'Thuê xe Hồ Chí Minh <=> Vũng Tàu',
-         subtitle: 'Du lịch biển Vũng Tàu chỉ với 1.500.000đ',
-         price: '1.500.000đ',
+         title: 'Đặt vé Sài Gòn <=> Vũng Tàu',
+         subtitle: 'Du lịch biển Vũng Tàu chỉ với 350.000đ',
+         price: '350.000đ',
          buttonText: 'Đặt nhanh - Tư vấn miễn phí',
          link: 'https://zalo.me/0978971421',
       },
@@ -84,7 +84,24 @@ export default function Home() {
                                  {slide.title}
                               </h1>
                               <p className="text-sm sm:text-base md:text-xl lg:text-2xl font-semibold mb-3 sm:mb-4 drop-shadow-lg leading-tight">
-                                 {slide.subtitle}
+                                 {slide.subtitle.includes('850.000đ') ? (
+                                    <>
+                                       Chỉ <span className="text-red-500">850.000đ</span>{' '}
+                                       Có Ngay Xe 4 Chỗ
+                                    </>
+                                 ) : slide.subtitle.includes('350.000đ') ? (
+                                    <>
+                                       Du lịch biển Vũng Tàu chỉ với{' '}
+                                       <span className="text-red-500">350.000đ</span>
+                                    </>
+                                 ) : slide.subtitle.includes('200.000đ') ? (
+                                    <>
+                                       Đặt vé Limousine chỉ từ{' '}
+                                       <span className="text-red-500">200.000đ</span>
+                                    </>
+                                 ) : (
+                                    slide.subtitle
+                                 )}
                               </p>
                               <p className="text-sm sm:text-base md:text-xl lg:text-2xl font-semibold mb-3 sm:mb-4 drop-shadow-lg leading-tight">
                                  {slide.subtitle2}

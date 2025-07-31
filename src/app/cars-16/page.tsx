@@ -21,11 +21,11 @@ export default function Home() {
                <div className="bg-[rgba(0,0,0,0.5)] rounded-lg sm:rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8 max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-2xl mx-auto">
                   <div className="text-center text-white">
                      <h1 className="text-[20px] sm:text-[25px] md:text-[35px] lg:text-[47px] font-bold mb-2 sm:mb-3 md:mb-4 drop-shadow-lg leading-tight">
-                        BẢNG GIÁ THUÊ XE 4 CHỖ
+                        BẢNG GIÁ THUÊ XE 16 CHỖ
                      </h1>
                      <p className="text-sm sm:text-base md:text-xl lg:text-2xl font-semibold mb-3 sm:mb-4 drop-shadow-lg leading-tight">
                         Chỉ <span className="text-red-500 font-bold">850.000đ</span> Có
-                        Ngay Xe 4 Chỗ
+                        Ngay Xe 16 Chỗ
                      </p>
                      <div className="flex justify-center">
                         <a
@@ -51,18 +51,18 @@ export default function Home() {
          <section className="max-w-5xl mx-auto pt-4 md:pt-8 !pb-0">
             <div className="text-left border-b border-gray-300 max-w">
                <h1 className="text-[20px] md:text-[30px] font-bold text-black mb-2 pl-4">
-                  Bảng giá thuê xe 4 chỗ mới nhất
+                  Bảng giá thuê xe 16 chỗ mới nhất
                </h1>
             </div>
-            {/* <div className="flex justify-center mb-4">
-               <Image
-                  src="/xe4cho.png"
-                  alt="Xe 4 chỗ"
+            <div className="flex justify-center mb-4">
+               {/* <Image
+                  src="/xelimousine.png"
+                  alt="Xe "
                   width={800}
                   height={600}
                   className="max-w-full h-auto rounded-lg shadow-lg"
-               />
-            </div> */}
+               /> */}
+            </div>
          </section>
          {/* Search Section */}
          <section className="max-w-5xl mx-auto pt-4 md:pt-8 pb-4">
@@ -187,7 +187,7 @@ export default function Home() {
                         </th>
                         <th className="px-4 py-2 border-b font-bold text-center">Km</th>
                         <th className="px-4 py-2 border-b font-bold text-center">
-                           Xe 4 chỗ
+                           Xe 16 chỗ
                         </th>
                      </tr>
                   </thead>
