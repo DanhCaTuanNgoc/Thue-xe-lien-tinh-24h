@@ -58,8 +58,8 @@ export default function Home() {
                <Image
                   src="/xelimousine.jpg"
                   alt="xelimousine "
-                  width={740}
-                  height={600}
+                  width={650}
+                  height={800}
                   className="max-w-full h-auto rounded-lg shadow-lg"
                />
             </div>

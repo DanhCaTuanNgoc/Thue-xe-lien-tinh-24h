@@ -25,7 +25,7 @@ export default function RootLayout({
       <html lang="vi">
          <body className={`${inter.className} overflow-x-hidden overscroll-none`}>
             {/* Header */}
-            <header className="w-full shadjphow bg-white sticky top-0 z-50">
+            <header className="w-full shadow-md bg-white sticky top-0 z-50">
                <div className="w-full flex items-center justify-between py-3 px-4 md:px-25">
                   <Link href="/" className="flex items-center gap-3 transition-opacity">
                      <span className="relative flex items-center">
@@ -318,7 +318,7 @@ export default function RootLayout({
                   </div>
                   <div>
                      <div className="font-bold">Loại xe:</div>
-                     <div>Hợp đồng 4/7/16 chỗ đời mới</div>
+                     <div>Hợp đồng 4/7/16/Limousine chỗ đời mới</div>
                   </div>
                   <div>
                      <div className="font-bold">Dịch vụ:</div>

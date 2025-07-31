@@ -403,3 +403,17 @@ export default function Home() {
       </>
    )
 }
+
+export function HomePage() {
+   return (
+      <section className="max-w-5xl mx-auto p-4 md:p-8 mt-6">
+         <h1 className="text-3xl font-bold mb-4 text-center text-blue-700 drop-shadow">
+            Dịch vụ thuê xe liên tỉnh 24H
+         </h1>
+         <p className="text-center text-gray-600">
+            Chúng tôi cung cấp dịch vụ thuê xe 4, 7, 16 chỗ và Limousine với tài xế chuyên
+            nghiệp, giá cả minh bạch.
+         </p>
+      </section>
+   )
+}
