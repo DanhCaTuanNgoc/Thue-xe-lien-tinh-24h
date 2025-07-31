@@ -411,17 +411,16 @@ export default function RootLayout({
             {/* Footer */}
             <footer className="w-full bg-gray-100 border-t">
                <div className="max-w-7xl mx-auto py-6 px-4 flex flex-col md:flex-row justify-between gap-4 text-gray-700 text-sm">
-                  <div>
+                  <div className='w-s'>
                      <div className="font-bold text-blue-700 text-lg mb-1">
                         <span className="text-xl font-bold text-black">
                            Thuexelientinh<span className="text-red-700">24H</span>
                         </span>
                      </div>
                      <div>
-                        Địa chỉ: 32 Nguyễn Thái Bình, P.Nguyễn Thái Bình, Quận 1, Hồ Chí
-                        Minh
+                        Địa chỉ: 409/40/66/5 Huỳnh Thị Hai, phường Tân Chánh Hiệp, Quận
+                        12, TP.HCM
                      </div>
-                     <div>185 Thống Nhất Mới, Phường 8, Vũng Tàu, Bà Rịa - Vũng Tàu</div>
                   </div>
                   <div>
                      <div className="font-bold">Hotline:</div>

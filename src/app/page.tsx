@@ -350,11 +350,144 @@ export default function Home() {
             </div>
          </section>
 
+         {/* Customer Reviews Section */}
+         <section className="max-w-6xl mx-auto py-12 px-4 bg-gray-50">
+            <div className="flex flex-col items-center mb-8">
+               <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center tracking-wide uppercase">
+                  ĐÁNH GIÁ TỪ KHÁCH HÀNG
+               </h2>
+               <div className="mt-2 flex items-center gap-2">
+                  <span className="block w-10 h-1 bg-gray-300 rounded-full"></span>
+                  <svg
+                     className="w-5 h-5 text-gray-400"
+                     fill="currentColor"
+                     viewBox="0 0 20 20"
+                  >
+                     <path d="M10 2a1 1 0 01.894.553l7 14A1 1 0 0117 18H3a1 1 0 01-.894-1.447l7-14A1 1 0 0110 2zm0 3.618L4.618 16h10.764L10 5.618z" />
+                  </svg>
+                  <span className="block w-10 h-1 bg-gray-300 rounded-full"></span>
+               </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+               {/* Review 1 */}
+               <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                  <div className="flex items-center mb-4">
+                     <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                        <span className="text-red-600 font-bold text-lg">N</span>
+                     </div>
+                     <div>
+                        <h4 className="font-bold text-gray-800">Nguyễn Văn An</h4>
+                        <div className="flex items-center">
+                           {[...Array(5)].map((_, i) => (
+                              <svg
+                                 key={i}
+                                 className="w-4 h-4 text-yellow-400"
+                                 fill="currentColor"
+                                 viewBox="0 0 20 20"
+                              >
+                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </svg>
+                           ))}
+                        </div>
+                     </div>
+                  </div>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                     "Dịch vụ rất tốt! Tài xế chuyên nghiệp, xe sạch sẽ. Đi Vũng Tàu chỉ
+                     350.000đ, giá cả hợp lý. Sẽ ủng hộ lại!"
+                  </p>
+                  <div className="mt-4 text-xs text-gray-500">
+                     <p>• Điểm đến: Vũng Tàu</p>
+                     <p>• Loại xe: Xe 4 chỗ</p>
+                     <p>• Ngày đi: 15/12/2024</p>
+                  </div>
+               </div>
+
+               {/* Review 2 */}
+               <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                  <div className="flex items-center mb-4">
+                     <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                        <span className="text-blue-600 font-bold text-lg">T</span>
+                     </div>
+                     <div>
+                        <h4 className="font-bold text-gray-800">Trần Thị Bình</h4>
+                        <div className="flex items-center">
+                           {[...Array(5)].map((_, i) => (
+                              <svg
+                                 key={i}
+                                 className="w-4 h-4 text-yellow-400"
+                                 fill="currentColor"
+                                 viewBox="0 0 20 20"
+                              >
+                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </svg>
+                           ))}
+                        </div>
+                     </div>
+                  </div>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                     "Đi đoàn 7 người đi Nha Trang, xe 7 chỗ rộng rãi, tài xế lái xe an
+                     toàn. Giá cả phải chăng, phục vụ chu đáo!"
+                  </p>
+                  <div className="mt-4 text-xs text-gray-500">
+                     <p>• Điểm đến: Nha Trang</p>
+                     <p>• Loại xe: Xe 7 chỗ</p>
+                     <p>• Ngày đi: 20/12/2024</p>
+                  </div>
+               </div>
+
+               {/* Review 3 */}
+               <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                  <div className="flex items-center mb-4">
+                     <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                        <span className="text-green-600 font-bold text-lg">L</span>
+                     </div>
+                     <div>
+                        <h4 className="font-bold text-gray-800">Lê Minh Cường</h4>
+                        <div className="flex items-center">
+                           {[...Array(5)].map((_, i) => (
+                              <svg
+                                 key={i}
+                                 className="w-4 h-4 text-yellow-400"
+                                 fill="currentColor"
+                                 viewBox="0 0 20 20"
+                              >
+                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </svg>
+                           ))}
+                        </div>
+                     </div>
+                  </div>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                     "Thuê xe Limousine đi công tác, xe đẹp, nội thất sang trọng. Tài xế
+                     chuyên nghiệp, đúng giờ. Rất hài lòng!"
+                  </p>
+                  <div className="mt-4 text-xs text-gray-500">
+                     <p>• Điểm đến: Phan Thiết</p>
+                     <p>• Loại xe: Limousine</p>
+                     <p>• Ngày đi: 25/12/2024</p>
+                  </div>
+               </div>
+            </div>
+         </section>
+
          {/* Process Section */}
          <section className="max-w-6xl mx-auto py-12 px-4">
-            <h2 className="text-3xl md:text-4xl font-bold text-black text-center mb-12">
-               QUY TRÌNH ĐẶT XE
-            </h2>
+            <div className="flex flex-col items-center mb-8">
+               <h2 className="text-3xl md:text-4xl font-bold text-black text-center">
+                  QUY TRÌNH ĐẶT XE
+               </h2>
+               <div className="mt-2 flex items-center gap-2">
+                  <span className="block w-10 h-1 bg-gray-300 rounded-full"></span>
+                  <svg
+                     className="w-5 h-5 text-gray-400"
+                     fill="currentColor"
+                     viewBox="0 0 20 20"
+                  >
+                     <path d="M10 2a1 1 0 01.894.553l7 14A1 1 0 0117 18H3a1 1 0 01-.894-1.447l7-14A1 1 0 0110 2zm0 3.618L4.618 16h10.764L10 5.618z" />
+                  </svg>
+                  <span className="block w-10 h-1 bg-gray-300 rounded-full"></span>
+               </div>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                {/* Step 1 */}
                <div className="bg-white rounded-lg p-6 text-center shadow-md hover:shadow-lg transition-shadow">

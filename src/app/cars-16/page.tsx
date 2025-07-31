@@ -54,14 +54,14 @@ export default function Home() {
                   Bảng giá thuê xe 16 chỗ mới nhất
                </h1>
             </div>
-            <div className="flex justify-center mb-4">
-               {/* <Image
-                  src="/xelimousine.png"
-                  alt="Xe "
-                  width={800}
-                  height={600}
+            <div className="max-w mt-4 text-center items-center flex justify-center">
+               <Image
+                  src="/xe16cho.jpg"
+                  alt="xelimousine "
+                  width={650}
+                  height={800}
                   className="max-w-full h-auto rounded-lg shadow-lg"
-               /> */}
+               />
             </div>
          </section>
          {/* Search Section */}

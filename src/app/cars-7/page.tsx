@@ -54,15 +54,15 @@ export default function Home() {
                   Bảng giá thuê xe 7 chỗ mới nhất
                </h1>
             </div>
-            {/* <div className="flex justify-center mb-4">
+            <div className="max-w mt-4 text-center items-center flex justify-center">
                <Image
-                  src="/xe4cho.png"
-                  alt="Xe 4 chỗ"
-                  width={800}
-                  height={600}
+                  src="/xe7cho.png"
+                  alt="xelimousine "
+                  width={650}
+                  height={800}
                   className="max-w-full h-auto rounded-lg shadow-lg"
                />
-            </div> */}
+            </div>
          </section>
          {/* Search Section */}
          <section className="max-w-5xl mx-auto pt-4 md:pt-8 pb-4">
