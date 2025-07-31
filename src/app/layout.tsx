@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Link from 'next/link'
 import { useState } from 'react'
+import Head from 'next/head'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,6 +24,118 @@ export default function RootLayout({
 
    return (
       <html lang="vi">
+         <Head>
+            {/* Primary Meta Tags */}
+            <title>Thuê xe liên tỉnh 24H - Dịch vụ thuê xe uy tín, chất lượng cao</title>
+            <meta
+               name="title"
+               content="Thuê xe liên tỉnh 24H - Dịch vụ thuê xe uy tín, chất lượng cao"
+            />
+            <meta
+               name="description"
+               content="Thuê xe liên tỉnh 24H cung cấp dịch vụ thuê xe 4 chỗ, 7 chỗ, 16 chỗ và Limousine chất lượng cao. Đặt xe nhanh chóng, giá cả hợp lý, tài xế chuyên nghiệp. Hotline: 0978 971 421"
+            />
+            <meta
+               name="keywords"
+               content="thuê xe, thuê xe liên tỉnh, xe 4 chỗ, xe 7 chỗ, xe 16 chỗ, limousine, đặt xe, thuê xe du lịch, xe đưa đón, taxi đường dài"
+            />
+            <meta name="author" content="Thuê xe liên tỉnh 24H" />
+            <meta name="robots" content="index, follow" />
+            <meta name="language" content="Vietnamese" />
+            <meta name="revisit-after" content="7 days" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+            {/* Open Graph / Facebook */}
+            <meta property="og:type" content="website" />
+            <meta property="og:url" content="https://thue-xe-lien-tinh-24h.vercel.app/" />
+            <meta
+               property="og:title"
+               content="Thuê xe liên tỉnh 24H - Dịch vụ thuê xe uy tín, chất lượng cao"
+            />
+            <meta
+               property="og:description"
+               content="Thuê xe liên tỉnh 24H cung cấp dịch vụ thuê xe 4 chỗ, 7 chỗ, 16 chỗ và Limousine chất lượng cao. Đặt xe nhanh chóng, giá cả hợp lý, tài xế chuyên nghiệp."
+            />
+            <meta
+               property="og:image"
+               content="https://thue-xe-lien-tinh-24h.vercel.app/banner.jpg"
+            />
+            <meta property="og:site_name" content="Thuê xe liên tỉnh 24H" />
+            <meta property="og:locale" content="vi_VN" />
+
+            {/* Twitter */}
+            <meta property="twitter:card" content="summary_large_image" />
+            <meta
+               property="twitter:url"
+               content="https://thue-xe-lien-tinh-24h.vercel.app/"
+            />
+            <meta
+               property="twitter:title"
+               content="Thuê xe liên tỉnh 24H - Dịch vụ thuê xe uy tín, chất lượng cao"
+            />
+            <meta
+               property="twitter:description"
+               content="Thuê xe liên tỉnh 24H cung cấp dịch vụ thuê xe 4 chỗ, 7 chỗ, 16 chỗ và Limousine chất lượng cao. Đặt xe nhanh chóng, giá cả hợp lý, tài xế chuyên nghiệp."
+            />
+            <meta
+               property="twitter:image"
+               content="https://thue-xe-lien-tinh-24h.vercel.app/banner.jpg"
+            />
+
+            {/* Additional SEO Meta Tags */}
+            <meta name="theme-color" content="#dc2626" />
+            <meta name="msapplication-TileColor" content="#dc2626" />
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+            <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+            <meta name="apple-mobile-web-app-title" content="Thuê xe liên tỉnh 24H" />
+
+            {/* Canonical URL */}
+            <link rel="canonical" href="https://thue-xe-lien-tinh-24h.vercel.app/" />
+
+            {/* Favicon */}
+            <link rel="icon" href="/favicon.ico" />
+            <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico" />
+            <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico" />
+            <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico" />
+
+            {/* Structured Data / JSON-LD */}
+            <script
+               type="application/ld+json"
+               dangerouslySetInnerHTML={{
+                  __html: JSON.stringify({
+                     '@context': 'https://schema.org',
+                     '@type': 'LocalBusiness',
+                     name: 'Thuê xe liên tỉnh 24H',
+                     description: 'Dịch vụ thuê xe liên tỉnh chất lượng cao',
+                     url: 'https://thue-xe-lien-tinh-24h.vercel.app/',
+                     telephone: '+84978971421',
+                     address: {
+                        '@type': 'PostalAddress',
+                        streetAddress: '32 Nguyễn Thái Bình, P.Nguyễn Thái Bình, Quận 1',
+                        addressLocality: 'Hồ Chí Minh',
+                        addressCountry: 'VN',
+                     },
+                     geo: {
+                        '@type': 'GeoCoordinates',
+                        latitude: '10.7769',
+                        longitude: '106.7009',
+                     },
+                     openingHours: 'Mo-Su 00:00-23:59',
+                     priceRange: '$$',
+                     serviceArea: {
+                        '@type': 'GeoCircle',
+                        geoMidpoint: {
+                           '@type': 'GeoCoordinates',
+                           latitude: '10.7769',
+                           longitude: '106.7009',
+                        },
+                        geoRadius: '500000',
+                     },
+                     sameAs: ['https://zalo.me/0978971421'],
+                  }),
+               }}
+            />
+         </Head>
          <body className={`${inter.className} overflow-x-hidden overscroll-none`}>
             {/* Header */}
             <header className="w-full shadow-md bg-white sticky top-0 z-50">
