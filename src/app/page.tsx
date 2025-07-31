@@ -392,8 +392,8 @@ export default function Home() {
                      </div>
                   </div>
                   <p className="text-gray-600 text-sm leading-relaxed">
-                     "Dịch vụ rất tốt! Tài xế chuyên nghiệp, xe sạch sẽ. Đi Vũng Tàu chỉ
-                     350.000đ, giá cả hợp lý. Sẽ ủng hộ lại!"
+                     &quot;Dịch vụ rất tốt! Tài xế chuyên nghiệp, xe sạch sẽ. Đi Vũng Tàu
+                     chỉ 350.000đ, giá cả hợp lý. Sẽ ủng hộ lại!&quot;
                   </p>
                   <div className="mt-4 text-xs text-gray-500">
                      <p>• Điểm đến: Vũng Tàu</p>
@@ -425,8 +425,8 @@ export default function Home() {
                      </div>
                   </div>
                   <p className="text-gray-600 text-sm leading-relaxed">
-                     "Đi đoàn 7 người đi Nha Trang, xe 7 chỗ rộng rãi, tài xế lái xe an
-                     toàn. Giá cả phải chăng, phục vụ chu đáo!"
+                     &quot;Đi đoàn 7 người đi Nha Trang, xe 7 chỗ rộng rãi, tài xế lái xe
+                     an toàn. Giá cả phải chăng, phục vụ chu đáo!&quot;
                   </p>
                   <div className="mt-4 text-xs text-gray-500">
                      <p>• Điểm đến: Nha Trang</p>
@@ -458,8 +458,8 @@ export default function Home() {
                      </div>
                   </div>
                   <p className="text-gray-600 text-sm leading-relaxed">
-                     "Thuê xe Limousine đi công tác, xe đẹp, nội thất sang trọng. Tài xế
-                     chuyên nghiệp, đúng giờ. Rất hài lòng!"
+                     &quot;Thuê xe Limousine đi công tác, xe đẹp, nội thất sang trọng. Tài
+                     xế chuyên nghiệp, đúng giờ. Rất hài lòng!&quot;
                   </p>
                   <div className="mt-4 text-xs text-gray-500">
                      <p>• Điểm đến: Phan Thiết</p>
