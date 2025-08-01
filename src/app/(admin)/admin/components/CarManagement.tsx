@@ -42,7 +42,7 @@ export default function CarManagement({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input 
               required 
-              placeholder="Điểm đi" 
+              placeholder="Điểm đón" 
               className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500" 
               value={carForm.start_location||''} 
               onChange={e=>onCarFormChange({...carForm,start_location:e.target.value})}
@@ -55,7 +55,7 @@ export default function CarManagement({
               onChange={e=>onCarFormChange({...carForm,end_location:e.target.value})}
             />
             <input 
-              type="number" 
+              type="number"
               placeholder="Quãng đường (km)" 
               className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500" 
               value={carForm.distance||''} 
@@ -74,11 +74,18 @@ export default function CarManagement({
               ))}
             </select>
             <input 
-              type="number" 
+              required
               placeholder="Giá (VNĐ)" 
               className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500" 
               value={carForm.price||''} 
-              onChange={e=>onCarFormChange({...carForm,price:Number(e.target.value)})}
+              onChange={e=>onCarFormChange({...carForm,price:e.target.value})}
+            />
+            <input 
+              type="number"
+              placeholder="Thời gian (ngày)" 
+              className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500" 
+              value={carForm.time||''} 
+              onChange={e=>onCarFormChange({...carForm,time:Number(e.target.value)})}
             />
           </div>
           <div className="flex gap-3">
@@ -126,6 +133,7 @@ export default function CarManagement({
                     )}
                     {car.distance && <span className="mr-2">• {car.distance}km</span>}
                     {car.price && <span>• {car.price.toLocaleString()} VNĐ</span>}
+                    {car.time && <span>• {car.time} ngày</span>}
                   </div>
                 </div>
                 <div className="flex gap-2">

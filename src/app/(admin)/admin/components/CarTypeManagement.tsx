@@ -71,7 +71,7 @@ export default function CarTypeManagement({
               onChange={e=>onCarTypeFormChange({...carTypeForm,slug:e.target.value})}
             />
             <input 
-              placeholder="Mô tả giá (ví dụ: 850.000đ)" 
+              placeholder="Giá" 
               className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500" 
               value={carTypeForm.description_price||''} 
               onChange={e=>onCarTypeFormChange({...carTypeForm,description_price:e.target.value})}
