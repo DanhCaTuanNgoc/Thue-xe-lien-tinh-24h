@@ -172,7 +172,7 @@ export default function RootLayout({
 
                      {/* Dropdown Menu */}
                      <div className="relative group">
-                        <button className="relative text-black hover:text-red-700 transition group flex items-center gap-1 whitespace-nowrap">
+                        <button className="relative text-black hover:text-red-700 transition group flex items-center gap-1 whitespace-nowrap cursor-pointer">
                            <span className="text-sm xl:text-base">Bảng giá thuê xe</span>
                            <svg
                               className="w-3 h-3 xl:w-4 xl:h-4 transition-transform group-hover:rotate-180"
