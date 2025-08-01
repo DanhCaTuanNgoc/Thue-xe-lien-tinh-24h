@@ -1,34 +1,22 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { createClient } from '@supabase/supabase-js'
-
-const supabase = createClient(
-   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-)
+import type { Car } from '../../../lib/models/car'
+import { fetchCars, fetchCarBySlug } from '../../../lib/repositories/carApi'
+import { formatVND } from '../../../app/(admin)/admin/hooks/formatCurrency'
 
 export default function CarSearchClient({ slug }: { slug: string }) {
-   const [location, setLocation] = useState('')
-   const [results, setResults] = useState<any[]>([])
+   const [cars, setCars] = useState<Car[]>([])
    const [loading, setLoading] = useState(false)
 
-   // Fetch dữ liệu mỗi khi location thay đổi
+   // Tải tất cả dữ liệu xe khi component mount
    useEffect(() => {
-      if (location.trim() === '') {
-         setResults([])
-         return
-      }
       setLoading(true)
-      supabase
-         .from('cars') // Đổi thành bảng thực tế của bạn
-         .select('*')
-         .eq('type_slug', slug)
-         .ilike('location', `%${location}%`)
-         .then(({ data }) => {
-            setResults(data || [])
-            setLoading(false)
+      fetchCarBySlug(slug)
+         .then((data) => {
+            setCars(data)
          })
-   }, [location, slug])
+         .finally(() => setLoading(false))
+   }, [])
 
    return (
       <div>
@@ -138,45 +126,59 @@ export default function CarSearchClient({ slug }: { slug: string }) {
                </button>
             </div>
          </form>
-         {loading && <div>Đang tìm kiếm...</div>}
-         <div className="overflow-x-auto">
+
+         <div className="overflow-x-auto pt-8">
             <table className="min-w-full border border-gray-200 text-sm md:text-base">
                <thead>
                   <tr className="bg-gray-100 text-gray-700">
+                     <th className="px-4 py-2 border-b font-bold text-center">Tỉnh</th>
                      <th className="px-4 py-2 border-b font-bold text-center">
-                        Địa điểm
+                        Điểm đến
                      </th>
                      <th className="px-4 py-2 border-b font-bold text-center">
                         Thời gian
                      </th>
-                     <th className="px-4 py-2 border-b font-bold text-center">Km</th>
+                     <th className="px-4 py-2 border-b font-bold text-center">
+                        Khoảng cách (Km)
+                     </th>
                      <th className="px-4 py-2 border-b font-bold text-center">Giá</th>
                   </tr>
                </thead>
                <tbody>
-                  {results.length === 0 && !loading && (
+                  {loading && (
                      <tr>
-                        <td colSpan={4} className="text-center py-4 text-gray-400">
-                           Không có kết quả
+                        <td colSpan={5} className="text-center py-4 text-gray-400">
+                           Đang tải dữ liệu...
                         </td>
                      </tr>
                   )}
-                  {results.map((item) => (
-                     <tr key={item.id} className="bg-white text-gray-700">
-                        <td className="px-4 py-2 border-b text-gray-700">
-                           {item.location}
-                        </td>
-                        <td className="px-4 py-2 border-b text-center text-gray-700">
-                           {item.time}
-                        </td>
-                        <td className="px-4 py-2 border-b text-center text-gray-700">
-                           {item.km}
-                        </td>
-                        <td className="px-4 py-2 border-b text-center text-gray-700">
-                           {item.price}
+                  {!loading && cars.length === 0 && (
+                     <tr>
+                        <td colSpan={5} className="text-center py-4 text-gray-400">
+                           Hiện chưa có dữ liệu
                         </td>
                      </tr>
-                  ))}
+                  )}
+                  {!loading &&
+                     cars.map((item) => (
+                        <tr key={item.id} className="bg-white text-gray-700">
+                           <td className="px-4 py-2 border-b text-gray-700">
+                              {item.start_location}
+                           </td>
+                           <td className="px-4 py-2 border-b text-gray-700">
+                              {item.end_location}
+                           </td>
+                           <td className="px-4 py-2 border-b text-center text-gray-700">
+                              {item.time} ngày
+                           </td>
+                           <td className="px-4 py-2 border-b text-center text-gray-700">
+                              {item.distance}
+                           </td>
+                           <td className="px-4 py-2 border-b text-center text-gray-700">
+                              {item.price}đ
+                           </td>
+                        </tr>
+                     ))}
                </tbody>
             </table>
          </div>

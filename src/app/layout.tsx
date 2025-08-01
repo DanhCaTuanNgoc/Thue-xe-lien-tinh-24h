@@ -4,6 +4,8 @@ import './globals.css'
 import Link from 'next/link'
 import { useState } from 'react'
 import Head from 'next/head'
+import CarTypeMenu from '@/components/CarMenu'
+import CarMenuMobile from '../components/CarMenuMobile'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -187,36 +189,9 @@ export default function RootLayout({
                         </button>
 
                         {/* Dropdown Content */}
-                        <div className="absolute top-full left-0 mt-2 w-40 xl:w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform scale-95 group-hover:scale-100 z-50">
-                           <div className="py-2">
-                              <Link
-                                 href="/cars/cars-4"
-                                 className="block px-3 xl:px-4 py-2 text-sm xl:text-base text-gray-800 hover:bg-red-50 hover:text-red-600 transition-colors"
-                              >
-                                 Xe 4 chỗ
-                              </Link>
-                              <Link
-                                 href="/cars/cars-7"
-                                 className="block px-3 xl:px-4 py-2 text-sm xl:text-base text-gray-800 hover:bg-red-50 hover:text-red-600 transition-colors"
-                              >
-                                 Xe 7 chỗ
-                              </Link>
-                              <Link
-                                 href="/cars/cars-16"
-                                 className="block px-3 xl:px-4 py-2 text-sm xl:text-base text-gray-800 hover:bg-red-50 hover:text-red-600 transition-colors"
-                              >
-                                 Xe 16 chỗ
-                              </Link>
-                              <Link
-                                 href="/cars/cars-limousine"
-                                 className="block px-3 xl:px-4 py-2 text-sm xl:text-base text-gray-800 hover:bg-red-50 hover:text-red-600 transition-colors"
-                              >
-                                 Xe Limousine
-                              </Link>
-                           </div>
-                        </div>
-                     </div>
 
+                        <CarTypeMenu />
+                     </div>
                      <Link
                         href="/posts"
                         className="relative text-black hover:text-red-700 transition group whitespace-nowrap"
@@ -333,34 +308,7 @@ export default function RootLayout({
                                     Bảng giá thuê xe
                                  </div>
                                  <div className="pl-4 space-y-2">
-                                    <Link
-                                       href="/cars/cars-4"
-                                       onClick={closeMobileMenu}
-                                       className="block py-2 px-4 text-gray-700 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-                                    >
-                                       Xe 4 chỗ
-                                    </Link>
-                                    <Link
-                                       href="/cars/cars-7"
-                                       onClick={closeMobileMenu}
-                                       className="block py-2 px-4 text-gray-700 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-                                    >
-                                       Xe 16 chỗ
-                                    </Link>
-                                    <Link
-                                       href="/cars/cars-16"
-                                       onClick={closeMobileMenu}
-                                       className="block py-2 px-4 text-gray-700 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-                                    >
-                                       Xe 7 chỗ
-                                    </Link>
-                                    <Link
-                                       href="/cars/cars-limousine"
-                                       onClick={closeMobileMenu}
-                                       className="block py-2 px-4 text-gray-700 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-                                    >
-                                       Xe Limousine
-                                    </Link>
+                                    <CarMenuMobile closeMobileMenu={closeMobileMenu} />
                                  </div>
                               </div>
 
