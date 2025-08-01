@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import type { Car } from '../../../../lib/models/car';
 import type { CarType } from '../../../../lib/models/car_type';
 
@@ -29,6 +29,35 @@ export default function CarManagement({
   onCarDelete,
   onCancelEdit
 }: CarManagementProps) {
+  // State cho tìm kiếm
+  const [startLocation, setStartLocation] = useState('');
+  const [endLocation, setEndLocation] = useState('');
+  const [selectedCarType, setSelectedCarType] = useState('');
+
+  // Lọc xe theo các tiêu chí
+  const filteredCars = useMemo(() => {
+    return cars.filter(car => {
+      // Lọc theo điểm đón
+      const matchesStartLocation = !startLocation || 
+        car.start_location.toLowerCase().includes(startLocation.toLowerCase());
+
+      // Lọc theo điểm đến
+      const matchesEndLocation = !endLocation || 
+        car.end_location.toLowerCase().includes(endLocation.toLowerCase());
+
+      // Lọc theo loại xe
+      const matchesCarType = !selectedCarType || car.slug === selectedCarType;
+
+      return matchesStartLocation && matchesEndLocation && matchesCarType;
+    });
+  }, [cars, startLocation, endLocation, selectedCarType]);
+
+  const clearFilters = () => {
+    setStartLocation('');
+    setEndLocation('');
+    setSelectedCarType('');
+  };
+
   return (
     <div className="space-y-6">
       {/* Form thêm/sửa xe ở trên */}
@@ -109,14 +138,62 @@ export default function CarManagement({
         </form>
       </div>
 
+      {/* Tìm kiếm */}
+      <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
+        <h3 className="text-xl font-semibold mb-4 text-slate-800 flex items-center gap-2">
+          <span className="text-blue-600">🔍</span>
+          Tìm kiếm xe
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          {/* Tìm theo điểm đón */}
+          <div>
+            <input
+              type="text"
+              placeholder="Nhập điểm đón..."
+              className="w-full border-2 border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800"
+              value={startLocation}
+              onChange={(e) => setStartLocation(e.target.value)}
+            />
+          </div>
+
+          {/* Tìm theo điểm đến */}
+          <div>
+            <input
+              type="text"
+              placeholder="Nhập điểm đến..."
+              className="w-full border-2 border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800"
+              value={endLocation}
+              onChange={(e) => setEndLocation(e.target.value)}
+            />
+          </div>
+
+          {/* Tìm theo loại xe */}
+          <div>
+            <select
+              className="w-full border-2 border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800"
+              value={selectedCarType}
+              onChange={(e) => setSelectedCarType(e.target.value)}
+            >
+              <option value="">Tất cả loại xe</option>
+              {carTypes.map(carType => (
+                <option key={carType.id} value={carType.slug}>
+                  {carType.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+
       {/* Danh sách xe ở dưới */}
       <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
         <h3 className="text-xl font-semibold mb-4 text-slate-800 flex items-center gap-2">
           <span className="text-blue-600">📋</span>
-          Danh sách xe ({cars.length})
+          Danh sách xe ({filteredCars.length})
         </h3>
         <div className="space-y-3">
-          {cars.map(car => (
+          {filteredCars.map(car => (
             <div key={car.id} className="border-2 border-slate-200 rounded-xl p-4 hover:shadow-md transition-shadow bg-slate-50">
               <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                 <div className="flex-1">
@@ -153,10 +230,12 @@ export default function CarManagement({
               </div>
             </div>
           ))}
-          {cars.length === 0 && (
+          {filteredCars.length === 0 && (
             <div className="text-center py-8 text-slate-500">
               <div className="text-4xl mb-2">🚗</div>
-              <div>Chưa có xe nào trong danh sách</div>
+              <div>
+                {cars.length === 0 ? 'Chưa có xe nào trong danh sách' : 'Không tìm thấy xe phù hợp với bộ lọc'}
+              </div>
             </div>
           )}
         </div>
