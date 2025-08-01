@@ -21,7 +21,7 @@ export default function RootLayout({
             {/* Header */}
             <header className="w-full shadow bg-white sticky top-0 z-50">
                <div className="w-full flex items-center justify-between py-3 px-25">
-                  <div className="flex items-center gap-3">
+                  <Link href="/" className="flex items-center gap-3 transition-opacity">
                      <img
                         src="/globe.svg"
                         alt="Logo"
@@ -30,7 +30,7 @@ export default function RootLayout({
                      <span className="text-xl font-bold text-black">
                         Thuexelientinh<span className="text-red-700">24H</span>
                      </span>
-                  </div>
+                  </Link>
                   <nav className="flex gap-6 text-base font-medium gap-15">
                      <Link
                         href="/"
@@ -39,16 +39,47 @@ export default function RootLayout({
                         Trang chủ
                         <span className="absolute left-0 -bottom-1 w-full h-0.5 bg-red-700 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
                      </Link>
-                     <Link
-                        href="/cars"
-                        className="relative text-black hover:text-red-700 transition group"
-                     >
-                        Bảng giá thuê xe
-                        <span className="absolute left-0 -bottom-1 w-full h-0.5 bg-red-700 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                     </Link>
+
+                     {/* Dropdown Menu */}
+                     <div className="relative group">
+                        <button className="relative text-black hover:text-red-700 transition group flex items-center gap-1">
+                           Bảng giá thuê xe
+                           <svg
+                              className="w-4 h-4 transition-transform group-hover:rotate-180"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                           >
+                              <path
+                                 fillRule="evenodd"
+                                 d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                 clipRule="evenodd"
+                              />
+                           </svg>
+                           <span className="absolute left-0 -bottom-1 w-full h-0.5 bg-red-700 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                        </button>
+
+                        {/* Dropdown Content */}
+                        <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform scale-95 group-hover:scale-100 z-50">
+                           <div className="py-2">
+                              <Link
+                                 href="/cars"
+                                 className="block px-4 py-2 text-gray-800 hover:bg-red-50 hover:text-red-600 transition-colors"
+                              >
+                                 Xe 4 chỗ
+                              </Link>
+                              <Link
+                                 href="/cars-7"
+                                 className="block px-4 py-2 text-gray-800 hover:bg-red-50 hover:text-red-600 transition-colors"
+                              >
+                                 Xe 7 chỗ
+                              </Link>
+                           </div>
+                        </div>
+                     </div>
+
                      <Link
                         href="/posts"
-                        className="relative text-black hover:text-red-700 transition group "
+                        className="relative text-black hover:text-red-700 transition group"
                      >
                         Bài viết
                         <span className="absolute left-0 -bottom-1 w-full h-0.5 bg-red-700 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
@@ -99,7 +130,7 @@ export default function RootLayout({
                   </div>
                   <div>
                      <div className="font-bold">Loại xe:</div>
-                     <div>Hợp đồng 4/7/16/29 chỗ đời mới</div>
+                     <div>Hợp đồng 4/7 chỗ đời mới</div>
                   </div>
                   <div>
                      <div className="font-bold">Dịch vụ:</div>
@@ -107,7 +138,7 @@ export default function RootLayout({
                   </div>
                </div>
                <div className="text-center text-xs text-gray-500 pb-2">
-                  © {new Date().getFullYear()} THUÊ XE VIP 24H. All rights reserved.
+                  © {new Date().getFullYear()} THUÊ XE LIÊN TỈNH 24H. All rights reserved.
                </div>
             </footer>
 

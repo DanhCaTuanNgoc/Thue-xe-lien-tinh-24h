@@ -17,8 +17,7 @@ export default function Home() {
                priority
             />
          </section>
-
-         {/* Pricing Section */}
+         {/* Pricing Section
          <section className="max-w-5xl mx-auto bg-white rounded-lg p-4 md:p-8 pb-8 mt-6 shadow-lg">
             <h1 className="text-3xl md:text-4xl font-bold text-black mb-2 text-center">
                BẢNG GIÁ THUÊ XE 4 CHỖ
@@ -157,7 +156,7 @@ export default function Home() {
                         <td className="border p-2 text-black">1,500,000</td>
                      </tr>
                      {/* ...Thêm các địa điểm khác nếu muốn... */}
-                  </tbody>
+         {/* </tbody>
                </table>
             </div>
             <div className="mt-6 text-black text-sm">
@@ -173,6 +172,158 @@ export default function Home() {
                <div className="mt-2">
                   Một số hạng mục như: thuế VAT 10%, phí qua trạm, tiền lưu trú qua đêm
                   của người lái xe,… sẽ được tư vấn cụ thể, minh bạch.
+               </div>
+            </div>
+         </section> */}
+         {/* Popular Destinations Section */}
+         <section className="max-w-6xl mx-auto py-12 px-4">
+            <div className="flex flex-col items-center mb-8">
+               <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center tracking-wide uppercase">
+                  ĐIỂM ĐẾN NỔI BẬT
+               </h2>
+               <div className="mt-2 flex items-center gap-2">
+                  <span className="block w-10 h-1 bg-gray-300 rounded-full"></span>
+                  <svg
+                     className="w-5 h-5 text-gray-400"
+                     fill="currentColor"
+                     viewBox="0 0 20 20"
+                  >
+                     <path d="M10 2a1 1 0 01.894.553l7 14A1 1 0 0117 18H3a1 1 0 01-.894-1.447l7-14A1 1 0 0110 2zm0 3.618L4.618 16h10.764L10 5.618z" />
+                  </svg>
+                  <span className="block w-10 h-1 bg-gray-300 rounded-full"></span>
+               </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+               {/* Đồng Nai */}
+               <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                  <div className="h-48 relative overflow-hidden">
+                     <Image
+                        src="/dongnai.png"
+                        alt="Đồng Nai"
+                        width={400}
+                        height={200}
+                        className="w-full h-full object-cover"
+                     />
+                     <div className="absolute inset-0 bg-opacity-40 flex items-center justify-center">
+                        <div className="text-center text-white">
+                           <h3 className="text-2xl font-bold mb-2">ĐỒNG NAI</h3>
+                           <p className="text-sm opacity-90">Thành phố công nghiệp</p>
+                        </div>
+                     </div>
+                  </div>
+                  <div className="p-6">
+                     <div className="flex justify-between items-center mb-3">
+                        <span className="text-gray-600 font-bold">Biên Hòa</span>
+                        <span className="text-red-600 font-bold">1,200,000đ</span>
+                     </div>
+                     <div className="text-xs text-gray-500 mb-4">
+                        <p>• Khoảng cách: 60km</p>
+                        <p>• Thời gian: 1 ngày</p>
+                        <p>• Xe 4 và 7 chỗ đời mới</p>
+                     </div>
+                     <button className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer">
+                        Xem ngay
+                     </button>
+                  </div>
+               </div>
+
+               {/* TP Huế */}
+               <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                  <div className="h-48 relative overflow-hidden">
+                     <Image
+                        src="/hue.jpg"
+                        alt="Huế"
+                        width={400}
+                        height={200}
+                        className="w-full h-full object-cover"
+                     />
+                     <div className="absolute inset-0 bg-opacity-40 flex items-center justify-center">
+                        <div className="text-center text-white">
+                           <h3 className="text-2xl font-bold mb-2">TP HUẾ</h3>
+                           <p className="text-sm opacity-90">Cố đô lịch sử</p>
+                        </div>
+                     </div>
+                  </div>
+                  <div className="p-6">
+                     <div className="flex justify-between items-center mb-3">
+                        <span className="text-gray-600 font-bold">TP Huế</span>
+                        <span className="text-red-600 font-bold">14,000,000đ</span>
+                     </div>
+                     <div className="text-xs text-gray-500 mb-4">
+                        <p>• Khoảng cách: 2,200km</p>
+                        <p>• Thời gian: 2 ngày</p>
+                        <p>• Xe 4 và 7 chỗ đời mới</p>
+                     </div>
+                     <button className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer">
+                        Xem ngay
+                     </button>
+                  </div>
+               </div>
+
+               {/* Lâm Đồng */}
+               <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                  <div className="h-48 relative overflow-hidden">
+                     <Image
+                        src="/lamdong.jpg"
+                        alt="Lâm Đồng"
+                        width={400}
+                        height={200}
+                        className="w-full h-full object-cover"
+                     />
+                     <div className="absolute inset-0 bg-opacity-40 flex items-center justify-center">
+                        <div className="text-center text-white">
+                           <h3 className="text-2xl font-bold mb-2">ĐÀ LẠT</h3>
+                           <p className="text-sm opacity-90">Thành phố ngàn hoa</p>
+                        </div>
+                     </div>
+                  </div>
+                  <div className="p-6">
+                     <div className="flex justify-between items-center mb-3">
+                        <span className="text-gray-600 font-bold">Đà Lạt</span>
+                        <span className="text-red-600 font-bold">3,300,000đ</span>
+                     </div>
+                     <div className="text-xs text-gray-500 mb-4">
+                        <p>• Khoảng cách: 600km</p>
+                        <p>• Thời gian: 1 ngày</p>
+                        <p>• Xe 4 và 7 chỗ đời mới</p>
+                     </div>
+                     <button className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer">
+                        Xem ngay
+                     </button>
+                  </div>
+               </div>
+
+               {/* Đắk Lắk */}
+               <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                  <div className="h-48 relative overflow-hidden">
+                     <Image
+                        src="/daklak.jpg"
+                        alt="ĐẮK LẮK"
+                        width={400}
+                        height={200}
+                        className="w-full h-full object-cover"
+                     />
+                     <div className="absolute inset-0 bg-opacity-40 flex items-center justify-center">
+                        <div className="text-center text-white">
+                           <h3 className="text-2xl font-bold mb-2">ĐẮK LẮK</h3>
+                           <p className="text-sm opacity-90">Tây Nguyên hùng vĩ</p>
+                        </div>
+                     </div>
+                  </div>
+                  <div className="p-6">
+                     <div className="flex justify-between items-center mb-3">
+                        <span className="text-gray-600 font-bold">Buôn Đôn</span>
+                        <span className="text-red-600 font-bold">3,200,000đ</span>
+                     </div>
+                     <div className="text-xs text-gray-500 mb-4">
+                        <p>• Khoảng cách: 720km</p>
+                        <p>• Thời gian: 1 ngày</p>
+                        <p>• Xe 4 và 7 chỗ đời mới</p>
+                     </div>
+                     <button className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer">
+                        Xem ngay
+                     </button>
+                  </div>
                </div>
             </div>
          </section>
