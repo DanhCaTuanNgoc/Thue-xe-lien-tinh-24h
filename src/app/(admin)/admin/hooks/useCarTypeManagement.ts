@@ -20,17 +20,32 @@ export function useCarTypeManagement() {
   const handleCarTypeSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    
     try {
+      // Validate required fields
+      if (!carTypeForm.name || !carTypeForm.slug) {
+        alert('Vui lòng nhập đầy đủ tên loại xe và slug!');
+        setLoading(false);
+        return;
+      }
+
+      console.log('Submitting car type form:', carTypeForm);
+      
       if (editingCarTypeId) {
+        console.log('Updating car type with ID:', editingCarTypeId);
         await updateCarType(editingCarTypeId, carTypeForm);
       } else {
-        await addCarType(carTypeForm as Omit<CarType, 'id'>);
+        console.log('Adding new car type');
+        const newCarType = await addCarType(carTypeForm as Omit<CarType, 'id'>);
+        console.log('New car type added:', newCarType);
       }
+      
       setCarTypeForm({});
       setEditingCarTypeId(null);
       await loadCarTypes();
     } catch (err) {
-      alert('Lỗi thao tác loại xe!');
+      console.error('Error submitting car type:', err);
+      alert('Lỗi thao tác loại xe! Vui lòng kiểm tra console để biết thêm chi tiết.');
     } finally {
       setLoading(false);
     }

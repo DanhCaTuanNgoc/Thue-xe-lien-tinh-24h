@@ -20,17 +20,32 @@ export function useCarManagement() {
   const handleCarSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    
     try {
+      // Validate required fields
+      if (!carForm.start_location || !carForm.end_location) {
+        alert('Vui lòng nhập đầy đủ điểm đi và điểm đến!');
+        setLoading(false);
+        return;
+      }
+
+      console.log('Submitting car form:', carForm);
+      
       if (editingCarId) {
+        console.log('Updating car with ID:', editingCarId);
         await updateCar(editingCarId, carForm);
       } else {
-        await addCar(carForm as Omit<Car, 'id'>);
+        console.log('Adding new car');
+        const newCar = await addCar(carForm as Omit<Car, 'id'>);
+        console.log('New car added:', newCar);
       }
+      
       setCarForm({});
       setEditingCarId(null);
       await loadCars();
     } catch (err) {
-      alert('Lỗi thao tác xe!');
+      console.error('Error submitting car:', err);
+      alert('Lỗi thao tác xe! Vui lòng kiểm tra console để biết thêm chi tiết.');
     } finally {
       setLoading(false);
     }

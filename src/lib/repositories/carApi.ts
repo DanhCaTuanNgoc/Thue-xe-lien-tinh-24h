@@ -1,5 +1,5 @@
 import { supabase } from '../supabaseClient';
-import type { Car } from '../../lib/models/car';
+import type { Car } from '../models/car';
 
 export async function fetchCars(): Promise<Car[]> {
   const { data, error } = await supabase
@@ -11,9 +11,17 @@ export async function fetchCars(): Promise<Car[]> {
 }
 
 export async function addCar(car: Omit<Car, 'id'>) {
+  // Generate a unique ID for the car
+  const carId = `car_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  
+  const carData = {
+    id: carId,
+    ...car
+  };
+
   const { data, error } = await supabase
     .from('cars')
-    .insert([car])
+    .insert([carData])
     .select();
   if (error) throw error;
   return data?.[0];

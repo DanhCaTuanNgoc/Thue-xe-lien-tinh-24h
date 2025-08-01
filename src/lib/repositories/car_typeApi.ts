@@ -12,7 +12,7 @@ export async function fetchCarTypes(): Promise<CarType[]> {
     id: item.id,
     name: item.name,
     slug: item.slug,
-    description: item.description,
+    description_price: item.description_price,
     image: item.img_url
   })) as CarType[];
 }
@@ -30,7 +30,7 @@ export async function fetchCarTypeById(id: number): Promise<CarType | null> {
     id: data.id,
     name: data.name,
     slug: data.slug,
-    description: data.description,
+    description_price: data.description_price,
     image: data.img_url
   } as CarType;
 }
@@ -48,7 +48,7 @@ export async function fetchCarTypeBySlug(slug: string): Promise<CarType | null> 
     id: data.id,
     name: data.name,
     slug: data.slug,
-    description: data.description,
+    description_price: data.description_price,
     image: data.img_url
   } as CarType;
 }
@@ -60,7 +60,7 @@ export async function addCarType(carType: Omit<CarType, 'id'>) {
     .insert([{
       name: carType.name,
       slug: carType.slug,
-      description: carType.description,
+      description_price: carType.description_price,
       img_url: carType.image
     }])
     .select();
@@ -70,7 +70,7 @@ export async function addCarType(carType: Omit<CarType, 'id'>) {
     id: data[0].id,
     name: data[0].name,
     slug: data[0].slug,
-    description: data[0].description,
+    description_price: data[0].description_price,
     image: data[0].img_url
   } as CarType;
 }
@@ -80,7 +80,7 @@ export async function updateCarType(id: number, carType: Partial<Omit<CarType, '
   const updateData: any = {};
   if (carType.name) updateData.name = carType.name;
   if (carType.slug) updateData.slug = carType.slug;
-  if (carType.description) updateData.description = carType.description;
+  if (carType.description_price) updateData.description_price = carType.description_price;
   if (carType.image) updateData.img_url = carType.image;
 
   const { data, error } = await supabase
@@ -94,7 +94,7 @@ export async function updateCarType(id: number, carType: Partial<Omit<CarType, '
     id: data[0].id,
     name: data[0].name,
     slug: data[0].slug,
-    description: data[0].description,
+    description_price: data[0].description_price,
     image: data[0].img_url
   } as CarType;
 }

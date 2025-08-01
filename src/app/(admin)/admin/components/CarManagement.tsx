@@ -2,9 +2,11 @@
 
 import React from 'react';
 import type { Car } from '../../../../lib/models/car';
+import type { CarType } from '../../../../lib/models/car_type';
 
 interface CarManagementProps {
   cars: Car[];
+  carTypes: CarType[]; // Thêm prop carTypes
   carForm: Partial<Omit<Car, 'id'>>;
   editingCarId: string | null;
   loading: boolean;
@@ -17,6 +19,7 @@ interface CarManagementProps {
 
 export default function CarManagement({
   cars,
+  carTypes,
   carForm,
   editingCarId,
   loading,
@@ -58,12 +61,18 @@ export default function CarManagement({
               value={carForm.distance||''} 
               onChange={e=>onCarFormChange({...carForm,distance:Number(e.target.value)})}
             />
-            <input 
-              placeholder="Loại xe" 
-              className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500" 
-              value={carForm.car_type||''} 
-              onChange={e=>onCarFormChange({...carForm,car_type:e.target.value})}
-            />
+            <select 
+              className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800" 
+              value={carForm.slug||''} 
+              onChange={e=>onCarFormChange({...carForm,slug:e.target.value})}
+            >
+              <option value="">-- Chọn loại xe --</option>
+              {carTypes.map(carType => (
+                <option key={carType.id} value={carType.slug}>
+                  {carType.name} ({carType.slug})
+                </option>
+              ))}
+            </select>
             <input 
               type="number" 
               placeholder="Giá (VNĐ)" 
@@ -110,7 +119,13 @@ export default function CarManagement({
                     <span className="text-blue-700">{car.end_location}</span>
                   </div>
                   <div className="text-sm text-slate-600 mt-1">
-                    {car.car_type} • {car.distance}km • {car.price?.toLocaleString()} VNĐ
+                    {car.slug && (
+                      <span className="mr-2">
+                        Loại xe: {carTypes.find(ct => ct.slug === car.slug)?.name || car.slug}
+                      </span>
+                    )}
+                    {car.distance && <span className="mr-2">• {car.distance}km</span>}
+                    {car.price && <span>• {car.price.toLocaleString()} VNĐ</span>}
                   </div>
                 </div>
                 <div className="flex gap-2">

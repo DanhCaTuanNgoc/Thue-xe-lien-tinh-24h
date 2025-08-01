@@ -3,6 +3,6 @@ export type Car = {
   start_location: string;
   end_location: string;
   distance?: number;
-  car_type?: string;
+  slug?: string;
   price?: number;
 }; 

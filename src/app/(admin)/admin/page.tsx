@@ -33,6 +33,7 @@ export default function AdminPage() {
     
     if (tab === 'car') {
       carManagement.loadCars();
+      carTypeManagement.loadCarTypes(); // Load car types for dropdown
     } else if (tab === 'post') {
       postManagement.loadPosts();
     } else if (tab === 'car_type') {
@@ -56,6 +57,7 @@ export default function AdminPage() {
         {tab === 'car' && (
           <CarManagement
             cars={carManagement.cars}
+            carTypes={carTypeManagement.carTypes}
             carForm={carManagement.carForm}
             editingCarId={carManagement.editingCarId}
             loading={carManagement.loading}
