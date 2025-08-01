@@ -2,179 +2,194 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import { useState, useEffect } from 'react'
 
 export default function Home() {
+   const [currentSlide, setCurrentSlide] = useState(0)
+
+   const slides = [
+      {
+         image: '/banner.jpg',
+         title: 'Thuê xe Sài Gòn <=> Vũng Tàu',
+         subtitle: 'Chỉ 850.000đ Có Ngay Xe 4 Chỗ',
+         price: '850.000đ',
+         buttonText: 'Đặt nhanh - Tư vấn miễn phí',
+         link: 'https://zalo.me/0978971421',
+      },
+      {
+         image: '/limouse-banner.jpg',
+         title: 'Đặt vé nhanh',
+         subtitle: 'Đặt vé Limousine chỉ từ 200.000đ',
+         subtitle2: 'Tư vấn báo giá miễn phí 24/7',
+         price: '1.200.000đ',
+         buttonText: 'Đặt nhanh - Tư vấn miễn phí',
+         link: 'https://zalo.me/0978971421',
+      },
+      {
+         image: '/banner3.jpg',
+         title: 'Đặt vé Sài Gòn <=> Vũng Tàu',
+         subtitle: 'Du lịch biển Vũng Tàu chỉ với 350.000đ',
+         price: '350.000đ',
+         buttonText: 'Đặt nhanh - Tư vấn miễn phí',
+         link: 'https://zalo.me/0978971421',
+      },
+   ]
+
+   // Auto-play functionality
+   useEffect(() => {
+      const timer = setInterval(() => {
+         setCurrentSlide((prev) => (prev + 1) % slides.length)
+      }, 15000)
+
+      return () => clearInterval(timer)
+   }, [slides.length])
+
+   const goToSlide = (index: number) => {
+      setCurrentSlide(index)
+   }
+
+   const nextSlide = () => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length)
+   }
+
+   const prevSlide = () => {
+      setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
+   }
+
    return (
       <>
-         {/* Banner Section */}
-         <section className="relative w-full md:h-[350px] overflow-hidden">
-            <Image
-               src="/banner.jpg"
-               alt="Banner thuê xe"
-               width={1920}
-               height={500}
-               className="w-full h-full object-cover"
-               priority
-            />
+         {/* Banner Carousel Section */}
+         <section className="relative w-full h-[280px] sm:h-[300px] md:h-[350px] lg:h-[400px] overflow-hidden">
+            {/* Slides */}
+            <div className="relative w-full h-full">
+               {slides.map((slide, index) => (
+                  <div
+                     key={index}
+                     className={`absolute inset-0 transition-opacity duration-1000 ${
+                        index === currentSlide ? 'opacity-100' : 'opacity-0'
+                     }`}
+                  >
+                     <Image
+                        src={slide.image}
+                        alt={`Banner ${index + 1}`}
+                        width={1920}
+                        height={500}
+                        className="w-full h-full object-cover"
+                        priority={index === 0}
+                     />
+                     {/* Overlay content */}
+                     <div className="absolute inset-0 flex items-center justify-center p-2 sm:p-3 md:p-4">
+                        <div className="bg-[rgba(0,0,0,0.5)] rounded-lg sm:rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8 max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-2xl mx-auto">
+                           <div className="text-center text-white">
+                              <h1 className="text-[20px] sm:text-[25px] md:text-[35px] lg:text-[47px] font-bold mb-2 sm:mb-3 md:mb-4 drop-shadow-lg leading-tight">
+                                 {slide.title}
+                              </h1>
+                              <p className="text-sm sm:text-base md:text-xl lg:text-2xl font-semibold mb-3 sm:mb-4 drop-shadow-lg leading-tight">
+                                 {slide.subtitle.includes('850.000đ') ? (
+                                    <>
+                                       Chỉ <span className="text-red-500">850.000đ</span>{' '}
+                                       Có Ngay Xe 4 Chỗ
+                                    </>
+                                 ) : slide.subtitle.includes('350.000đ') ? (
+                                    <>
+                                       Du lịch biển Vũng Tàu chỉ với{' '}
+                                       <span className="text-red-500">350.000đ</span>
+                                    </>
+                                 ) : slide.subtitle.includes('200.000đ') ? (
+                                    <>
+                                       Đặt vé Limousine chỉ từ{' '}
+                                       <span className="text-red-500">200.000đ</span>
+                                    </>
+                                 ) : (
+                                    slide.subtitle
+                                 )}
+                              </p>
+                              <p className="text-sm sm:text-base md:text-xl lg:text-2xl font-semibold mb-3 sm:mb-4 drop-shadow-lg leading-tight">
+                                 {slide.subtitle2}
+                              </p>
+                              <div className="flex justify-center">
+                                 <a
+                                    className="bg-red-600 hover:bg-red-700 text-white font-bold py-1.5 sm:py-2 px-3 sm:px-4 rounded-md sm:rounded-lg text-xs sm:text-sm md:text-base transition-colors duration-300 shadow-lg flex items-center gap-1 sm:gap-2 cursor-pointer"
+                                    href={slide.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                 >
+                                    <svg
+                                       className="w-3 h-3 sm:w-4 sm:h-4"
+                                       fill="currentColor"
+                                       viewBox="0 0 20 20"
+                                    >
+                                       <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                                    </svg>
+                                    <span className="whitespace-nowrap">
+                                       {slide.buttonText}
+                                    </span>
+                                 </a>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               ))}
+            </div>
+
+            {/* Navigation Arrows */}
+            <button
+               onClick={prevSlide}
+               className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-2 rounded-full transition-all duration-300 z-10"
+               aria-label="Previous slide"
+            >
+               <svg
+                  className="w-4 h-4 sm:w-6 sm:h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+               >
+                  <path
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     strokeWidth={2}
+                     d="M15 19l-7-7 7-7"
+                  />
+               </svg>
+            </button>
+            <button
+               onClick={nextSlide}
+               className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-2 rounded-full transition-all duration-300 z-10"
+               aria-label="Next slide"
+            >
+               <svg
+                  className="w-4 h-4 sm:w-6 sm:h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+               >
+                  <path
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     strokeWidth={2}
+                     d="M9 5l7 7-7 7"
+                  />
+               </svg>
+            </button>
+
+            {/* Dots Indicator */}
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+               {slides.map((_, index) => (
+                  <button
+                     key={index}
+                     onClick={() => goToSlide(index)}
+                     className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
+                        index === currentSlide
+                           ? 'bg-white scale-125'
+                           : 'bg-white bg-opacity-50 hover:bg-opacity-75'
+                     }`}
+                     aria-label={`Go to slide ${index + 1}`}
+                  />
+               ))}
+            </div>
          </section>
-         {/* Pricing Section
-         <section className="max-w-5xl mx-auto bg-white rounded-lg p-4 md:p-8 pb-8 mt-6 shadow-lg">
-            <h1 className="text-3xl md:text-4xl font-bold text-black mb-2 text-center">
-               BẢNG GIÁ THUÊ XE 4 CHỖ
-            </h1>
-            <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
-               <div className="text-lg font-semibold text-black">
-                  Chỉ <span className="text-red-600 text-2xl font-bold">850.000đ</span> Có
-                  Ngay Xe 4 Chỗ
-               </div>
-               <div className="bg-yellow-400 px-4 py-2 rounded shadow font-bold text-lg text-red-700 flex items-center gap-2">
-                  <span>Hotline:</span>
-                  <a href="tel:0978971421" className="underline">
-                     0978 971 421
-                  </a>
-               </div>
-            </div>
-            <div className="overflow-x-auto">
-               <table className="min-w-full border border-gray-300 text-sm md:text-base">
-                  <thead className="bg-red-600 text-white">
-                     <tr>
-                        <th className="p-2 border">Địa điểm</th>
-                        <th className="p-2 border">Thời gian</th>
-                        <th className="p-2 border">Km</th>
-                        <th className="p-2 border">Xe 4 chỗ</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr className="bg-gray-50 font-bold">
-                        <td colSpan={4} className="text-black">
-                           Hồ Chí Minh
-                        </td>
-                     </tr>
-                     <tr>
-                        <td className="border p-2 text-black">Sân Bay</td>
-                        <td className="border p-2 text-black">1 ngày</td>
-                        <td className="border p-2 text-black">10</td>
-                        <td className="border p-2 text-black">500,000</td>
-                     </tr>
-                     <tr>
-                        <td className="border p-2 text-black">
-                           City tour (4 tiếng/50km)
-                        </td>
-                        <td className="border p-2 text-black">1 ngày</td>
-                        <td className="border p-2 text-black">50</td>
-                        <td className="border p-2 text-black">900,000</td>
-                     </tr>
-                     <tr>
-                        <td className="border p-2 text-black">
-                           City tour (8 tiếng/100km)
-                        </td>
-                        <td className="border p-2 text-black">1 ngày</td>
-                        <td className="border p-2 text-black">100</td>
-                        <td className="border p-2 text-black">1,100,000</td>
-                     </tr>
-                     <tr>
-                        <td className="border p-2 text-black">Củ Chi</td>
-                        <td className="border p-2 text-black">1 ngày</td>
-                        <td className="border p-2 text-black">100</td>
-                        <td className="border p-2 text-black">1,100,000</td>
-                     </tr>
-                     <tr>
-                        <td className="border p-2 text-black">Cần Giờ</td>
-                        <td className="border p-2 text-black">1 ngày</td>
-                        <td className="border p-2 text-black">130</td>
-                        <td className="border p-2 text-black">1,400,000</td>
-                     </tr>
-                     <tr className="bg-gray-50 font-bold">
-                        <td colSpan={4} className="text-black">
-                           Bình Dương
-                        </td>
-                     </tr>
-                     <tr>
-                        <td className="border p-2 text-black">Dĩ An</td>
-                        <td className="border p-2 text-black">1 ngày</td>
-                        <td className="border p-2 text-black">50</td>
-                        <td className="border p-2 text-black">1,200,000</td>
-                     </tr>
-                     <tr>
-                        <td className="border p-2 text-black">Khu du lịch Thủy Châu</td>
-                        <td className="border p-2 text-black">1 ngày</td>
-                        <td className="border p-2 text-black">50</td>
-                        <td className="border p-2 text-black">1,200,000</td>
-                     </tr>
-                     <tr>
-                        <td className="border p-2 text-black">TP Thủ Dầu 1</td>
-                        <td className="border p-2 text-black">1 ngày</td>
-                        <td className="border p-2 text-black">80</td>
-                        <td className="border p-2 text-black">1,100,000</td>
-                     </tr>
-                     <tr>
-                        <td className="border p-2 text-black">KCN VSIP 1 và 2</td>
-                        <td className="border p-2 text-black">1 ngày</td>
-                        <td className="border p-2 text-black">80</td>
-                        <td className="border p-2 text-black">1,100,000</td>
-                     </tr>
-                     <tr>
-                        <td className="border p-2 text-black">TP mới Bình Dương</td>
-                        <td className="border p-2 text-black">1 ngày</td>
-                        <td className="border p-2 text-black">80</td>
-                        <td className="border p-2 text-black">1,200,000</td>
-                     </tr>
-                     <tr>
-                        <td className="border p-2 text-black">Khu du lịch Đại Nam</td>
-                        <td className="border p-2 text-black">1 ngày</td>
-                        <td className="border p-2 text-black">80</td>
-                        <td className="border p-2 text-black">1,100,000</td>
-                     </tr>
-                     <tr>
-                        <td className="border p-2 text-black">Tân Uyên</td>
-                        <td className="border p-2 text-black">1 ngày</td>
-                        <td className="border p-2 text-black">100</td>
-                        <td className="border p-2 text-black">1,200,000</td>
-                     </tr>
-                     <tr>
-                        <td className="border p-2 text-black">Bến Cát</td>
-                        <td className="border p-2 text-black">1 ngày</td>
-                        <td className="border p-2 text-black">100</td>
-                        <td className="border p-2 text-black">1,200,000</td>
-                     </tr>
-                     <tr>
-                        <td className="border p-2 text-black">Phú Giáo</td>
-                        <td className="border p-2 text-black">1 ngày</td>
-                        <td className="border p-2 text-black">130</td>
-                        <td className="border p-2 text-black">1,300,000</td>
-                     </tr>
-                     <tr>
-                        <td className="border p-2 text-black">Bàu Bàng</td>
-                        <td className="border p-2 text-black">1 ngày</td>
-                        <td className="border p-2 text-black">130</td>
-                        <td className="border p-2 text-black">1,300,000</td>
-                     </tr>
-                     <tr>
-                        <td className="border p-2 text-black">Dầu Tiếng</td>
-                        <td className="border p-2 text-black">1 ngày</td>
-                        <td className="border p-2 text-black">170</td>
-                        <td className="border p-2 text-black">1,500,000</td>
-                     </tr>
-                     {/* ...Thêm các địa điểm khác nếu muốn... */}
-         {/* </tbody>
-               </table>
-            </div>
-            <div className="mt-6 text-black text-sm">
-               <div className="font-bold mb-1">Bảng giá trên đã bao gồm:</div>
-               <ul className="list-disc pl-6">
-                  <li>Xe ô tô 4 chỗ đời mới nhất được quý khách tận tay chọn lựa.</li>
-                  <li>
-                     Bảo hiểm bắt buộc (tai nạn 100 triệu/người, thân vỏ xe, miễn trừ
-                     trách nhiệm).
-                  </li>
-                  <li>Phí xăng dầu đi đường, bảo dưỡng xe.</li>
-               </ul>
-               <div className="mt-2">
-                  Một số hạng mục như: thuế VAT 10%, phí qua trạm, tiền lưu trú qua đêm
-                  của người lái xe,… sẽ được tư vấn cụ thể, minh bạch.
-               </div>
-            </div>
-         </section> */}
+
          {/* Popular Destinations Section */}
          <section className="max-w-6xl mx-auto py-12 px-4">
             <div className="flex flex-col items-center mb-8">
@@ -194,135 +209,262 @@ export default function Home() {
                </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-               {/* Đồng Nai */}
+               {/* Núi Bà Đen */}
                <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                   <div className="h-48 relative overflow-hidden">
                      <Image
-                        src="/dongnai.png"
-                        alt="Đồng Nai"
+                        src="/nuibaden.jpg"
+                        alt="Núi Bà Đen"
                         width={400}
                         height={200}
                         className="w-full h-full object-cover"
                      />
                      <div className="absolute inset-0 bg-opacity-40 flex items-center justify-center">
                         <div className="text-center text-white">
-                           <h3 className="text-2xl font-bold mb-2">ĐỒNG NAI</h3>
-                           <p className="text-sm opacity-90">Thành phố công nghiệp</p>
+                           <h3 className="text-2xl font-bold mb-2">NÚI BÀ ĐEN</h3>
+                           <p className="text-sm opacity-90">Nóc nhà Nam Bộ</p>
                         </div>
                      </div>
                   </div>
                   <div className="p-6">
                      <div className="flex justify-between items-center mb-3">
-                        <span className="text-gray-600 font-bold">Biên Hòa</span>
-                        <span className="text-red-600 font-bold">1,200,000đ</span>
+                        <span className="text-gray-600 font-bold">Tây Ninh</span>
+                        <span className="text-red-600 font-bold">1,900,000đ</span>
                      </div>
                      <div className="text-xs text-gray-500 mb-4">
-                        <p>• Khoảng cách: 60km</p>
+                        <p>• Khoảng cách: 100km</p>
                         <p>• Thời gian: 1 ngày</p>
                         <p>• Xe 4 và 7 chỗ đời mới</p>
                      </div>
-                     <button className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer">
-                        Xem ngay
-                     </button>
+                     <Link href="/cars/cars-4" legacyBehavior>
+                        <a className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer block text-center">
+                           Xem ngay
+                        </a>
+                     </Link>
                   </div>
                </div>
 
-               {/* TP Huế */}
+               {/* Vũng Tàu */}
                <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                   <div className="h-48 relative overflow-hidden">
                      <Image
-                        src="/hue.jpg"
-                        alt="Huế"
+                        src="/vungtau.jpg"
+                        alt="Vũng Tàu"
                         width={400}
                         height={200}
                         className="w-full h-full object-cover"
                      />
                      <div className="absolute inset-0 bg-opacity-40 flex items-center justify-center">
                         <div className="text-center text-white">
-                           <h3 className="text-2xl font-bold mb-2">TP HUẾ</h3>
-                           <p className="text-sm opacity-90">Cố đô lịch sử</p>
+                           <h3 className="text-2xl font-bold mb-2">VŨNG TÀU</h3>
+                           <p className="text-sm opacity-90">Thành phố biển sôi động</p>
                         </div>
                      </div>
                   </div>
                   <div className="p-6">
                      <div className="flex justify-between items-center mb-3">
-                        <span className="text-gray-600 font-bold">TP Huế</span>
-                        <span className="text-red-600 font-bold">14,000,000đ</span>
+                        <span className="text-gray-600 font-bold">Vũng Tàu</span>
+                        <span className="text-red-600 font-bold">1,500,000đ</span>
                      </div>
                      <div className="text-xs text-gray-500 mb-4">
-                        <p>• Khoảng cách: 2,200km</p>
+                        <p>• Khoảng cách: 100km</p>
+                        <p>• Thời gian: 1 ngày</p>
+                        <p>• Xe 4 và 7 chỗ đời mới</p>
+                     </div>
+                     <Link href="/cars/cars-4" legacyBehavior>
+                        <a className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer block text-center">
+                           Xem ngay
+                        </a>
+                     </Link>
+                  </div>
+               </div>
+
+               {/* Phan Thiết */}
+               <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                  <div className="h-48 relative overflow-hidden">
+                     <Image
+                        src="/phanthiet.jpg"
+                        alt="Phan Thiết"
+                        width={400}
+                        height={200}
+                        className="w-full h-full object-cover"
+                     />
+                     <div className="absolute inset-0 bg-opacity-40 flex items-center justify-center">
+                        <div className="text-center text-white">
+                           <h3 className="text-2xl font-bold mb-2">PHAN THIẾT</h3>
+                           <p className="text-sm opacity-90">Biển xanh cát trắng</p>
+                        </div>
+                     </div>
+                  </div>
+                  <div className="p-6">
+                     <div className="flex justify-between items-center mb-3">
+                        <span className="text-gray-600 font-bold">Phan Thiết</span>
+                        <span className="text-red-600 font-bold">2,500,000đ</span>
+                     </div>
+                     <div className="text-xs text-gray-500 mb-4">
+                        <p>• Khoảng cách: 200-400km</p>
                         <p>• Thời gian: 2 ngày</p>
                         <p>• Xe 4 và 7 chỗ đời mới</p>
                      </div>
-                     <button className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer">
-                        Xem ngay
-                     </button>
+                     <Link href="/cars/cars-4" legacyBehavior>
+                        <a className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer block text-center">
+                           Xem ngay
+                        </a>
+                     </Link>
                   </div>
                </div>
-
-               {/* Lâm Đồng */}
+               {/* Nha Trang */}
                <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                   <div className="h-48 relative overflow-hidden">
                      <Image
-                        src="/lamdong.jpg"
-                        alt="Lâm Đồng"
+                        src="/nhatrang.jpg"
+                        alt="Nha Trang"
                         width={400}
                         height={200}
                         className="w-full h-full object-cover"
                      />
                      <div className="absolute inset-0 bg-opacity-40 flex items-center justify-center">
                         <div className="text-center text-white">
-                           <h3 className="text-2xl font-bold mb-2">ĐÀ LẠT</h3>
-                           <p className="text-sm opacity-90">Thành phố ngàn hoa</p>
+                           <h3 className="text-2xl font-bold mb-2">Nha Trang</h3>
+                           <p className="text-sm opacity-90">Thành phố biển</p>
                         </div>
                      </div>
                   </div>
                   <div className="p-6">
                      <div className="flex justify-between items-center mb-3">
-                        <span className="text-gray-600 font-bold">Đà Lạt</span>
-                        <span className="text-red-600 font-bold">3,300,000đ</span>
+                        <span className="text-gray-600 font-bold">Nha Trang</span>
+                        <span className="text-red-600 font-bold">2,500,000đ</span>
                      </div>
                      <div className="text-xs text-gray-500 mb-4">
-                        <p>• Khoảng cách: 600km</p>
-                        <p>• Thời gian: 1 ngày</p>
+                        <p>• Khoảng cách: 200-400km</p>
+                        <p>• Thời gian: 2 ngày</p>
                         <p>• Xe 4 và 7 chỗ đời mới</p>
                      </div>
-                     <button className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer">
-                        Xem ngay
-                     </button>
+                     <Link href="/cars/cars-4" legacyBehavior>
+                        <a className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer block text-center">
+                           Xem ngay
+                        </a>
+                     </Link>
+                  </div>
+               </div>
+            </div>
+         </section>
+
+         {/* Customer Reviews Section */}
+         <section className="max-w-6xl mx-auto py-12 px-4 bg-gray-50">
+            <div className="flex flex-col items-center mb-8">
+               <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center tracking-wide uppercase">
+                  ĐÁNH GIÁ TỪ KHÁCH HÀNG
+               </h2>
+               <div className="mt-2 flex items-center gap-2">
+                  <span className="block w-10 h-1 bg-gray-300 rounded-full"></span>
+                  <svg
+                     className="w-5 h-5 text-gray-400"
+                     fill="currentColor"
+                     viewBox="0 0 20 20"
+                  >
+                     <path d="M10 2a1 1 0 01.894.553l7 14A1 1 0 0117 18H3a1 1 0 01-.894-1.447l7-14A1 1 0 0110 2zm0 3.618L4.618 16h10.764L10 5.618z" />
+                  </svg>
+                  <span className="block w-10 h-1 bg-gray-300 rounded-full"></span>
+               </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+               {/* Review 1 */}
+               <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                  <div className="flex items-center mb-4">
+                     <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                        <span className="text-red-600 font-bold text-lg">N</span>
+                     </div>
+                     <div>
+                        <h4 className="font-bold text-gray-800">Nguyễn Văn An</h4>
+                        <div className="flex items-center">
+                           {[...Array(5)].map((_, i) => (
+                              <svg
+                                 key={i}
+                                 className="w-4 h-4 text-yellow-400"
+                                 fill="currentColor"
+                                 viewBox="0 0 20 20"
+                              >
+                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </svg>
+                           ))}
+                        </div>
+                     </div>
+                  </div>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                     &quot;Dịch vụ rất tốt! Tài xế chuyên nghiệp, xe sạch sẽ. Đi Vũng Tàu
+                     chỉ 350.000đ, giá cả hợp lý. Sẽ ủng hộ lại!&quot;
+                  </p>
+                  <div className="mt-4 text-xs text-gray-500">
+                     <p>• Điểm đến: Vũng Tàu</p>
+                     <p>• Loại xe: Xe 4 chỗ</p>
+                     <p>• Ngày đi: 15/12/2024</p>
                   </div>
                </div>
 
-               {/* Đắk Lắk */}
-               <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-                  <div className="h-48 relative overflow-hidden">
-                     <Image
-                        src="/daklak.jpg"
-                        alt="ĐẮK LẮK"
-                        width={400}
-                        height={200}
-                        className="w-full h-full object-cover"
-                     />
-                     <div className="absolute inset-0 bg-opacity-40 flex items-center justify-center">
-                        <div className="text-center text-white">
-                           <h3 className="text-2xl font-bold mb-2">ĐẮK LẮK</h3>
-                           <p className="text-sm opacity-90">Tây Nguyên hùng vĩ</p>
+               {/* Review 2 */}
+               <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                  <div className="flex items-center mb-4">
+                     <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                        <span className="text-blue-600 font-bold text-lg">T</span>
+                     </div>
+                     <div>
+                        <h4 className="font-bold text-gray-800">Trần Thị Bình</h4>
+                        <div className="flex items-center">
+                           {[...Array(5)].map((_, i) => (
+                              <svg
+                                 key={i}
+                                 className="w-4 h-4 text-yellow-400"
+                                 fill="currentColor"
+                                 viewBox="0 0 20 20"
+                              >
+                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </svg>
+                           ))}
                         </div>
                      </div>
                   </div>
-                  <div className="p-6">
-                     <div className="flex justify-between items-center mb-3">
-                        <span className="text-gray-600 font-bold">Buôn Đôn</span>
-                        <span className="text-red-600 font-bold">3,200,000đ</span>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                     &quot;Đi đoàn 7 người đi Nha Trang, xe 7 chỗ rộng rãi, tài xế lái xe
+                     an toàn. Giá cả phải chăng, phục vụ chu đáo!&quot;
+                  </p>
+                  <div className="mt-4 text-xs text-gray-500">
+                     <p>• Điểm đến: Nha Trang</p>
+                     <p>• Loại xe: Xe 7 chỗ</p>
+                     <p>• Ngày đi: 20/12/2024</p>
+                  </div>
+               </div>
+
+               {/* Review 3 */}
+               <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                  <div className="flex items-center mb-4">
+                     <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                        <span className="text-green-600 font-bold text-lg">L</span>
                      </div>
-                     <div className="text-xs text-gray-500 mb-4">
-                        <p>• Khoảng cách: 720km</p>
-                        <p>• Thời gian: 1 ngày</p>
-                        <p>• Xe 4 và 7 chỗ đời mới</p>
+                     <div>
+                        <h4 className="font-bold text-gray-800">Lê Minh Cường</h4>
+                        <div className="flex items-center">
+                           {[...Array(5)].map((_, i) => (
+                              <svg
+                                 key={i}
+                                 className="w-4 h-4 text-yellow-400"
+                                 fill="currentColor"
+                                 viewBox="0 0 20 20"
+                              >
+                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </svg>
+                           ))}
+                        </div>
                      </div>
-                     <button className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-semibold cursor-pointer">
-                        Xem ngay
-                     </button>
+                  </div>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                     &quot;Thuê xe Limousine đi công tác, xe đẹp, nội thất sang trọng. Tài
+                     xế chuyên nghiệp, đúng giờ. Rất hài lòng!&quot;
+                  </p>
+                  <div className="mt-4 text-xs text-gray-500">
+                     <p>• Điểm đến: Phan Thiết</p>
+                     <p>• Loại xe: Limousine</p>
+                     <p>• Ngày đi: 25/12/2024</p>
                   </div>
                </div>
             </div>
@@ -330,9 +472,22 @@ export default function Home() {
 
          {/* Process Section */}
          <section className="max-w-6xl mx-auto py-12 px-4">
-            <h2 className="text-3xl md:text-4xl font-bold text-black text-center mb-12">
-               QUY TRÌNH ĐẶT XE
-            </h2>
+            <div className="flex flex-col items-center mb-8">
+               <h2 className="text-3xl md:text-4xl font-bold text-black text-center">
+                  QUY TRÌNH ĐẶT XE
+               </h2>
+               <div className="mt-2 flex items-center gap-2">
+                  <span className="block w-10 h-1 bg-gray-300 rounded-full"></span>
+                  <svg
+                     className="w-5 h-5 text-gray-400"
+                     fill="currentColor"
+                     viewBox="0 0 20 20"
+                  >
+                     <path d="M10 2a1 1 0 01.894.553l7 14A1 1 0 0117 18H3a1 1 0 01-.894-1.447l7-14A1 1 0 0110 2zm0 3.618L4.618 16h10.764L10 5.618z" />
+                  </svg>
+                  <span className="block w-10 h-1 bg-gray-300 rounded-full"></span>
+               </div>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                {/* Step 1 */}
                <div className="bg-white rounded-lg p-6 text-center shadow-md hover:shadow-lg transition-shadow">
