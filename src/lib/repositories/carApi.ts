@@ -3,7 +3,7 @@ import type { Car } from '../../lib/models/car';
 
 export async function fetchCars(): Promise<Car[]> {
   const { data, error } = await supabase
-    .from('car_rental_prices')
+    .from('cars')
     .select('*')
     .order('start_location');
   if (error) throw error;
@@ -12,7 +12,7 @@ export async function fetchCars(): Promise<Car[]> {
 
 export async function addCar(car: Omit<Car, 'id'>) {
   const { data, error } = await supabase
-    .from('car_rental_prices')
+    .from('cars')
     .insert([car])
     .select();
   if (error) throw error;
@@ -21,7 +21,7 @@ export async function addCar(car: Omit<Car, 'id'>) {
 
 export async function updateCar(id: string, car: Partial<Omit<Car, 'id'>>) {
   const { data, error } = await supabase
-    .from('car_rental_prices')
+    .from('cars')
     .update(car)
     .eq('id', id)
     .select();
@@ -31,7 +31,7 @@ export async function updateCar(id: string, car: Partial<Omit<Car, 'id'>>) {
 
 export async function deleteCar(id: string) {
   const { error } = await supabase
-    .from('car_rental_prices')
+    .from('cars')
     .delete()
     .eq('id', id);
   if (error) throw error;
