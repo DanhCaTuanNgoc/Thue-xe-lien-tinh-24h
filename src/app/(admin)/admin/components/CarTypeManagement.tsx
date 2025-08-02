@@ -90,7 +90,7 @@ export default function CarTypeManagement({
                {/* Image Upload Section */}
                <div className="space-y-3">
                   <label className="block text-sm font-semibold text-slate-700">
-                     Hình ảnh loại xe
+                     Hình ảnh loại xe (tùy chọn)
                   </label>
                   {/* File Upload */}
                   <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
@@ -109,7 +109,7 @@ export default function CarTypeManagement({
                         📁 Chọn ảnh từ máy tính
                      </button>
                      <p className="text-sm text-slate-500 mt-2">
-                        Chọn ảnh đại diện cho loại xe
+                        Chọn ảnh đại diện cho loại xe (không bắt buộc)
                      </p>
                   </div>
 
@@ -135,6 +135,19 @@ export default function CarTypeManagement({
                               ×
                            </button>
                         </div>
+                     </div>
+                  )}
+                  
+                  {/* No Image Message */}
+                  {!carTypeForm.image && (
+                     <div className="text-sm text-slate-500 bg-slate-100 p-3 rounded-lg border border-slate-200">
+                        <div className="flex items-center gap-2">
+                           <span>ℹ️</span>
+                           <span>Chưa có hình ảnh cho loại xe này</span>
+                        </div>
+                        <p className="text-xs text-slate-400 mt-1">
+                           Bạn có thể thêm hình ảnh sau hoặc để trống
+                        </p>
                      </div>
                   )}
                </div>

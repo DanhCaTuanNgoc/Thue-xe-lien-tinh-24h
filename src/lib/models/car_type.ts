@@ -3,5 +3,5 @@ export interface CarType {
    name: string
    slug: string
    description_price?: string
-   image: string
+   image?: string
 }

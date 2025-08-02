@@ -10,7 +10,7 @@ export async function fetchCarTypes(): Promise<CarType[]> {
       name: item.name,
       slug: item.slug,
       description_price: item.description_price,
-      image: item.img_url,
+      image: item.img_url || '',
    })) as CarType[]
 }
 
@@ -28,7 +28,7 @@ export async function fetchCarTypeById(id: number): Promise<CarType | null> {
       name: data.name,
       slug: data.slug,
       description_price: data.description_price,
-      image: data.img_url,
+      image: data.img_url || '',
    } as CarType
 }
 
@@ -59,7 +59,7 @@ export async function addCarType(carType: Omit<CarType, 'id'>) {
             name: carType.name,
             slug: carType.slug,
             description_price: carType.description_price,
-            img_url: carType.image,
+            img_url: carType.image || null,
          },
       ])
       .select()
@@ -76,11 +76,12 @@ export async function addCarType(carType: Omit<CarType, 'id'>) {
 
 // Cập nhật loại xe
 export async function updateCarType(id: number, carType: Partial<Omit<CarType, 'id'>>) {
-   const updateData: Partial<CarType> = {}
+   const updateData: any = {}
    if (carType.name) updateData.name = carType.name
    if (carType.slug) updateData.slug = carType.slug
    if (carType.description_price) updateData.description_price = carType.description_price
-   if (carType.image) updateData.image = carType.image
+   // Handle image field - can be null, undefined, or a string
+   if (carType.image !== undefined) updateData.img_url = carType.image || null
 
    const { data, error } = await supabase
       .from('car_types')
