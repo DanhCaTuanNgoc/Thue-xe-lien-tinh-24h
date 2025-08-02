@@ -39,6 +39,9 @@ export function useCarTypeManagement() {
         const newCarType = await addCarType(carTypeForm as Omit<CarType, 'id'>);
         console.log('New car type added:', newCarType);
       }
+      if (!carTypeForm.image) {
+        carTypeForm.image = undefined;
+      }
       
       setCarTypeForm({});
       setEditingCarTypeId(null);

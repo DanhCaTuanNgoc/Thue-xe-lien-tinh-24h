@@ -7,12 +7,14 @@ import {
    CarManagement,
    CarTypeManagement,
    PostManagement,
+   FeaturedLocationManagement,
 } from './components'
 import {
    useAdminAuth,
    useCarManagement,
    useCarTypeManagement,
    usePostManagement,
+   useFeaturedLocationManagement,
 } from './hooks'
 
 export default function AdminPage() {
@@ -20,12 +22,13 @@ export default function AdminPage() {
    const { authenticated, error, handleLogin } = useAdminAuth()
 
    // Tabs
-   const [tab, setTab] = React.useState<'car' | 'post' | 'car_type'>('car')
+   const [tab, setTab] = React.useState<'car' | 'post' | 'car_type' | 'featured_locations'>('car')
 
    // Hooks for different management sections
    const carManagement = useCarManagement()
    const carTypeManagement = useCarTypeManagement()
    const postManagement = usePostManagement()
+   const featuredLocationManagement = useFeaturedLocationManagement()
 
    // Fetch data when authenticated and tab changes
    useEffect(() => {
@@ -38,6 +41,8 @@ export default function AdminPage() {
          postManagement.loadPosts()
       } else if (tab === 'car_type') {
          carTypeManagement.loadCarTypes()
+      } else if (tab === 'featured_locations') {
+         featuredLocationManagement.loadLocations()
       }
    }, [authenticated, tab])
 
@@ -97,6 +102,20 @@ export default function AdminPage() {
                   onCancelEdit={postManagement.handleCancelEdit}
                   onImageUpload={postManagement.handleImageUpload}
                   onRemoveImage={postManagement.removeImage}
+               />
+            )}
+
+            {tab === 'featured_locations' && (
+               <FeaturedLocationManagement
+                  locations={featuredLocationManagement.locations}
+                  locationForm={featuredLocationManagement.locationForm}
+                  editingLocationId={featuredLocationManagement.editingLocationId}
+                  loading={featuredLocationManagement.loading}
+                  onLocationFormChange={featuredLocationManagement.setLocationForm}
+                  onLocationSubmit={featuredLocationManagement.handleLocationSubmit}
+                  onLocationEdit={featuredLocationManagement.handleLocationEdit}
+                  onLocationDelete={featuredLocationManagement.handleLocationDelete}
+                  onCancelEdit={featuredLocationManagement.handleCancelEdit}
                />
             )}
          </div>
