@@ -76,7 +76,12 @@ export async function addCarType(carType: Omit<CarType, 'id'>) {
 
 // Cập nhật loại xe
 export async function updateCarType(id: number, carType: Partial<Omit<CarType, 'id'>>) {
-   const updateData: any = {}
+   const updateData: {
+      name?: string;
+      slug?: string;
+      description_price?: string;
+      img_url?: string | null;
+   } = {}
    if (carType.name) updateData.name = carType.name
    if (carType.slug) updateData.slug = carType.slug
    if (carType.description_price) updateData.description_price = carType.description_price
