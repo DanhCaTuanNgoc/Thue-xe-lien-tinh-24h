@@ -20,33 +20,6 @@ export default function SearchForm() {
                className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px] text-black bg-white"
             />
          </div>
-         {/* Khoảng cách */}
-         <div className="flex flex-col w-full md:w-1/4">
-            <label
-               htmlFor="search-distance-min"
-               className="font-semibold mb-1 text-gray-700"
-            >
-               Khoảng cách (Km)
-            </label>
-            <div className="flex gap-2">
-               <input
-                  id="search-distance-min"
-                  name="distanceMin"
-                  type="number"
-                  min={0}
-                  placeholder="VD: 10"
-                  className="border border-gray-300 rounded px-3 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px] text-black bg-white"
-               />
-               <input
-                  id="search-distance-max"
-                  name="distanceMax"
-                  type="number"
-                  min={0}
-                  placeholder="VD: 100"
-                  className="border border-gray-300 rounded px-3 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px] text-black bg-white"
-               />
-            </div>
-         </div>
          {/* Khoảng giá */}
          <div className="flex flex-col w-full md:w-1/4">
             <label

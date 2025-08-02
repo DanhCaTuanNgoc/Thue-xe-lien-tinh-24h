@@ -1,12 +1,16 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import type { Car } from '../../../lib/models/car'
-import { fetchCars, fetchCarBySlug } from '../../../lib/repositories/carApi'
-import { formatVND } from '../../../app/(admin)/admin/hooks/formatCurrency'
+import { fetchCarBySlug } from '../../../lib/repositories/carApi'
 
 export default function CarSearchClient({ slug }: { slug: string }) {
    const [cars, setCars] = useState<Car[]>([])
    const [loading, setLoading] = useState(false)
+   
+   // Search state
+   const [searchLocation, setSearchLocation] = useState('')
+   const [priceMin, setPriceMin] = useState('')
+   const [priceMax, setPriceMax] = useState('')
 
    // Tải tất cả dữ liệu xe khi component mount
    useEffect(() => {
@@ -16,16 +20,58 @@ export default function CarSearchClient({ slug }: { slug: string }) {
             setCars(data)
          })
          .finally(() => setLoading(false))
-   }, [])
+   }, [slug])
+
+   // Filter cars based on search criteria
+   const filteredCars = useMemo(() => {
+      return cars.filter((car) => {
+         // Filter by location (province or end_location)
+         const locationMatch = !searchLocation || 
+            car.province.toLowerCase().includes(searchLocation.toLowerCase()) ||
+            car.end_location.toLowerCase().includes(searchLocation.toLowerCase())
+
+         // Filter by price range
+         const priceMatch = (() => {
+            // If no price filters are set, return true
+            if (!priceMin && !priceMax) return true
+            
+            // Convert car price to number for comparison (remove commas first)
+            const carPriceString = String(car.price || '').replace(/,/g, '')
+            const carPrice = Number(carPriceString)
+            if (isNaN(carPrice)) return false
+            
+            // Check min price
+            if (priceMin && carPrice < Number(priceMin)) return false
+            
+            // Check max price
+            if (priceMax && carPrice > Number(priceMax)) return false
+            
+            return true
+         })()
+
+         return locationMatch && priceMatch
+      })
+   }, [cars, searchLocation, priceMin, priceMax])
+
+   const handleSearch = (e: React.FormEvent) => {
+      e.preventDefault()
+      // Search is handled by filteredCars automatically
+   }
+
+   const clearSearch = () => {
+      setSearchLocation('')
+      setPriceMin('')
+      setPriceMax('')
+   }
 
    return (
       <div>
          <form
             className="flex flex-col md:flex-row gap-4 items-center justify-between bg-gray-50 rounded-lg p-4 shadow"
-            onSubmit={(e) => e.preventDefault()}
+            onSubmit={handleSearch}
          >
             {/* Địa điểm */}
-            <div className="flex flex-col w-full md:w-1/4">
+            <div className="flex flex-col w-full md:w-1/3">
                <label
                   htmlFor="search-location"
                   className="font-semibold mb-1 text-gray-700"
@@ -37,38 +83,14 @@ export default function CarSearchClient({ slug }: { slug: string }) {
                   name="location"
                   type="text"
                   placeholder="VD: Vũng Tàu, Biên Hòa..."
+                  value={searchLocation}
+                  onChange={(e) => setSearchLocation(e.target.value)}
                   className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px] text-black bg-white"
                />
             </div>
-            {/* Khoảng cách */}
-            <div className="flex flex-col w-full md:w-1/4">
-               <label
-                  htmlFor="search-distance-min"
-                  className="font-semibold mb-1 text-gray-700"
-               >
-                  Khoảng cách (Km)
-               </label>
-               <div className="flex gap-2">
-                  <input
-                     id="search-distance-min"
-                     name="distanceMin"
-                     type="number"
-                     min={0}
-                     placeholder="VD: 10"
-                     className="border border-gray-300 rounded px-3 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px] text-black bg-white"
-                  />
-                  <input
-                     id="search-distance-max"
-                     name="distanceMax"
-                     type="number"
-                     min={0}
-                     placeholder="VD: 100"
-                     className="border border-gray-300 rounded px-3 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px] text-black bg-white"
-                  />
-               </div>
-            </div>
+            
             {/* Khoảng giá */}
-            <div className="flex flex-col w-full md:w-1/4">
+            <div className="flex flex-col w-full md:w-1/3">
                <label
                   htmlFor="search-price-min"
                   className="font-semibold mb-1 text-gray-700"
@@ -81,6 +103,9 @@ export default function CarSearchClient({ slug }: { slug: string }) {
                      name="priceMin"
                      type="number"
                      min={0}
+                     placeholder="Từ"
+                     value={priceMin}
+                     onChange={(e) => setPriceMin(e.target.value)}
                      className="border border-gray-300 rounded px-3 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px] text-black bg-white"
                   />
                   <input
@@ -88,15 +113,18 @@ export default function CarSearchClient({ slug }: { slug: string }) {
                      name="priceMax"
                      type="number"
                      min={0}
+                     placeholder="Đến"
+                     value={priceMax}
+                     onChange={(e) => setPriceMax(e.target.value)}
                      className="border border-gray-300 rounded px-3 py-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px] text-black bg-white"
                   />
                </div>
             </div>
             {/* Nút tìm kiếm */}
-            <div className="flex items-end w-full md:w-auto">
+            <div className="flex items-end gap-2 w-full md:w-1/3">
                <button
                   type="submit"
-                  className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg transition-colors duration-300 shadow flex items-center justify-center gap-2 cursor-pointer w-full md:w-auto"
+                  className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg transition-colors duration-300 shadow flex items-center justify-center gap-2 cursor-pointer flex-1"
                >
                   <svg
                      className="w-5 h-5 text-white"
@@ -124,10 +152,31 @@ export default function CarSearchClient({ slug }: { slug: string }) {
                   </svg>
                   Tìm kiếm
                </button>
+               <button
+                  type="button"
+                  onClick={clearSearch}
+                  className="bg-gray-500 hover:bg-gray-600 text-white font-bold px-4 py-2 rounded-lg transition-colors duration-300 shadow flex items-center justify-center gap-2 cursor-pointer"
+               >
+                  🗑️ Xóa
+               </button>
             </div>
          </form>
 
-         <div className="overflow-x-auto pt-8">
+         {/* Search Results Info */}
+         <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+            <div className="flex items-center justify-between">
+               <span className="text-blue-800 font-medium">
+                  Kết quả tìm kiếm: {filteredCars.length} xe
+               </span>
+               {(searchLocation || priceMin || priceMax) && (
+                  <span className="text-blue-600 text-sm">
+                     Đang lọc dữ liệu...
+                  </span>
+               )}
+            </div>
+         </div>
+
+         <div className="overflow-x-auto pt-4">
             <table className="min-w-full border border-gray-200 text-sm md:text-base">
                <thead>
                   <tr className="bg-gray-100 text-gray-700">
@@ -152,16 +201,16 @@ export default function CarSearchClient({ slug }: { slug: string }) {
                         </td>
                      </tr>
                   )}
-                  {!loading && cars.length === 0 && (
+                  {!loading && filteredCars.length === 0 && (
                      <tr>
                         <td colSpan={5} className="text-center py-4 text-gray-400">
-                           Hiện chưa có dữ liệu
+                           {cars.length === 0 ? 'Hiện chưa có dữ liệu' : 'Không tìm thấy xe phù hợp với bộ lọc'}
                         </td>
                      </tr>
                   )}
                   {!loading &&
-                     cars.map((item) => (
-                        <tr key={item.id} className="bg-white text-gray-700">
+                     filteredCars.map((item) => (
+                        <tr key={item.id} className="bg-white text-gray-700 hover:bg-gray-50 transition-colors">
                            <td className="px-4 py-2 border-b text-gray-700">
                               {item.province}
                            </td>

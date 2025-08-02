@@ -30,34 +30,51 @@ export default function CarManagement({
    onCancelEdit,
 }: CarManagementProps) {
    // State cho tìm kiếm
-   const [startLocation, setStartLocation] = useState('')
-   const [endLocation, setEndLocation] = useState('')
+   const [searchLocation, setSearchLocation] = useState('')
    const [selectedCarType, setSelectedCarType] = useState('')
+   const [priceMin, setPriceMin] = useState('')
+   const [priceMax, setPriceMax] = useState('')
 
    // Lọc xe theo các tiêu chí
    const filteredCars = useMemo(() => {
       return cars.filter((car) => {
-         // Lọc theo tỉnh
-         const matchesStartLocation =
-            !startLocation ||
-            car.province.toLowerCase().includes(startLocation.toLowerCase())
-
-         // Lọc theo điểm đến
-         const matchesEndLocation =
-            !endLocation ||
-            car.end_location.toLowerCase().includes(endLocation.toLowerCase())
+         // Lọc theo địa điểm (tỉnh hoặc điểm đến)
+         const matchesLocation =
+            !searchLocation ||
+            car.province.toLowerCase().includes(searchLocation.toLowerCase()) ||
+            car.end_location.toLowerCase().includes(searchLocation.toLowerCase())
 
          // Lọc theo loại xe
          const matchesCarType = !selectedCarType || car.slug === selectedCarType
 
-         return matchesStartLocation && matchesEndLocation && matchesCarType
+         // Lọc theo khoảng giá
+         const matchesPrice = (() => {
+            // If no price filters are set, return true
+            if (!priceMin && !priceMax) return true
+            
+            // Convert car price to number for comparison (remove commas first)
+            const carPriceString = String(car.price || '').replace(/,/g, '')
+            const carPrice = Number(carPriceString)
+            if (isNaN(carPrice)) return false
+            
+            // Check min price
+            if (priceMin && carPrice < Number(priceMin)) return false
+            
+            // Check max price
+            if (priceMax && carPrice > Number(priceMax)) return false
+            
+            return true
+         })()
+
+         return matchesLocation && matchesCarType && matchesPrice
       })
-   }, [cars, startLocation, endLocation, selectedCarType])
+   }, [cars, searchLocation, selectedCarType, priceMin, priceMax])
 
    const clearFilters = () => {
-      setStartLocation('')
-      setEndLocation('')
+      setSearchLocation('')
       setSelectedCarType('')
+      setPriceMin('')
+      setPriceMax('')
    }
 
    return (
@@ -164,30 +181,25 @@ export default function CarManagement({
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-               {/* Tìm theo tỉnh */}
+               {/* Tìm theo địa điểm */}
                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">
+                     Địa điểm
+                  </label>
                   <input
                      type="text"
-                     placeholder="Nhập tỉnh..."
+                     placeholder="Nhập địa điểm..."
                      className="w-full border-2 border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800"
-                     value={startLocation}
-                     onChange={(e) => setStartLocation(e.target.value)}
-                  />
-               </div>
-
-               {/* Tìm theo điểm đến */}
-               <div>
-                  <input
-                     type="text"
-                     placeholder="Nhập điểm đến..."
-                     className="w-full border-2 border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800"
-                     value={endLocation}
-                     onChange={(e) => setEndLocation(e.target.value)}
+                     value={searchLocation}
+                     onChange={(e) => setSearchLocation(e.target.value)}
                   />
                </div>
 
                {/* Tìm theo loại xe */}
                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">
+                     Loại xe
+                  </label>
                   <select
                      className="w-full border-2 border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800"
                      value={selectedCarType}
@@ -200,6 +212,29 @@ export default function CarManagement({
                         </option>
                      ))}
                   </select>
+               </div>
+
+               {/* Tìm theo khoảng giá */}
+               <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">
+                     Khoảng giá (VNĐ)
+                  </label>
+                  <div className="flex gap-2">
+                     <input
+                        type="number"
+                        placeholder="Từ"
+                        className="w-1/2 border-2 border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800"
+                        value={priceMin}
+                        onChange={(e) => setPriceMin(e.target.value)}
+                     />
+                     <input
+                        type="number"
+                        placeholder="Đến"
+                        className="w-1/2 border-2 border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800"
+                        value={priceMax}
+                        onChange={(e) => setPriceMax(e.target.value)}
+                     />
+                  </div>
                </div>
             </div>
          </div>
