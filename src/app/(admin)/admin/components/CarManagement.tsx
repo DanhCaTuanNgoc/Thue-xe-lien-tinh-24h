@@ -37,10 +37,10 @@ export default function CarManagement({
    // Lọc xe theo các tiêu chí
    const filteredCars = useMemo(() => {
       return cars.filter((car) => {
-         // Lọc theo điểm đón
+         // Lọc theo tỉnh
          const matchesStartLocation =
             !startLocation ||
-            car.start_location.toLowerCase().includes(startLocation.toLowerCase())
+            car.province.toLowerCase().includes(startLocation.toLowerCase())
 
          // Lọc theo điểm đến
          const matchesEndLocation =
@@ -73,11 +73,11 @@ export default function CarManagement({
                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <input
                      required
-                     placeholder="Điểm đón"
+                     placeholder="Tỉnh"
                      className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
-                     value={carForm.start_location || ''}
+                     value={carForm.province || ''}
                      onChange={(e) =>
-                        onCarFormChange({ ...carForm, start_location: e.target.value })
+                        onCarFormChange({ ...carForm, province: e.target.value })
                      }
                   />
                   <input
@@ -164,11 +164,11 @@ export default function CarManagement({
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-               {/* Tìm theo điểm đón */}
+               {/* Tìm theo tỉnh */}
                <div>
                   <input
                      type="text"
-                     placeholder="Nhập điểm đón..."
+                     placeholder="Nhập tỉnh..."
                      className="w-full border-2 border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800"
                      value={startLocation}
                      onChange={(e) => setStartLocation(e.target.value)}
@@ -219,7 +219,7 @@ export default function CarManagement({
                      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                         <div className="flex-1">
                            <div className="font-semibold text-slate-800">
-                              <span className="text-blue-600">{car.start_location}</span>
+                              <span className="text-blue-600">{car.province}</span>
                               <span className="mx-2">→</span>
                               <span className="text-blue-700">{car.end_location}</span>
                            </div>

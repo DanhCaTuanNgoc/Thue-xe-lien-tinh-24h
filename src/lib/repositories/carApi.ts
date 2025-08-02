@@ -2,7 +2,7 @@ import { supabase } from '../supabaseClient'
 import type { Car } from '../models/car'
 
 export async function fetchCars(): Promise<Car[]> {
-   const { data, error } = await supabase.from('cars').select('*').order('start_location')
+   const { data, error } = await supabase.from('cars').select('*').order('province')
    if (error) throw error
    return data as Car[]
 }
@@ -38,7 +38,7 @@ export async function fetchCarBySlug(slug: string): Promise<Car[]> {
       .from('cars')
       .select('*')
       .eq('slug', slug)
-      .order('start_location')
+      .order('province')
    if (error) throw error
    return data as Car[]
 }

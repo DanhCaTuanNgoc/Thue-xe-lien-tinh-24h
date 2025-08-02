@@ -1,6 +1,6 @@
 export type Car = {
   id: string;
-  start_location: string;
+  province: string;
   end_location: string;
   distance?: number;
   slug?: string;

@@ -29,7 +29,7 @@ export function useCarManagement() {
 
       try {
          // Validate required fields
-         if (!carForm.start_location || !carForm.end_location) {
+         if (!carForm.province || !carForm.end_location) {
             alert('Vui lòng nhập đầy đủ điểm đi và điểm đến!')
             setLoading(false)
             return

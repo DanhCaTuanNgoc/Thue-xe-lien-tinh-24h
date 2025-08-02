@@ -12,7 +12,7 @@
 //          {cars.map((car) => (
 //             <div key={car.id} className="border rounded p-4 shadow">
 //                <div>
-//                   <b>Điểm đi:</b> {car.start_location}
+//                   <b>Điểm đi:</b> {car.province}
 //                </div>
 //                <div>
 //                   <b>Điểm đến:</b> {car.end_location}
