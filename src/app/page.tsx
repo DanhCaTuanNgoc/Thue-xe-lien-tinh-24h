@@ -341,7 +341,7 @@ export default function Home() {
                      <div className="text-xs text-gray-500 mb-4">
                         <p>• Khoảng cách: 200-400km</p>
                         <p>• Thời gian: 2 ngày</p>
-                        <p>• Xe 4 và 7 chỗ đời mới</p>
+                        <p>• Xe 4 và 7 chỗ đời mới Xe 4 và 7 chỗ đời mớiXe 4 và 7 chỗ đời mới Xe 4 và 7 chỗ đời mớiXe 4 và 7 chỗ đời mới</p>
                      </div>
                      <Link
                         href="https://zalo.me/0978971421"

@@ -121,7 +121,7 @@ export default function CarSearchClient({ slug }: { slug: string }) {
                </div>
             </div>
             {/* Nút tìm kiếm */}
-            <div className="flex items-end gap-2 w-full md:w-1/3">
+            <div className="flex items-end gap-2 w-full md:w-1/3 mt-6">
                <button
                   type="submit"
                   className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg transition-colors duration-300 shadow flex items-center justify-center gap-2 cursor-pointer flex-1"
@@ -163,7 +163,7 @@ export default function CarSearchClient({ slug }: { slug: string }) {
          </form>
 
          {/* Search Results Info */}
-         <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+         {/* <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
             <div className="flex items-center justify-between">
                <span className="text-blue-800 font-medium">
                   Kết quả tìm kiếm: {filteredCars.length} xe
@@ -174,7 +174,7 @@ export default function CarSearchClient({ slug }: { slug: string }) {
                   </span>
                )}
             </div>
-         </div>
+         </div> */}
 
          <div className="overflow-x-auto pt-4">
             <table className="min-w-full border border-gray-200 text-sm md:text-base">

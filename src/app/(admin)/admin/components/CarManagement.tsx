@@ -51,18 +51,18 @@ export default function CarManagement({
          const matchesPrice = (() => {
             // If no price filters are set, return true
             if (!priceMin && !priceMax) return true
-            
+
             // Convert car price to number for comparison (remove commas first)
             const carPriceString = String(car.price || '').replace(/,/g, '')
             const carPrice = Number(carPriceString)
             if (isNaN(carPrice)) return false
-            
+
             // Check min price
             if (priceMin && carPrice < Number(priceMin)) return false
-            
+
             // Check max price
             if (priceMax && carPrice > Number(priceMax)) return false
-            
+
             return true
          })()
 
@@ -254,9 +254,11 @@ export default function CarManagement({
                      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                         <div className="flex-1">
                            <div className="font-semibold text-slate-800">
-                              <span className="text-blue-600">{car.province}</span>
-                              <span className="mx-2">→</span>
-                              <span className="text-blue-700">{car.end_location}</span>
+                              <span className="text-blue-600">Tỉnh: {car.province}</span>
+                              <span className="mx-2">|</span>
+                              <span className="text-blue-700">
+                                 Địa điểm: {car.end_location}
+                              </span>
                            </div>
                            <div className="text-sm text-slate-600 mt-1">
                               {car.slug && (

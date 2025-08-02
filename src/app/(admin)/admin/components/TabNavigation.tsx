@@ -21,7 +21,7 @@ export default function TabNavigation({ currentTab, onTabChange }: TabNavigation
                }`}
                onClick={() => onTabChange('car')}
             >
-               🚗 Quản lý xe
+               🚗 Quản lý chuyến xe
             </button>
             <button
                className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 cursor-pointer ${

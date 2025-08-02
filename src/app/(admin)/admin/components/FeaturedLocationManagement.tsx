@@ -85,15 +85,16 @@ export default function FeaturedLocationManagement({
    // Reset image preview when form is cleared (after submit or cancel)
    React.useEffect(() => {
       // Check if form is empty (no data in any field)
-      const isFormEmpty = !locationForm.title && 
-                         !locationForm.name && 
-                         !locationForm.subtitle && 
-                         !locationForm.price && 
-                         !locationForm.distance_km && 
-                         !locationForm.duration_days && 
-                         !locationForm.car_description && 
-                         !locationForm.image_url
-      
+      const isFormEmpty =
+         !locationForm.title &&
+         !locationForm.name &&
+         !locationForm.subtitle &&
+         !locationForm.price &&
+         !locationForm.distance_km &&
+         !locationForm.duration_days &&
+         !locationForm.car_description &&
+         !locationForm.image_url
+
       if (isFormEmpty && !editingLocationId) {
          setImagePreview(null)
       }
@@ -118,16 +119,19 @@ export default function FeaturedLocationManagement({
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                      <input
                         required
-                        placeholder="Tiêu đề"
+                        placeholder="Tiêu đề (VD: NÚI BÀ ĐEN)"
                         className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
                         value={locationForm.title || ''}
                         onChange={(e) =>
-                           onLocationFormChange({ ...locationForm, title: e.target.value })
+                           onLocationFormChange({
+                              ...locationForm,
+                              title: e.target.value,
+                           })
                         }
                      />
                      <input
                         required
-                        placeholder="Tên địa điểm"
+                        placeholder="Tên địa điểm (VD: Tây Ninh)"
                         className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
                         value={locationForm.name || ''}
                         onChange={(e) =>
@@ -135,11 +139,14 @@ export default function FeaturedLocationManagement({
                         }
                      />
                      <input
-                        placeholder="Phụ đề"
+                        placeholder="Phụ đề (VD: Nóc nhà Nam Bộ)"
                         className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 md:col-span-2"
                         value={locationForm.subtitle || ''}
                         onChange={(e) =>
-                           onLocationFormChange({ ...locationForm, subtitle: e.target.value })
+                           onLocationFormChange({
+                              ...locationForm,
+                              subtitle: e.target.value,
+                           })
                         }
                      />
                   </div>
@@ -158,7 +165,10 @@ export default function FeaturedLocationManagement({
                         className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
                         value={locationForm.price || ''}
                         onChange={(e) =>
-                           onLocationFormChange({ ...locationForm, price: Number(e.target.value) })
+                           onLocationFormChange({
+                              ...locationForm,
+                              price: Number(e.target.value),
+                           })
                         }
                      />
                      <input
@@ -167,7 +177,10 @@ export default function FeaturedLocationManagement({
                         className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
                         value={locationForm.distance_km || ''}
                         onChange={(e) =>
-                           onLocationFormChange({ ...locationForm, distance_km: Number(e.target.value) })
+                           onLocationFormChange({
+                              ...locationForm,
+                              distance_km: Number(e.target.value),
+                           })
                         }
                      />
                      <input
@@ -176,7 +189,10 @@ export default function FeaturedLocationManagement({
                         className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
                         value={locationForm.duration_days || ''}
                         onChange={(e) =>
-                           onLocationFormChange({ ...locationForm, duration_days: Number(e.target.value) })
+                           onLocationFormChange({
+                              ...locationForm,
+                              duration_days: Number(e.target.value),
+                           })
                         }
                      />
                   </div>
@@ -189,12 +205,15 @@ export default function FeaturedLocationManagement({
                      Mô tả xe
                   </h3>
                   <textarea
-                     placeholder="Mô tả xe "
+                     placeholder="Mô tả các phương tiện phục vụ (VD: Xe 4 và 7 chỗ đời mới)"
                      rows={3}
                      className="w-full border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 resize-none"
                      value={locationForm.car_description || ''}
                      onChange={(e) =>
-                        onLocationFormChange({ ...locationForm, car_description: e.target.value })
+                        onLocationFormChange({
+                           ...locationForm,
+                           car_description: e.target.value,
+                        })
                      }
                   />
                </div>
@@ -203,9 +222,9 @@ export default function FeaturedLocationManagement({
                <div className="bg-slate-50 rounded-lg p-4">
                   <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
                      <span className="text-blue-600">🖼️</span>
-                     Hình ảnh
+                     Hình ảnh cho địa điểm nổi bật
                   </h3>
-                  
+
                   {/* File Upload */}
                   <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
                      <input
@@ -223,13 +242,17 @@ export default function FeaturedLocationManagement({
                      >
                         📁 Chọn ảnh từ máy tính
                      </button>
-                     <p className="text-sm text-slate-500 mt-2">Chọn một ảnh để hiển thị cho địa điểm này</p>
+                     <p className="text-sm text-slate-500 mt-2">
+                        Chọn một ảnh để hiển thị cho địa điểm này
+                     </p>
                   </div>
-                  
+
                   {/* Image Preview */}
                   {imagePreview && (
                      <div className="mt-4 space-y-3">
-                        <h4 className="text-sm font-semibold text-slate-700">Xem trước ảnh</h4>
+                        <h4 className="text-sm font-semibold text-slate-700">
+                           Xem trước ảnh
+                        </h4>
                         <div className="relative group">
                            <img
                               src={imagePreview}
@@ -246,7 +269,7 @@ export default function FeaturedLocationManagement({
                         </div>
                      </div>
                   )}
-                  
+
                   {/* Existing Image Display */}
                   {locationForm.image_url && !imagePreview && (
                      <div className="mt-4 text-sm text-slate-600 bg-white p-3 rounded-lg border border-slate-200">
@@ -328,19 +351,25 @@ export default function FeaturedLocationManagement({
                            <div className="font-semibold text-slate-800">
                               <span className="text-blue-600">{location.title}</span>
                               {location.subtitle && (
-                                 <span className="text-slate-600 ml-2">- {location.subtitle}</span>
+                                 <span className="text-slate-600 ml-2">
+                                    - {location.subtitle}
+                                 </span>
                               )}
                            </div>
                            <div className="text-sm text-slate-600 mt-1">
                               <span className="mr-2">📍 {location.name}</span>
                               {location.price && (
-                                 <span className="mr-2">• {location.price.toLocaleString()} VNĐ</span>
+                                 <span className="mr-2">
+                                    • {location.price.toLocaleString()} VNĐ
+                                 </span>
                               )}
                               {location.distance_km && (
                                  <span className="mr-2">• {location.distance_km}km</span>
                               )}
                               {location.duration_days && (
-                                 <span className="mr-2">• {location.duration_days} ngày</span>
+                                 <span className="mr-2">
+                                    • {location.duration_days} ngày
+                                 </span>
                               )}
                               {location.car_description && (
                                  <span>• {location.car_description}</span>
@@ -383,4 +412,4 @@ export default function FeaturedLocationManagement({
          </div>
       </div>
    )
-} 
+}
