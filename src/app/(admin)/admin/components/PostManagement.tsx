@@ -63,14 +63,6 @@ export default function PostManagement({
           <div className="space-y-3">
             <label className="block text-sm font-semibold text-slate-700">Hình ảnh bài viết</label>
             
-            {/* URL Input */}
-            <input 
-              placeholder="URL ảnh (tùy chọn)" 
-              className="w-full border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500" 
-              value={postForm.image||''} 
-              onChange={e=>onPostFormChange({...postForm,image:e.target.value})}
-            />
-            
             {/* File Upload */}
             <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
               <input

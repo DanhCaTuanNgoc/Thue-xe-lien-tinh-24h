@@ -35,6 +35,68 @@ export default function CarManagement({
    const [priceMin, setPriceMin] = useState('')
    const [priceMax, setPriceMax] = useState('')
 
+   // State cho validation errors
+   const [errors, setErrors] = useState<{
+      province?: string
+      end_location?: string
+      distance?: string
+      price?: string
+      time?: string
+   }>({})
+
+   // Hàm kiểm tra ký tự hợp lệ cho text
+   const isValidTextCharacter = (char: string) => {
+      return /[a-zA-ZÀ-ỹ0-9\s]/.test(char)
+   }
+
+   // Hàm xử lý input text với validation
+   const handleTextInputChange = (field: string, value: string) => {
+      // Kiểm tra từng ký tự
+      const invalidChars = value.split('').filter(char => !isValidTextCharacter(char))
+      
+      if (invalidChars.length > 0) {
+         setErrors(prev => ({
+            ...prev,
+            [field]: `Không được chứa ký tự đặc biệt: ${invalidChars.join(', ')}`
+         }))
+         return
+      }
+
+      // Xóa lỗi nếu input hợp lệ
+      setErrors(prev => ({
+         ...prev,
+         [field]: undefined
+      }))
+
+      onCarFormChange({
+         ...carForm,
+         [field]: value
+      })
+   }
+
+   // Hàm xử lý input số với validation
+   const handleNumberInputChange = (field: string, value: string) => {
+      // Kiểm tra xem có phải toàn số không (không có dấu chấm)
+      if (value && !/^\d+$/.test(value)) {
+         setErrors(prev => ({
+            ...prev,
+            [field]: 'Chỉ được nhập số nguyên từ 0-9'
+         }))
+         return
+      }
+
+      // Xóa lỗi nếu input hợp lệ
+      setErrors(prev => ({
+         ...prev,
+         [field]: undefined
+      }))
+
+      onCarFormChange({
+         ...carForm,
+         [field]: value ? Number(value) : undefined
+      })
+   }
+
    // Lọc xe theo các tiêu chí
    const filteredCars = useMemo(() => {
       return cars.filter((car) => {
@@ -91,30 +153,83 @@ export default function CarManagement({
                   <input
                      required
                      placeholder="Tỉnh"
-                     className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                     className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
+                        errors.province ? 'border-red-500' : 'border-slate-200'
+                     }`}
                      value={carForm.province || ''}
                      onChange={(e) =>
-                        onCarFormChange({ ...carForm, province: e.target.value })
+                        handleTextInputChange('province', e.target.value)
                      }
+                     onKeyDown={(e) => {
+                        // Cho phép: chữ cái, số, khoảng trắng, backspace, delete, arrow keys, tab, enter
+                        const allowedKeys = [
+                           'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '
+                        ]
+                        const isLetter = /[a-zA-ZÀ-ỹ]/.test(e.key)
+                        const isNumber = /[0-9]/.test(e.key)
+                        const isAllowedKey = allowedKeys.includes(e.key)
+                        
+                        if (!isLetter && !isNumber && !isAllowedKey) {
+                           e.preventDefault()
+                        }
+                     }}
                   />
+                  {errors.province && (
+                     <p className="text-red-500 text-xs mt-1">{errors.province}</p>
+                  )}
                   <input
                      required
                      placeholder="Điểm đến"
-                     className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                     className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
+                        errors.end_location ? 'border-red-500' : 'border-slate-200'
+                     }`}
                      value={carForm.end_location || ''}
                      onChange={(e) =>
-                        onCarFormChange({ ...carForm, end_location: e.target.value })
+                        handleTextInputChange('end_location', e.target.value)
                      }
+                     onKeyDown={(e) => {
+                        // Cho phép: chữ cái, số, khoảng trắng, backspace, delete, arrow keys, tab, enter
+                        const allowedKeys = [
+                           'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '
+                        ]
+                        const isLetter = /[a-zA-ZÀ-ỹ]/.test(e.key)
+                        const isNumber = /[0-9]/.test(e.key)
+                        const isAllowedKey = allowedKeys.includes(e.key)
+                        
+                        if (!isLetter && !isNumber && !isAllowedKey) {
+                           e.preventDefault()
+                        }
+                     }}
                   />
+                  {errors.end_location && (
+                     <p className="text-red-500 text-xs mt-1">{errors.end_location}</p>
+                  )}
                   <input
                      type="number"
                      placeholder="Quãng đường (km)"
-                     className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                     className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
+                        errors.distance ? 'border-red-500' : 'border-slate-200'
+                     }`}
                      value={carForm.distance || ''}
                      onChange={(e) =>
-                        onCarFormChange({ ...carForm, distance: Number(e.target.value) })
+                        handleNumberInputChange('distance', e.target.value)
                      }
+                     onKeyDown={(e) => {
+                        // Cho phép: số, backspace, delete, arrow keys, tab, enter
+                        const allowedKeys = [
+                           'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
+                        ]
+                        const isNumber = /[0-9]/.test(e.key)
+                        const isAllowedKey = allowedKeys.includes(e.key)
+                        
+                        if (!isNumber && !isAllowedKey) {
+                           e.preventDefault()
+                        }
+                     }}
                   />
+                  {errors.distance && (
+                     <p className="text-red-500 text-xs mt-1">{errors.distance}</p>
+                  )}
                   <select
                      className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800"
                      value={carForm.slug || ''}
@@ -132,13 +247,15 @@ export default function CarManagement({
                   <input
                      required
                      placeholder="Giá (VNĐ)"
-                     className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                     className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
+                        errors.price ? 'border-red-500' : 'border-slate-200'
+                     }`}
                      value={carForm.price || ''}
                      onChange={(e) =>
-                        onCarFormChange({ ...carForm, price: e.target.value })
+                        handleNumberInputChange('price', e.target.value)
                      }
                      onKeyDown={(e) => {
-                        // Cho phép: số, dấu phẩy, backspace, delete, arrow keys, tab, enter
+                        // Cho phép: số, backspace, delete, arrow keys, tab, enter
                         const allowedKeys = [
                            'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
                         ]
@@ -150,15 +267,35 @@ export default function CarManagement({
                         }
                      }}
                   />
+                  {errors.price && (
+                     <p className="text-red-500 text-xs mt-1">{errors.price}</p>
+                  )}
                   <input
                      type="number"
                      placeholder="Thời gian (ngày)"
-                     className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                     className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
+                        errors.time ? 'border-red-500' : 'border-slate-200'
+                     }`}
                      value={carForm.time || ''}
                      onChange={(e) =>
-                        onCarFormChange({ ...carForm, time: Number(e.target.value) })
+                        handleNumberInputChange('time', e.target.value)
                      }
+                     onKeyDown={(e) => {
+                        // Cho phép: số, backspace, delete, arrow keys, tab, enter
+                        const allowedKeys = [
+                           'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
+                        ]
+                        const isNumber = /[0-9]/.test(e.key)
+                        const isAllowedKey = allowedKeys.includes(e.key)
+                        
+                        if (!isNumber && !isAllowedKey) {
+                           e.preventDefault()
+                        }
+                     }}
                   />
+                  {errors.time && (
+                     <p className="text-red-500 text-xs mt-1">{errors.time}</p>
+                  )}
                </div>
                <div className="flex gap-3">
                   <button

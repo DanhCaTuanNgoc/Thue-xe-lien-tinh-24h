@@ -50,7 +50,16 @@ export default function FeaturedLocationManagement({
 
    // Hàm xử lý input với validation
    const handleInputChange = (field: string, value: string) => {
-      // Kiểm tra từng ký tự
+      // Bỏ qua validation cho phụ đề và mô tả xe
+      if (field === 'subtitle' || field === 'car_description') {
+         onLocationFormChange({
+            ...locationForm,
+            [field]: value
+         })
+         return
+      }
+
+      // Kiểm tra từng ký tự cho các trường khác
       const invalidChars = value.split('').filter(char => !isValidCharacter(char))
       
       if (invalidChars.length > 0) {
@@ -311,30 +320,12 @@ export default function FeaturedLocationManagement({
                      )}
                      <input
                         placeholder="Phụ đề (VD: Nóc nhà Nam Bộ)"
-                        className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 md:col-span-2 ${
-                           errors.subtitle ? 'border-red-500' : 'border-slate-200'
-                        }`}
+                        className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 md:col-span-2"
                         value={locationForm.subtitle || ''}
                         onChange={(e) =>
                            handleInputChange('subtitle', e.target.value)
                         }
-                        onKeyDown={(e) => {
-                           // Cho phép: chữ cái, số, khoảng trắng, backspace, delete, arrow keys, tab, enter
-                           const allowedKeys = [
-                              'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '
-                           ]
-                           const isLetter = /[a-zA-ZÀ-ỹ]/.test(e.key)
-                           const isNumber = /[0-9]/.test(e.key)
-                           const isAllowedKey = allowedKeys.includes(e.key)
-                           
-                           if (!isLetter && !isNumber && !isAllowedKey) {
-                              e.preventDefault()
-                           }
-                        }}
                      />
-                     {errors.subtitle && (
-                        <p className="text-red-500 text-xs mt-1">{errors.subtitle}</p>
-                     )}
                   </div>
                </div>
 
@@ -438,30 +429,12 @@ export default function FeaturedLocationManagement({
                   <textarea
                      placeholder="Mô tả các phương tiện phục vụ (VD: Xe 4 và 7 chỗ đời mới)"
                      rows={3}
-                     className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 resize-none ${
-                        errors.car_description ? 'border-red-500' : 'border-slate-200'
-                     }`}
+                     className="w-full border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 resize-none"
                      value={locationForm.car_description || ''}
                      onChange={(e) =>
                         handleInputChange('car_description', e.target.value)
                      }
-                     onKeyDown={(e) => {
-                        // Cho phép: chữ cái, số, khoảng trắng, backspace, delete, arrow keys, tab, enter
-                        const allowedKeys = [
-                           'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '
-                        ]
-                        const isLetter = /[a-zA-ZÀ-ỹ]/.test(e.key)
-                        const isNumber = /[0-9]/.test(e.key)
-                        const isAllowedKey = allowedKeys.includes(e.key)
-                        
-                        if (!isLetter && !isNumber && !isAllowedKey) {
-                           e.preventDefault()
-                        }
-                     }}
                   />
-                  {errors.car_description && (
-                     <p className="text-red-500 text-xs mt-1">{errors.car_description}</p>
-                  )}
                </div>
 
                {/* Image Upload Section */}

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import type { CarType } from '../../../../lib/models/car_type'
 
 interface CarTypeManagementProps {
@@ -29,6 +29,50 @@ export default function CarTypeManagement({
    onImageUpload,
 }: CarTypeManagementProps) {
    const fileInputRef = useRef<HTMLInputElement>(null)
+
+   // State cho validation errors
+   const [errors, setErrors] = useState<{
+      name?: string
+      description_price?: string
+   }>({})
+
+   // Hàm kiểm tra ký tự hợp lệ cho text
+   const isValidTextCharacter = (char: string) => {
+      return /[a-zA-ZÀ-ỹ0-9\s]/.test(char)
+   }
+
+   // Hàm xử lý input text với validation
+   const handleTextInputChange = (field: string, value: string) => {
+      // Kiểm tra từng ký tự
+      const invalidChars = value.split('').filter(char => !isValidTextCharacter(char))
+      
+      if (invalidChars.length > 0) {
+         setErrors(prev => ({
+            ...prev,
+            [field]: `Không được chứa ký tự đặc biệt: ${invalidChars.join(', ')}`
+         }))
+         return
+      }
+
+      // Xóa lỗi nếu input hợp lệ
+      setErrors(prev => ({
+         ...prev,
+         [field]: undefined
+      }))
+
+      // Nếu là trường name, tự động tạo slug
+      if (field === 'name') {
+         const slug = value
+            .toLowerCase()
+            .replace(/[^a-z0-9\s]/g, '') // Loại bỏ ký tự đặc biệt
+            .replace(/\s+/g, '-') // Thay khoảng trắng bằng dấu gạch ngang
+            .replace(/^-+|-+$/g, '') // Loại bỏ dấu gạch ngang ở đầu và cuối
+         
+         onCarTypeFormChange({ ...carTypeForm, name: value, slug })
+      } else {
+         onCarTypeFormChange({ ...carTypeForm, [field]: value })
+      }
+   }
 
    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
       const files = e.target.files
@@ -59,19 +103,28 @@ export default function CarTypeManagement({
                   <input
                      required
                      placeholder="Tên loại xe (ví dụ: Xe 4 chỗ)"
-                     className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                     className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
+                        errors.name ? 'border-red-500' : 'border-slate-200'
+                     }`}
                      value={carTypeForm.name || ''}
-                     onChange={(e) => {
-                        const name = e.target.value
-                        // Tự động tạo slug từ tên
-                        const slug = name
-                           .toLowerCase()
-                           .replace(/[^a-z0-9\s]/g, '') // Loại bỏ ký tự đặc biệt
-                           .replace(/\s+/g, '-') // Thay khoảng trắng bằng dấu gạch ngang
-                           .replace(/^-+|-+$/g, '') // Loại bỏ dấu gạch ngang ở đầu và cuối
-                        onCarTypeFormChange({ ...carTypeForm, name, slug })
+                     onChange={(e) => handleTextInputChange('name', e.target.value)}
+                     onKeyDown={(e) => {
+                        // Cho phép: chữ cái, số, khoảng trắng, backspace, delete, arrow keys, tab, enter
+                        const allowedKeys = [
+                           'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '
+                        ]
+                        const isLetter = /[a-zA-ZÀ-ỹ]/.test(e.key)
+                        const isNumber = /[0-9]/.test(e.key)
+                        const isAllowedKey = allowedKeys.includes(e.key)
+                        
+                        if (!isLetter && !isNumber && !isAllowedKey) {
+                           e.preventDefault()
+                        }
                      }}
                   />
+                  {errors.name && (
+                     <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+                  )}
                   <input
                      required
                      placeholder="Slug (tự động tạo)"
@@ -82,15 +135,28 @@ export default function CarTypeManagement({
                   />
                   <input
                      placeholder="Giá giới thiệu (ví dụ: 850.000đ)"
-                     className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                     className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
+                        errors.description_price ? 'border-red-500' : 'border-slate-200'
+                     }`}
                      value={carTypeForm.description_price || ''}
-                     onChange={(e) =>
-                        onCarTypeFormChange({
-                           ...carTypeForm,
-                           description_price: e.target.value,
-                        })
-                     }
+                     onChange={(e) => handleTextInputChange('description_price', e.target.value)}
+                     onKeyDown={(e) => {
+                        // Cho phép: chữ cái, số, khoảng trắng, backspace, delete, arrow keys, tab, enter
+                        const allowedKeys = [
+                           'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '
+                        ]
+                        const isLetter = /[a-zA-ZÀ-ỹ]/.test(e.key)
+                        const isNumber = /[0-9]/.test(e.key)
+                        const isAllowedKey = allowedKeys.includes(e.key)
+                        
+                        if (!isLetter && !isNumber && !isAllowedKey) {
+                           e.preventDefault()
+                        }
+                     }}
                   />
+                  {errors.description_price && (
+                     <p className="text-red-500 text-xs mt-1">{errors.description_price}</p>
+                  )}
                </div>
 
                {/* Image Upload Section */}
