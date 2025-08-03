@@ -3,6 +3,8 @@
 import React, { useState, useMemo } from 'react'
 import type { Car } from '../../../../lib/models/car'
 import type { CarType } from '../../../../lib/models/car_type'
+import ExcelImport from './ExcelImport'
+import ExcelExport from './ExcelExport'
 
 interface CarManagementProps {
    cars: Car[]
@@ -15,6 +17,7 @@ interface CarManagementProps {
    onCarEdit: (car: Car) => void
    onCarDelete: (id: string) => void
    onCancelEdit: () => void
+   onReloadCars: () => void // Thêm callback để reload cars
 }
 
 export default function CarManagement({
@@ -28,12 +31,16 @@ export default function CarManagement({
    onCarEdit,
    onCarDelete,
    onCancelEdit,
+   onReloadCars,
 }: CarManagementProps) {
    // State cho tìm kiếm
    const [searchLocation, setSearchLocation] = useState('')
    const [selectedCarType, setSelectedCarType] = useState('')
    const [priceMin, setPriceMin] = useState('')
    const [priceMax, setPriceMax] = useState('')
+
+   // State cho Excel import/export
+   const [showExcelTools, setShowExcelTools] = useState(false)
 
    // State cho validation errors
    const [errors, setErrors] = useState<{
@@ -139,8 +146,46 @@ export default function CarManagement({
       setPriceMax('')
    }
 
+   // Handlers cho Excel import/export
+   const handleImportComplete = () => {
+      // Reload cars sau khi import
+      onReloadCars()
+   }
+
+   const handleImportError = (message: string) => {
+      alert('Lỗi import: ' + message)
+   }
+
    return (
       <div className="space-y-6">
+         {/* Excel Tools Toggle */}
+         <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
+            <div className="flex items-center justify-between">
+               <h3 className="text-xl font-semibold text-slate-800 flex items-center gap-2">
+                  <span className="text-purple-600">📊</span>
+                  Công cụ Excel
+               </h3>
+               <button
+                  type="button"
+                  onClick={() => setShowExcelTools(!showExcelTools)}
+                  className="bg-purple-600 text-white rounded-lg px-4 py-2 font-semibold hover:bg-purple-700 transition-colors flex items-center gap-2"
+               >
+                  {showExcelTools ? '🔽 Ẩn' : '🔼 Hiện'} Công cụ Excel
+               </button>
+            </div>
+         </div>
+
+         {/* Excel Import/Export Tools */}
+         {showExcelTools && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+               <ExcelImport
+                  onImportComplete={handleImportComplete}
+                  onError={handleImportError}
+               />
+               <ExcelExport cars={cars} />
+            </div>
+         )}
+
          {/* Form thêm/sửa xe ở trên */}
          <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
             <h2 className="text-xl font-semibold mb-4 text-slate-800 flex items-center gap-2">

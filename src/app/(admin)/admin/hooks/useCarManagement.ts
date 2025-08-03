@@ -100,5 +100,6 @@ export function useCarManagement() {
       handleCarDelete,
       handleCancelEdit,
       loadCars,
+      reloadCars: loadCars, // Alias cho loadCars để dễ sử dụng
    }
 }
