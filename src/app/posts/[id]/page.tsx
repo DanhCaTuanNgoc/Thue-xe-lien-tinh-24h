@@ -27,7 +27,7 @@ export default function PostDetailPage() {
          try {
             const data = await fetchPostById(id as string)
             setPost(data)
-         } catch (err: any) {
+         } catch (err: unknown) {
             setError('Không thể tải bài viết')
          } finally {
             setLoading(false)

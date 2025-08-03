@@ -9,9 +9,7 @@ import type { Post } from '../../../../lib/models/post'
 
 export function usePostManagement() {
    const [posts, setPosts] = useState<Post[]>([])
-   const [postForm, setPostForm] = useState<Partial<Omit<Post, 'id'>>>({
-      description: '', // thêm mô tả mặc định rỗng
-   })
+   const [postForm, setPostForm] = useState<Partial<Omit<Post, 'id'>>>({})
    const [editingPostId, setEditingPostId] = useState<string | null>(null)
    const [postImages, setPostImages] = useState<string[]>([]) // preview base64
    const [postFiles, setPostFiles] = useState<File[]>([]) // thực tế file ảnh
@@ -53,17 +51,17 @@ export function usePostManagement() {
       e.preventDefault()
       setLoading(true)
       try {
+         // Truyền file thực tế vào addPost/updatePost
          const postData = {
             ...postForm,
             images: postFiles,
-            description: postForm.description,
          }
          if (editingPostId) {
             await updatePost(editingPostId, postData)
          } else {
             await addPost(postData as Omit<Post, 'id'> & { images: File[] })
          }
-         setPostForm({ description: '' })
+         setPostForm({})
          setPostImages([])
          setPostFiles([])
          setEditingPostId(null)
@@ -78,6 +76,7 @@ export function usePostManagement() {
    const handlePostEdit = (post: Post) => {
       setPostForm(post)
       setEditingPostId(post.id)
+      // Không set lại postFiles khi edit, chỉ preview ảnh cũ
       if (post.image) {
          const images = post.image.split('|')
          setPostImages(images)
@@ -101,7 +100,7 @@ export function usePostManagement() {
    }
 
    const handleCancelEdit = () => {
-      setPostForm({ description: '' })
+      setPostForm({})
       setPostImages([])
       setPostFiles([])
       setEditingPostId(null)

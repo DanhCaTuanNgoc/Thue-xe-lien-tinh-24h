@@ -25,9 +25,10 @@ export async function fetchPostById(id: string) {
    if (error) throw error
    return data
 }
+
 // Sửa addPost để nhận images: File[] và upload lên bucket
 export async function addPost(post: Omit<Post, 'id'> & { images?: File[] }) {
-   let imageUrls: string[] = []
+   const imageUrls: string[] = []
    if (post.images && post.images.length > 0) {
       for (const file of post.images) {
          const fileName = `${Date.now()}_${file.name}`
@@ -35,7 +36,7 @@ export async function addPost(post: Omit<Post, 'id'> & { images?: File[] }) {
          imageUrls.push(url)
       }
    }
-   const { images, ...rest } = post
+   const { ...rest } = post
    const { data, error } = await supabase
       .from('posts')
       .insert([{ ...rest, image: imageUrls.join('|') }])
@@ -49,7 +50,7 @@ export async function updatePost(
    id: string,
    post: Partial<Omit<Post, 'id'>> & { images?: File[] },
 ) {
-   let imageUrls: string[] = []
+   const imageUrls: string[] = []
    if (post.images && post.images.length > 0) {
       for (const file of post.images) {
          const fileName = `${Date.now()}_${file.name}`
@@ -57,7 +58,7 @@ export async function updatePost(
          imageUrls.push(url)
       }
    }
-   const { images, ...rest } = post
+   const { ...rest } = post
    // Nếu có ảnh mới thì dùng ảnh mới, không thì giữ nguyên image cũ
    const updateData =
       imageUrls.length > 0 ? { ...rest, image: imageUrls.join('|') } : rest
