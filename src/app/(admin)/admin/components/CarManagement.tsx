@@ -235,7 +235,7 @@ export default function CarManagement({
                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <input
                      required
-                     placeholder="Tỉnh"
+                     placeholder="Tỉnh*"
                      className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
                      value={carForm.province || ''}
                      onChange={(e) =>
@@ -244,7 +244,7 @@ export default function CarManagement({
                   />
                   <input
                      required
-                     placeholder="Điểm đến"
+                     placeholder="Điểm đến*"
                      className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
                      value={carForm.end_location || ''}
                      onChange={(e) =>
