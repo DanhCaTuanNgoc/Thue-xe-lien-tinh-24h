@@ -7,6 +7,17 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY! // Dùng Service Role Key để update
 );
 
+// Kiểm tra mật khẩu admin
+export async function AdminPassword(password: string) {
+  const { data, error } = await supabase.from('admin_users').select('password_hash').eq('id', 1).single()
+  if (error) throw error
+  if (password === data?.password_hash) {
+    return true
+  }
+  return false
+}
+
+// Kiểm tra mật khẩu admin
 export async function POST(req: NextRequest) {
   try {
     const { id, oldPassword, newPassword } = await req.json();

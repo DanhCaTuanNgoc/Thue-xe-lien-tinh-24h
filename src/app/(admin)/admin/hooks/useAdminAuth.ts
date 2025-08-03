@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { ADMIN_PASSWORD } from '../components/LoginForm';
+import { AdminPassword } from '@/lib/repositories/adminApi';
 
 export function useAdminAuth() {
   const [authenticated, setAuthenticated] = useState(false);
   const [error, setError] = useState('');
 
-  const handleLogin = (password: string) => {
-    if (password === ADMIN_PASSWORD) {
+  const handleLogin = async (password: string) => {
+    const adminPassword = await AdminPassword(password);
+    if (adminPassword) {
       setAuthenticated(true);
       setError('');
     } else {

@@ -7,7 +7,6 @@ interface LoginFormProps {
   error: string;
 }
 
-const ADMIN_PASSWORD = 'admin123';
 
 export default function LoginForm({ onLogin, error }: LoginFormProps) {
   const [password, setPassword] = useState('');
@@ -47,5 +46,3 @@ export default function LoginForm({ onLogin, error }: LoginFormProps) {
     </div>
   );
 }
-
-export { ADMIN_PASSWORD }; 
