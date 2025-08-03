@@ -137,6 +137,18 @@ export default function CarManagement({
                      onChange={(e) =>
                         onCarFormChange({ ...carForm, price: e.target.value })
                      }
+                     onKeyDown={(e) => {
+                        // Cho phép: số, dấu phẩy, backspace, delete, arrow keys, tab, enter
+                        const allowedKeys = [
+                           'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
+                        ]
+                        const isNumber = /[0-9]/.test(e.key)
+                        const isAllowedKey = allowedKeys.includes(e.key)
+                        
+                        if (!isNumber && !isAllowedKey) {
+                           e.preventDefault()
+                        }
+                     }}
                   />
                   <input
                      type="number"

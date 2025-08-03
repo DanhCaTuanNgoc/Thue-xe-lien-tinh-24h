@@ -31,6 +31,71 @@ export default function FeaturedLocationManagement({
    const [imagePreview, setImagePreview] = useState<string | null>(null)
    const fileInputRef = React.useRef<HTMLInputElement>(null)
 
+   // State cho validation errors
+   const [errors, setErrors] = useState<{
+      title?: string
+      name?: string
+      subtitle?: string
+      car_description?: string
+      price?: string
+      distance_km?: string
+      duration_days?: string
+      image_url?: string
+   }>({})
+
+   // Hàm kiểm tra ký tự hợp lệ
+   const isValidCharacter = (char: string) => {
+      return /[a-zA-ZÀ-ỹ0-9\s]/.test(char)
+   }
+
+   // Hàm xử lý input với validation
+   const handleInputChange = (field: string, value: string) => {
+      // Kiểm tra từng ký tự
+      const invalidChars = value.split('').filter(char => !isValidCharacter(char))
+      
+      if (invalidChars.length > 0) {
+         setErrors(prev => ({
+            ...prev,
+            [field]: `Không được chứa ký tự đặc biệt: ${invalidChars.join(', ')}`
+         }))
+         return
+      }
+
+      // Xóa lỗi nếu input hợp lệ
+      setErrors(prev => ({
+         ...prev,
+         [field]: undefined
+      }))
+
+      onLocationFormChange({
+         ...locationForm,
+         [field]: value
+      })
+   }
+
+   // Hàm xử lý input số với validation
+   const handleNumberInputChange = (field: string, value: string) => {
+      // Kiểm tra xem có phải toàn số không
+      if (value && !/^\d+$/.test(value)) {
+         setErrors(prev => ({
+            ...prev,
+            [field]: 'Chỉ được nhập số từ 0-9'
+         }))
+         return
+      }
+
+      // Xóa lỗi nếu input hợp lệ
+      setErrors(prev => ({
+         ...prev,
+         [field]: undefined
+      }))
+
+      onLocationFormChange({
+         ...locationForm,
+         [field]: value ? Number(value) : undefined
+      })
+   }
+
    // Lọc địa điểm theo tiêu đề
    const filteredLocations = useMemo(() => {
       return locations.filter((location) => {
@@ -47,6 +112,7 @@ export default function FeaturedLocationManagement({
       setSearchTitle('')
    }
 
+   // Hàm xử lý upload ảnh với validation
    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0]
       if (file) {
@@ -60,6 +126,28 @@ export default function FeaturedLocationManagement({
          // For now, we'll just store the file name as the image URL
          // In a real application, you'd upload the file to a server and get back a URL
          onLocationFormChange({ ...locationForm, image_url: file.name })
+         
+         // Xóa lỗi ảnh nếu có
+         setErrors(prev => ({
+            ...prev,
+            image_url: undefined
+         }))
+      } else {
+         // Nếu không chọn file, hiển thị lỗi
+         setErrors(prev => ({
+            ...prev,
+            image_url: 'Vui lòng chọn một ảnh'
+         }))
+      }
+   }
+
+   // Hàm kiểm tra ảnh khi blur khỏi upload area
+   const handleImageAreaBlur = () => {
+      if (!locationForm.image_url && !imagePreview) {
+         setErrors(prev => ({
+            ...prev,
+            image_url: 'Vui lòng chọn một ảnh'
+         }))
       }
    }
 
@@ -70,6 +158,11 @@ export default function FeaturedLocationManagement({
       if (fileInputRef.current) {
          fileInputRef.current.value = ''
       }
+      // Xóa lỗi ảnh nếu có
+      setErrors(prev => ({
+         ...prev,
+         image_url: undefined
+      }))
    }
 
    // Handle editing a location - clear image preview when starting to edit
@@ -100,6 +193,51 @@ export default function FeaturedLocationManagement({
       }
    }, [editingLocationId, locationForm])
 
+   // Kiểm tra validation ảnh khi form thay đổi
+   React.useEffect(() => {
+      // Nếu có dữ liệu khác nhưng không có ảnh, hiển thị lỗi
+      const hasOtherData = locationForm.title || locationForm.name || locationForm.subtitle || 
+                           locationForm.price || locationForm.distance_km || locationForm.duration_days || 
+                           locationForm.car_description
+      
+      if (hasOtherData && !locationForm.image_url && !imagePreview) {
+         setErrors(prev => ({
+            ...prev,
+            image_url: 'Vui lòng chọn một ảnh'
+         }))
+      }
+   }, [locationForm, imagePreview])
+
+   // Hàm kiểm tra form có hợp lệ không
+   const isFormValid = () => {
+      return !Object.values(errors).some(error => error !== undefined)
+   }
+
+   // Hàm xử lý submit với validation
+   const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault()
+      
+      // Kiểm tra các trường bắt buộc
+      const requiredFields = ['title', 'name', 'price', 'distance_km', 'duration_days', 'image_url']
+      const missingFields = requiredFields.filter(field => !locationForm[field as keyof typeof locationForm])
+      
+      if (missingFields.length > 0) {
+         setErrors(prev => ({
+            ...prev,
+            ...Object.fromEntries(missingFields.map(field => [field, 'Trường này là bắt buộc']))
+         }))
+         return
+      }
+
+      // Kiểm tra lỗi validation
+      if (!isFormValid()) {
+         return
+      }
+
+      // Nếu tất cả hợp lệ, submit form
+      onLocationSubmit(e)
+   }
+
    return (
       <div className="space-y-6">
          {/* Form thêm/sửa địa điểm ở trên */}
@@ -109,7 +247,7 @@ export default function FeaturedLocationManagement({
                {editingLocationId ? 'Sửa thông tin địa điểm' : 'Thêm địa điểm mới'}
             </h2>
 
-            <form onSubmit={onLocationSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
                {/* Basic Information Section */}
                <div className="bg-slate-50 rounded-lg p-4">
                   <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
@@ -120,35 +258,83 @@ export default function FeaturedLocationManagement({
                      <input
                         required
                         placeholder="Tiêu đề (VD: NÚI BÀ ĐEN)"
-                        className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                        className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
+                           errors.title ? 'border-red-500' : 'border-slate-200'
+                        }`}
                         value={locationForm.title || ''}
                         onChange={(e) =>
-                           onLocationFormChange({
-                              ...locationForm,
-                              title: e.target.value,
-                           })
+                           handleInputChange('title', e.target.value)
                         }
+                        onKeyDown={(e) => {
+                           // Cho phép: chữ cái, số, khoảng trắng, backspace, delete, arrow keys, tab, enter
+                           const allowedKeys = [
+                              'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '
+                           ]
+                           const isLetter = /[a-zA-ZÀ-ỹ]/.test(e.key)
+                           const isNumber = /[0-9]/.test(e.key)
+                           const isAllowedKey = allowedKeys.includes(e.key)
+                           
+                           if (!isLetter && !isNumber && !isAllowedKey) {
+                              e.preventDefault()
+                           }
+                        }}
                      />
+                     {errors.title && (
+                        <p className="text-red-500 text-xs mt-1">{errors.title}</p>
+                     )}
                      <input
                         required
                         placeholder="Tên địa điểm (VD: Tây Ninh)"
-                        className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                        className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
+                           errors.name ? 'border-red-500' : 'border-slate-200'
+                        }`}
                         value={locationForm.name || ''}
                         onChange={(e) =>
-                           onLocationFormChange({ ...locationForm, name: e.target.value })
+                           handleInputChange('name', e.target.value)
                         }
+                        onKeyDown={(e) => {
+                           // Cho phép: chữ cái, số, khoảng trắng, backspace, delete, arrow keys, tab, enter
+                           const allowedKeys = [
+                              'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '
+                           ]
+                           const isLetter = /[a-zA-ZÀ-ỹ]/.test(e.key)
+                           const isNumber = /[0-9]/.test(e.key)
+                           const isAllowedKey = allowedKeys.includes(e.key)
+                           
+                           if (!isLetter && !isNumber && !isAllowedKey) {
+                              e.preventDefault()
+                           }
+                        }}
                      />
+                     {errors.name && (
+                        <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+                     )}
                      <input
                         placeholder="Phụ đề (VD: Nóc nhà Nam Bộ)"
-                        className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 md:col-span-2"
+                        className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 md:col-span-2 ${
+                           errors.subtitle ? 'border-red-500' : 'border-slate-200'
+                        }`}
                         value={locationForm.subtitle || ''}
                         onChange={(e) =>
-                           onLocationFormChange({
-                              ...locationForm,
-                              subtitle: e.target.value,
-                           })
+                           handleInputChange('subtitle', e.target.value)
                         }
+                        onKeyDown={(e) => {
+                           // Cho phép: chữ cái, số, khoảng trắng, backspace, delete, arrow keys, tab, enter
+                           const allowedKeys = [
+                              'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '
+                           ]
+                           const isLetter = /[a-zA-ZÀ-ỹ]/.test(e.key)
+                           const isNumber = /[0-9]/.test(e.key)
+                           const isAllowedKey = allowedKeys.includes(e.key)
+                           
+                           if (!isLetter && !isNumber && !isAllowedKey) {
+                              e.preventDefault()
+                           }
+                        }}
                      />
+                     {errors.subtitle && (
+                        <p className="text-red-500 text-xs mt-1">{errors.subtitle}</p>
+                     )}
                   </div>
                </div>
 
@@ -161,40 +347,85 @@ export default function FeaturedLocationManagement({
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                      <input
                         type="number"
+                        required
                         placeholder="Giá (VNĐ)"
-                        className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                        className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
+                           errors.price ? 'border-red-500' : 'border-slate-200'
+                        }`}
                         value={locationForm.price || ''}
                         onChange={(e) =>
-                           onLocationFormChange({
-                              ...locationForm,
-                              price: Number(e.target.value),
-                           })
+                           handleNumberInputChange('price', e.target.value)
                         }
+                        onKeyDown={(e) => {
+                           // Cho phép: số, backspace, delete, arrow keys, tab, enter
+                           const allowedKeys = [
+                              'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
+                           ]
+                           const isNumber = /[0-9]/.test(e.key)
+                           const isAllowedKey = allowedKeys.includes(e.key)
+                           
+                           if (!isNumber && !isAllowedKey) {
+                              e.preventDefault()
+                           }
+                        }}
                      />
+                     {errors.price && (
+                        <p className="text-red-500 text-xs mt-1">{errors.price}</p>
+                     )}
                      <input
                         type="number"
+                        required
                         placeholder="Khoảng cách (km)"
-                        className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                        className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
+                           errors.distance_km ? 'border-red-500' : 'border-slate-200'
+                        }`}
                         value={locationForm.distance_km || ''}
                         onChange={(e) =>
-                           onLocationFormChange({
-                              ...locationForm,
-                              distance_km: Number(e.target.value),
-                           })
+                           handleNumberInputChange('distance_km', e.target.value)
                         }
+                        onKeyDown={(e) => {
+                           // Cho phép: số, backspace, delete, arrow keys, tab, enter
+                           const allowedKeys = [
+                              'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
+                           ]
+                           const isNumber = /[0-9]/.test(e.key)
+                           const isAllowedKey = allowedKeys.includes(e.key)
+                           
+                           if (!isNumber && !isAllowedKey) {
+                              e.preventDefault()
+                           }
+                        }}
                      />
+                     {errors.distance_km && (
+                        <p className="text-red-500 text-xs mt-1">{errors.distance_km}</p>
+                     )}
                      <input
                         type="number"
+                        required
                         placeholder="Thời gian (ngày)"
-                        className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                        className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
+                           errors.duration_days ? 'border-red-500' : 'border-slate-200'
+                        }`}
                         value={locationForm.duration_days || ''}
                         onChange={(e) =>
-                           onLocationFormChange({
-                              ...locationForm,
-                              duration_days: Number(e.target.value),
-                           })
+                           handleNumberInputChange('duration_days', e.target.value)
                         }
+                        onKeyDown={(e) => {
+                           // Cho phép: số, backspace, delete, arrow keys, tab, enter
+                           const allowedKeys = [
+                              'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
+                           ]
+                           const isNumber = /[0-9]/.test(e.key)
+                           const isAllowedKey = allowedKeys.includes(e.key)
+                           
+                           if (!isNumber && !isAllowedKey) {
+                              e.preventDefault()
+                           }
+                        }}
                      />
+                     {errors.duration_days && (
+                        <p className="text-red-500 text-xs mt-1">{errors.duration_days}</p>
+                     )}
                   </div>
                </div>
 
@@ -207,26 +438,43 @@ export default function FeaturedLocationManagement({
                   <textarea
                      placeholder="Mô tả các phương tiện phục vụ (VD: Xe 4 và 7 chỗ đời mới)"
                      rows={3}
-                     className="w-full border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 resize-none"
+                     className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 resize-none ${
+                        errors.car_description ? 'border-red-500' : 'border-slate-200'
+                     }`}
                      value={locationForm.car_description || ''}
                      onChange={(e) =>
-                        onLocationFormChange({
-                           ...locationForm,
-                           car_description: e.target.value,
-                        })
+                        handleInputChange('car_description', e.target.value)
                      }
+                     onKeyDown={(e) => {
+                        // Cho phép: chữ cái, số, khoảng trắng, backspace, delete, arrow keys, tab, enter
+                        const allowedKeys = [
+                           'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '
+                        ]
+                        const isLetter = /[a-zA-ZÀ-ỹ]/.test(e.key)
+                        const isNumber = /[0-9]/.test(e.key)
+                        const isAllowedKey = allowedKeys.includes(e.key)
+                        
+                        if (!isLetter && !isNumber && !isAllowedKey) {
+                           e.preventDefault()
+                        }
+                     }}
                   />
+                  {errors.car_description && (
+                     <p className="text-red-500 text-xs mt-1">{errors.car_description}</p>
+                  )}
                </div>
 
                {/* Image Upload Section */}
                <div className="bg-slate-50 rounded-lg p-4">
                   <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
                      <span className="text-blue-600">🖼️</span>
-                     Hình ảnh cho địa điểm nổi bật
+                     Hình ảnh cho địa điểm nổi bật <span className="text-red-500">*</span>
                   </h3>
 
                   {/* File Upload */}
-                  <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+                  <div className={`border-2 border-dashed rounded-lg p-6 text-center hover:border-blue-400 transition-colors ${
+                     errors.image_url ? 'border-red-500' : 'border-slate-300'
+                  }`} onBlur={handleImageAreaBlur}>
                      <input
                         ref={fileInputRef}
                         type="file"
@@ -234,18 +482,34 @@ export default function FeaturedLocationManagement({
                         onChange={handleImageUpload}
                         className="hidden"
                         id="image-upload"
+                        required
                      />
                      <button
                         type="button"
-                        onClick={() => fileInputRef.current?.click()}
+                        onClick={() => {
+                           fileInputRef.current?.click()
+                           // Nếu không có ảnh, hiển thị lỗi sau khi click
+                           setTimeout(() => {
+                              if (!locationForm.image_url && !imagePreview) {
+                                 setErrors(prev => ({
+                                    ...prev,
+                                    image_url: 'Vui lòng chọn một ảnh'
+                                 }))
+                              }
+                           }, 100)
+                        }}
                         className="bg-blue-600 text-white rounded-lg px-6 py-3 font-semibold hover:bg-blue-700 transition-all duration-200"
                      >
                         📁 Chọn ảnh từ máy tính
                      </button>
                      <p className="text-sm text-slate-500 mt-2">
-                        Chọn một ảnh để hiển thị cho địa điểm này
+                        Chọn một ảnh để hiển thị cho địa điểm này (bắt buộc)
                      </p>
                   </div>
+                  
+                  {errors.image_url && (
+                     <p className="text-red-500 text-xs mt-1">{errors.image_url}</p>
+                  )}
 
                   {/* Image Preview */}
                   {imagePreview && (
@@ -289,7 +553,7 @@ export default function FeaturedLocationManagement({
                   <button
                      type="submit"
                      className="bg-blue-600 text-white rounded-lg px-8 py-3 font-semibold hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50"
-                     disabled={loading}
+                     disabled={loading || !isFormValid()}
                   >
                      {loading
                         ? '⏳ Đang xử lý...'

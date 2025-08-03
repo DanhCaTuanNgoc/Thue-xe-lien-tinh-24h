@@ -61,18 +61,24 @@ export default function CarTypeManagement({
                      placeholder="Tên loại xe (ví dụ: Xe 4 chỗ)"
                      className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
                      value={carTypeForm.name || ''}
-                     onChange={(e) =>
-                        onCarTypeFormChange({ ...carTypeForm, name: e.target.value })
-                     }
+                     onChange={(e) => {
+                        const name = e.target.value
+                        // Tự động tạo slug từ tên
+                        const slug = name
+                           .toLowerCase()
+                           .replace(/[^a-z0-9\s]/g, '') // Loại bỏ ký tự đặc biệt
+                           .replace(/\s+/g, '-') // Thay khoảng trắng bằng dấu gạch ngang
+                           .replace(/^-+|-+$/g, '') // Loại bỏ dấu gạch ngang ở đầu và cuối
+                        onCarTypeFormChange({ ...carTypeForm, name, slug })
+                     }}
                   />
                   <input
                      required
-                     placeholder="Slug (ví dụ: cars-4)"
-                     className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                     placeholder="Slug (tự động tạo)"
+                     className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-slate-100 text-slate-600 cursor-not-allowed"
                      value={carTypeForm.slug || ''}
-                     onChange={(e) =>
-                        onCarTypeFormChange({ ...carTypeForm, slug: e.target.value })
-                     }
+                     disabled
+                     readOnly
                   />
                   <input
                      placeholder="Giá giới thiệu (ví dụ: 850.000đ)"
