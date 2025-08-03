@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import type { Post } from '../../../../lib/models/post'
 
 interface PostManagementProps {
@@ -34,6 +34,34 @@ export default function PostManagement({
 }: PostManagementProps) {
    const fileInputRef = useRef<HTMLInputElement>(null)
 
+   // State cho validation errors
+   const [errors, setErrors] = useState<{
+      title?: string
+      description?: string
+      content?: string
+      author?: string
+   }>({})
+
+   // Hàm xử lý input với validation
+   const handleInputChange = (field: string, value: string) => {
+      // Kiểm tra bắt buộc cho các trường
+      if (!value || value.trim() === '') {
+         setErrors(prev => ({
+            ...prev,
+            [field]: `${field === 'title' ? 'Tiêu đề' : field === 'description' ? 'Mô tả' : field === 'content' ? 'Nội dung' : 'Tác giả'} là bắt buộc`
+         }))
+         return
+      }
+
+      // Xóa lỗi nếu input hợp lệ
+      setErrors(prev => ({
+         ...prev,
+         [field]: undefined
+      }))
+
+      onPostFormChange({ ...postForm, [field]: value })
+   }
+
    return (
       <div className="space-y-6">
          {/* Form thêm/sửa bài viết ở trên */}
@@ -46,40 +74,46 @@ export default function PostManagement({
             <form onSubmit={onPostSubmit} className="space-y-4">
                <input
                   required
-                  placeholder="Tiêu đề bài viết"
-                  className="w-full border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                  placeholder="Tiêu đề bài viết *"
+                  className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
+                     errors.title ? 'border-red-500' : 'border-slate-200'
+                  }`}
                   value={postForm.title || ''}
-                  onChange={(e) =>
-                     onPostFormChange({ ...postForm, title: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange('title', e.target.value)}
                />
+               {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
                <input
                   required
-                  placeholder="Mô tả bài viết"
-                  className="w-full border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                  placeholder="Mô tả bài viết *"
+                  className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
+                     errors.description ? 'border-red-500' : 'border-slate-200'
+                  }`}
                   value={postForm.description || ''}
-                  onChange={(e) =>
-                     onPostFormChange({ ...postForm, description: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange('description', e.target.value)}
                />
+               {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
                <textarea
-                  placeholder="Nội dung bài viết"
+                  required
+                  placeholder="Nội dung bài viết *"
                   rows={4}
-                  className="w-full border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 resize-none"
+                  className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 resize-none ${
+                     errors.content ? 'border-red-500' : 'border-slate-200'
+                  }`}
                   value={postForm.content || ''}
-                  onChange={(e) =>
-                     onPostFormChange({ ...postForm, content: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange('content', e.target.value)}
                />
+               {errors.content && <p className="text-red-500 text-sm">{errors.content}</p>}
 
                <input
-                  placeholder="Tác giả"
-                  className="w-full border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                  required
+                  placeholder="Tác giả *"
+                  className={`w-full border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
+                     errors.author ? 'border-red-500' : 'border-slate-200'
+                  }`}
                   value={postForm.author || ''}
-                  onChange={(e) =>
-                     onPostFormChange({ ...postForm, author: e.target.value })
-                  }
+                  onChange={(e) => handleInputChange('author', e.target.value)}
                />
+               {errors.author && <p className="text-red-500 text-sm">{errors.author}</p>}
 
                {/* Image Upload Section */}
                <div className="space-y-3">

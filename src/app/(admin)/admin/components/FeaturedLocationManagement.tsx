@@ -266,7 +266,7 @@ export default function FeaturedLocationManagement({
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                      <input
                         required
-                        placeholder="Tiêu đề (VD: NÚI BÀ ĐEN)"
+                        placeholder="Tiêu đề (VD: NÚI BÀ ĐEN) *"
                         className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
                            errors.title ? 'border-red-500' : 'border-slate-200'
                         }`}
@@ -293,7 +293,7 @@ export default function FeaturedLocationManagement({
                      )}
                      <input
                         required
-                        placeholder="Tên địa điểm (VD: Tây Ninh)"
+                        placeholder="Tên địa điểm (VD: Tây Ninh) *"
                         className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
                            errors.name ? 'border-red-500' : 'border-slate-200'
                         }`}
@@ -339,7 +339,7 @@ export default function FeaturedLocationManagement({
                      <input
                         type="number"
                         required
-                        placeholder="Giá (VNĐ)"
+                        placeholder="Giá (VNĐ) *"
                         className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
                            errors.price ? 'border-red-500' : 'border-slate-200'
                         }`}
@@ -366,7 +366,7 @@ export default function FeaturedLocationManagement({
                      <input
                         type="number"
                         required
-                        placeholder="Khoảng cách (km)"
+                        placeholder="Khoảng cách (km) *"
                         className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
                            errors.distance_km ? 'border-red-500' : 'border-slate-200'
                         }`}
@@ -393,7 +393,7 @@ export default function FeaturedLocationManagement({
                      <input
                         type="number"
                         required
-                        placeholder="Thời gian (ngày)"
+                        placeholder="Thời gian (ngày) *"
                         className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
                            errors.duration_days ? 'border-red-500' : 'border-slate-200'
                         }`}

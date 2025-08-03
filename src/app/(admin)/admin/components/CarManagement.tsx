@@ -49,6 +49,7 @@ export default function CarManagement({
       distance?: string
       price?: string
       time?: string
+      slug?: string // Thêm validation cho loại xe
    }>({})
 
    // Hàm kiểm tra ký tự hợp lệ cho text
@@ -120,6 +121,25 @@ export default function CarManagement({
          ...carForm,
          [field]: value ? Number(value) : undefined
       })
+   }
+
+   // Hàm xử lý select loại xe với validation
+   const handleCarTypeChange = (value: string) => {
+      if (!value || value === '') {
+         setErrors(prev => ({
+            ...prev,
+            slug: 'Vui lòng chọn loại xe'
+         }))
+         return
+      }
+
+      // Xóa lỗi nếu input hợp lệ
+      setErrors(prev => ({
+         ...prev,
+         slug: undefined
+      }))
+
+      onCarFormChange({ ...carForm, slug: value })
    }
 
    // Lọc xe theo các tiêu chí
@@ -259,19 +279,25 @@ export default function CarManagement({
                      <p className="text-red-500 text-xs mt-1">{errors.distance}</p>
                   )}
                   <select
-                     className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800"
+                     required
+                     className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 ${
+                        errors.slug ? 'border-red-500' : 'border-slate-200'
+                     }`}
                      value={carForm.slug || ''}
                      onChange={(e) =>
-                        onCarFormChange({ ...carForm, slug: e.target.value })
+                        handleCarTypeChange(e.target.value)
                      }
                   >
-                     <option value="">-- Chọn loại xe --</option>
+                     <option value="">-- Chọn loại xe * --</option>
                      {carTypes.map((carType) => (
                         <option key={carType.id} value={carType.slug}>
                            {carType.name} ({carType.slug})
                         </option>
                      ))}
                   </select>
+                  {errors.slug && (
+                     <p className="text-red-500 text-xs mt-1">{errors.slug}</p>
+                  )}
                   <input
                      required
                      placeholder="Giá (VNĐ)"
