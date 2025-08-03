@@ -29,8 +29,39 @@ export function useCarManagement() {
 
       try {
          // Validate required fields
-         if (!carForm.province || !carForm.end_location) {
-            alert('Vui lòng nhập đầy đủ điểm đi và điểm đến!')
+         if (!carForm.province || !carForm.province.trim()) {
+            alert('Vui lòng nhập tỉnh!')
+            setLoading(false)
+            return
+         }
+
+         if (!carForm.end_location || !carForm.end_location.trim()) {
+            alert('Vui lòng nhập điểm đến!')
+            setLoading(false)
+            return
+         }
+
+         if (!carForm.slug || !carForm.slug.trim()) {
+            alert('Vui lòng chọn loại xe!')
+            setLoading(false)
+            return
+         }
+
+         // Validate required number fields
+         if (!carForm.distance || carForm.distance === 0) {
+            alert('Vui lòng nhập quãng đường!')
+            setLoading(false)
+            return
+         }
+
+         if (!carForm.price || Number(carForm.price) === 0) {
+            alert('Vui lòng nhập giá!')
+            setLoading(false)
+            return
+         }
+
+         if (!carForm.time || carForm.time === 0) {
+            alert('Vui lòng nhập thời gian!')
             setLoading(false)
             return
          }
@@ -100,5 +131,6 @@ export function useCarManagement() {
       handleCarDelete,
       handleCancelEdit,
       loadCars,
+      reloadCars: loadCars, // Alias cho loadCars để dễ sử dụng
    }
 }

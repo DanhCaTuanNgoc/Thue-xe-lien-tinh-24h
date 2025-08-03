@@ -23,8 +23,21 @@ export function useCarTypeManagement() {
     
     try {
       // Validate required fields
-      if (!carTypeForm.name || !carTypeForm.slug) {
-        alert('Vui lòng nhập đầy đủ tên loại xe và slug!');
+      if (!carTypeForm.name || !carTypeForm.name.trim()) {
+        alert('Vui lòng nhập tên loại xe!');
+        setLoading(false);
+        return;
+      }
+
+      if (!carTypeForm.description_price || !carTypeForm.description_price.trim()) {
+        alert('Vui lòng nhập giá!');
+        setLoading(false);
+        return;
+      }
+
+      // Validate giá chỉ được nhập số
+      if (!/^\d+$/.test(carTypeForm.description_price)) {
+        alert('Giá chỉ được nhập số nguyên!');
         setLoading(false);
         return;
       }

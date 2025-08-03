@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import type { CarType } from '../../../../lib/models/car_type'
 
 interface CarTypeManagementProps {
@@ -30,6 +30,68 @@ export default function CarTypeManagement({
 }: CarTypeManagementProps) {
    const fileInputRef = useRef<HTMLInputElement>(null)
 
+   // State cho validation errors
+   const [errors, setErrors] = useState<{
+      name?: string
+      description_price?: string
+   }>({})
+
+   // Hàm xử lý input text với validation
+   const handleTextInputChange = (field: string, value: string) => {
+      // Nếu là trường name, tự động tạo slug
+      if (field === 'name') {
+         const slug = `car-${value}`
+         
+         // Kiểm tra bắt buộc cho tên loại xe
+         if (!value || value.trim() === '') {
+            setErrors(prev => ({
+               ...prev,
+               name: 'Tên loại xe là bắt buộc'
+            }))
+            return
+         }
+
+         // Xóa lỗi nếu input hợp lệ
+         setErrors(prev => ({
+            ...prev,
+            name: undefined
+         }))
+         
+         onCarTypeFormChange({ ...carTypeForm, name: value, slug })
+      } else {
+         onCarTypeFormChange({ ...carTypeForm, [field]: value })
+      }
+   }
+
+   // Hàm xử lý input số cho giá
+   const handlePriceInputChange = (value: string) => {
+      // Kiểm tra bắt buộc cho giá
+      if (!value || value.trim() === '') {
+         setErrors(prev => ({
+            ...prev,
+            description_price: 'Giá là bắt buộc'
+         }))
+         return
+      }
+
+      // Kiểm tra xem có phải toàn số không
+      if (value && !/^\d+$/.test(value)) {
+         setErrors(prev => ({
+            ...prev,
+            description_price: 'Chỉ được nhập số nguyên từ 0-9'
+         }))
+         return
+      }
+
+      // Xóa lỗi nếu input hợp lệ
+      setErrors(prev => ({
+         ...prev,
+         description_price: undefined
+      }))
+
+      onCarTypeFormChange({ ...carTypeForm, description_price: value })
+   }
+
    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
       const files = e.target.files
       if (!files) return
@@ -58,33 +120,40 @@ export default function CarTypeManagement({
                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <input
                      required
-                     placeholder="Tên loại xe (ví dụ: Xe 4 chỗ)"
-                     className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                     placeholder="Tên loại xe (ví dụ: Xe 4 chỗ) *"
+                     className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
+                        errors.name ? 'border-red-500' : 'border-slate-200'
+                     }`}
                      value={carTypeForm.name || ''}
-                     onChange={(e) =>
-                        onCarTypeFormChange({ ...carTypeForm, name: e.target.value })
-                     }
+                     onChange={(e) => handleTextInputChange('name', e.target.value)}
                   />
+                  {errors.name && (
+                     <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+                  )}
                   <input
                      required
-                     placeholder="Slug (ví dụ: cars-4)"
-                     className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
-                     value={carTypeForm.slug || ''}
-                     onChange={(e) =>
-                        onCarTypeFormChange({ ...carTypeForm, slug: e.target.value })
-                     }
-                  />
-                  <input
-                     placeholder="Giá giới thiệu (ví dụ: 850.000đ)"
-                     className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                     placeholder="Giá (chỉ nhập số) *"
+                     className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
+                        errors.description_price ? 'border-red-500' : 'border-slate-200'
+                     }`}
                      value={carTypeForm.description_price || ''}
-                     onChange={(e) =>
-                        onCarTypeFormChange({
-                           ...carTypeForm,
-                           description_price: e.target.value,
-                        })
-                     }
+                     onChange={(e) => handlePriceInputChange(e.target.value)}
+                     onKeyDown={(e) => {
+                        // Cho phép: số, backspace, delete, arrow keys, tab, enter
+                        const allowedKeys = [
+                           'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
+                        ]
+                        const isNumber = /[0-9]/.test(e.key)
+                        const isAllowedKey = allowedKeys.includes(e.key)
+                        
+                        if (!isNumber && !isAllowedKey) {
+                           e.preventDefault()
+                        }
+                     }}
                   />
+                  {errors.description_price && (
+                     <p className="text-red-500 text-xs mt-1">{errors.description_price}</p>
+                  )}
                </div>
 
                {/* Image Upload Section */}

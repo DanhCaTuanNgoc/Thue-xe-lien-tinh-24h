@@ -51,7 +51,31 @@ export function usePostManagement() {
       e.preventDefault()
       setLoading(true)
       try {
-         // Truyền file thực tế vào addPost/updatePost
+         // Validate required fields
+         if (!postForm.title || !postForm.title.trim()) {
+            alert('Vui lòng nhập tiêu đề bài viết!')
+            setLoading(false)
+            return
+         }
+
+         if (!postForm.description || !postForm.description.trim()) {
+            alert('Vui lòng nhập mô tả bài viết!')
+            setLoading(false)
+            return
+         }
+
+         if (!postForm.content || !postForm.content.trim()) {
+            alert('Vui lòng nhập nội dung bài viết!')
+            setLoading(false)
+            return
+         }
+
+         if (!postForm.author || !postForm.author.trim()) {
+            alert('Vui lòng nhập tác giả!')
+            setLoading(false)
+            return
+         }
+
          const postData = {
             ...postForm,
             images: postFiles,

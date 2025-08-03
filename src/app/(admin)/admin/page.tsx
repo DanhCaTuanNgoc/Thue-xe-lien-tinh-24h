@@ -71,6 +71,7 @@ export default function AdminPage() {
                   onCarEdit={carManagement.handleCarEdit}
                   onCarDelete={carManagement.handleCarDelete}
                   onCancelEdit={carManagement.handleCancelEdit}
+                  onReloadCars={carManagement.reloadCars}
                />
             )}
 
