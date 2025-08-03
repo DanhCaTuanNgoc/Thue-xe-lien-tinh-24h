@@ -9,7 +9,10 @@ import type { FeaturedLocation } from '../../../../lib/models/featuredLocation'
 
 export function useFeaturedLocationManagement() {
    const [locations, setLocations] = useState<FeaturedLocation[]>([])
-   const [locationForm, setLocationForm] = useState<Partial<Omit<FeaturedLocation, 'id'>>>({})
+   // Thêm imageFile vào state
+   const [locationForm, setLocationForm] = useState<
+      Partial<Omit<FeaturedLocation, 'id'>> & { imageFile?: File }
+   >({})
    const [editingLocationId, setEditingLocationId] = useState<number | null>(null)
    const [loading, setLoading] = useState(false)
 
@@ -33,19 +36,23 @@ export function useFeaturedLocationManagement() {
             setLoading(false)
             return
          }
-
-         console.log('Submitting location form:', locationForm)
-
-         if (editingLocationId) {
-            console.log('Updating location with ID:', editingLocationId)
-            await updateFeaturedLocation(editingLocationId, locationForm)
-         } else {
-            console.log('Adding new location')
-            const newLocation = await addFeaturedLocation(locationForm as Omit<FeaturedLocation, 'id'>)
-            console.log('New location added:', newLocation)
+         // Validate ảnh khi thêm mới
+         if (!editingLocationId && !locationForm.imageFile) {
+            alert('Vui lòng chọn ảnh cho địa điểm!')
+            setLoading(false)
+            return
          }
 
-         // Reset form completely
+         if (editingLocationId) {
+            await updateFeaturedLocation(editingLocationId, locationForm)
+         } else {
+            await addFeaturedLocation(
+               locationForm as Omit<FeaturedLocation, 'id' | 'image_url'> & {
+                  imageFile: File
+               },
+            )
+         }
+
          setLocationForm({})
          setEditingLocationId(null)
          await loadLocations()
@@ -58,6 +65,7 @@ export function useFeaturedLocationManagement() {
    }
 
    const handleLocationEdit = (location: FeaturedLocation) => {
+      // Không set imageFile khi edit, chỉ set khi user chọn file mới
       setLocationForm(location)
       setEditingLocationId(location.id)
    }
@@ -92,4 +100,4 @@ export function useFeaturedLocationManagement() {
       handleCancelEdit,
       loadLocations,
    }
-} 
+}
