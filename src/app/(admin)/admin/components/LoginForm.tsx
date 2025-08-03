@@ -5,15 +5,17 @@ import React, { useState } from 'react';
 interface LoginFormProps {
   onLogin: (password: string) => void;
   error: string;
+  loading?: boolean;
 }
 
-
-export default function LoginForm({ onLogin, error }: LoginFormProps) {
+export default function LoginForm({ onLogin, error, loading = false }: LoginFormProps) {
   const [password, setPassword] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onLogin(password);
+    if (!loading && password.trim()) {
+      onLogin(password);
+    }
   };
 
   return (
@@ -27,14 +29,23 @@ export default function LoginForm({ onLogin, error }: LoginFormProps) {
               placeholder="Nhập mật khẩu"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+              disabled={loading}
+              className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
           <button 
             type="submit" 
-            className="w-full bg-blue-600 text-white rounded-lg px-4 py-3 font-semibold hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+            disabled={loading || !password.trim()}
+            className="w-full bg-blue-600 text-white rounded-lg px-4 py-3 font-semibold hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600"
           >
-            Đăng nhập
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                Đang đăng nhập...
+              </div>
+            ) : (
+              'Đăng nhập'
+            )}
           </button>
           {error && (
             <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded-lg border border-red-200">

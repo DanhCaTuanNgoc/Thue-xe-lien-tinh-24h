@@ -1,17 +1,36 @@
 import { useState } from 'react';
-import { AdminPassword } from '@/lib/repositories/adminApi';
 
 export function useAdminAuth() {
   const [authenticated, setAuthenticated] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (password: string) => {
-    const adminPassword = await AdminPassword(password);
-    if (adminPassword) {
-      setAuthenticated(true);
-      setError('');
-    } else {
-      setError('Sai mật khẩu!');
+    setLoading(true);
+    setError('');
+    
+    try {
+      const response = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setAuthenticated(true);
+        setError('');
+      } else {
+        setError(data.error || 'Đăng nhập thất bại');
+      }
+    } catch (error) {
+      console.error('Lỗi khi đăng nhập:', error);
+      setError('Lỗi kết nối server');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -23,6 +42,7 @@ export function useAdminAuth() {
   return {
     authenticated,
     error,
+    loading,
     handleLogin,
     logout
   };

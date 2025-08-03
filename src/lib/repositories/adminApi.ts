@@ -9,12 +9,18 @@ const supabase = createClient(
 
 // Kiểm tra mật khẩu admin
 export async function AdminPassword(password: string) {
-  const { data, error } = await supabase.from('admin_users').select('password_hash').eq('id', 1).single()
-  if (error) throw error
-  if (password === data?.password_hash) {
-    return true
+  try {
+    const { data, error } = await supabase.from('admin_user').select('password_hash').eq('id', 1).single()
+    if (error) throw error
+    if (!data?.password_hash) return false
+    
+    // Sử dụng bcrypt.compare để so sánh password với hash
+    const isMatch = await bcrypt.compare(password, data.password_hash)
+    return isMatch
+  } catch (error) {
+    console.error('Lỗi khi kiểm tra mật khẩu admin:', error)
+    return false
   }
-  return false
 }
 
 // Kiểm tra mật khẩu admin
@@ -28,7 +34,7 @@ export async function POST(req: NextRequest) {
 
     // Lấy user từ Supabase
     const { data: user, error } = await supabase
-      .from('admin_users')
+      .from('admin_user')
       .select('password_hash')
       .eq('id', id)
       .single();
@@ -48,7 +54,7 @@ export async function POST(req: NextRequest) {
 
     // Cập nhật mật khẩu mới
     const { error: updateError } = await supabase
-      .from('admin_users')
+      .from('admin_user')
       .update({ password_hash: newHash })
       .eq('id', id);
 

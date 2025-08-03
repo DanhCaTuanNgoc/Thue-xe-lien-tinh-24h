@@ -19,7 +19,7 @@ import {
 
 export default function AdminPage() {
    // Auth
-   const { authenticated, error, handleLogin } = useAdminAuth()
+   const { authenticated, error, loading, handleLogin } = useAdminAuth()
 
    // Tabs
    const [tab, setTab] = React.useState<'car' | 'post' | 'car_type' | 'featured_locations'>('car')
@@ -48,7 +48,7 @@ export default function AdminPage() {
 
    // Admin login
    if (!authenticated) {
-      return <LoginForm onLogin={handleLogin} error={error} />
+      return <LoginForm onLogin={handleLogin} error={error} loading={loading} />
    }
 
    // Admin dashboard
