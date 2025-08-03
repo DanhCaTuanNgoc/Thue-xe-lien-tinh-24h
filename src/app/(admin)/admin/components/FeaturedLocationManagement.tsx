@@ -5,10 +5,12 @@ import type { FeaturedLocation } from '../../../../lib/models/featuredLocation'
 
 interface FeaturedLocationManagementProps {
    locations: FeaturedLocation[]
-   locationForm: Partial<Omit<FeaturedLocation, 'id'>>
+   locationForm: Partial<Omit<FeaturedLocation, 'id'>> & { imageFile?: File }
    editingLocationId: number | null
    loading: boolean
-   onLocationFormChange: (form: Partial<Omit<FeaturedLocation, 'id'>>) => void
+   onLocationFormChange: (
+      form: Partial<Omit<FeaturedLocation, 'id'>> & { imageFile?: File },
+   ) => void
    onLocationSubmit: (e: React.FormEvent) => void
    onLocationEdit: (location: FeaturedLocation) => void
    onLocationDelete: (id: number) => void
@@ -56,16 +58,14 @@ export default function FeaturedLocationManagement({
             setImagePreview(event.target?.result as string)
          }
          reader.readAsDataURL(file)
-
-         // For now, we'll just store the file name as the image URL
-         // In a real application, you'd upload the file to a server and get back a URL
-         onLocationFormChange({ ...locationForm, image_url: file.name })
+         // Lưu file vào form thay vì image_url
+         onLocationFormChange({ ...locationForm, imageFile: file })
       }
    }
 
    const clearImagePreview = () => {
       setImagePreview(null)
-      onLocationFormChange({ ...locationForm, image_url: '' })
+      onLocationFormChange({ ...locationForm, imageFile: undefined, image_url: '' })
       // Clear the file input
       if (fileInputRef.current) {
          fileInputRef.current.value = ''
