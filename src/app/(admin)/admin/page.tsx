@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
    LoginForm,
    TabNavigation,
@@ -8,6 +8,7 @@ import {
    CarTypeManagement,
    PostManagement,
    FeaturedLocationManagement,
+   ChangePasswordForm,
 } from './components'
 import {
    useAdminAuth,
@@ -19,10 +20,13 @@ import {
 
 export default function AdminPage() {
    // Auth
-   const { authenticated, error, loading, handleLogin } = useAdminAuth()
+   const { authenticated, error, loading, handleLogin, logout } = useAdminAuth()
 
    // Tabs
    const [tab, setTab] = React.useState<'car' | 'post' | 'car_type' | 'featured_locations'>('car')
+
+   // Change password modal
+   const [showChangePassword, setShowChangePassword] = useState(false)
 
    // Hooks for different management sections
    const carManagement = useCarManagement()
@@ -56,7 +60,12 @@ export default function AdminPage() {
       <div className="min-h-screen p-4">
          <div className="max-w-7xl mx-auto">
             {/* Header with tabs */}
-            <TabNavigation currentTab={tab} onTabChange={setTab} />
+            <TabNavigation 
+               currentTab={tab} 
+               onTabChange={setTab} 
+               onLogout={logout}
+               onChangePassword={() => setShowChangePassword(true)}
+            />
 
             {/* Content based on selected tab */}
             {tab === 'car' && (
@@ -120,6 +129,11 @@ export default function AdminPage() {
                />
             )}
          </div>
+
+         {/* Change Password Modal */}
+         {showChangePassword && (
+            <ChangePasswordForm onClose={() => setShowChangePassword(false)} />
+         )}
       </div>
    )
 }
