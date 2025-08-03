@@ -7,21 +7,6 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY! // Dùng Service Role Key để update
 );
 
-// Kiểm tra mật khẩu admin
-export async function AdminPassword(password: string) {
-  try {
-    const { data, error } = await supabase.from('admin_user').select('password_hash').eq('id', 1).single()
-    if (error) throw error
-    if (!data?.password_hash) return false
-    
-    // Sử dụng bcrypt.compare để so sánh password với hash
-    const isMatch = await bcrypt.compare(password, data.password_hash)
-    return isMatch
-  } catch (error) {
-    console.error('Lỗi khi kiểm tra mật khẩu admin:', error)
-    return false
-  }
-}
 
 // Kiểm tra mật khẩu admin
 export async function POST(req: NextRequest) {
