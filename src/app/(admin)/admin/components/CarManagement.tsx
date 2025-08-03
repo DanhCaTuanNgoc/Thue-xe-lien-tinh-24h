@@ -206,7 +206,7 @@ export default function CarManagement({
                <button
                   type="button"
                   onClick={() => setShowExcelTools(!showExcelTools)}
-                  className="bg-purple-600 text-white rounded-lg px-4 py-2 font-semibold hover:bg-purple-700 transition-colors flex items-center gap-2"
+                  className="bg-purple-600 text-white rounded-lg px-4 py-2 font-semibold hover:bg-purple-700 transition-colors flex items-center gap-2 cursor-pointer"
                >
                   {showExcelTools ? '🔽 Ẩn' : '🔼 Hiện'} Công cụ Excel
                </button>

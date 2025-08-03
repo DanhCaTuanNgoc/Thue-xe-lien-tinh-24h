@@ -53,6 +53,16 @@ export default function TabNavigation({ currentTab, onTabChange }: TabNavigation
             >
                📍 Quản lý địa điểm nổi bật
             </button>
+            <button
+               className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 cursor-pointer ${
+                  currentTab === 'featured_locations'
+                     ? 'bg-blue-600 text-white shadow-lg'
+                     : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300'
+               }`}
+               onClick={() => onTabChange('featured_locations')}
+            >
+               📍 Quản lý địa điểm nổi bật
+            </button>
          </div>
       </div>
    )

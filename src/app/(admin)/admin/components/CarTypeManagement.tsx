@@ -41,22 +41,22 @@ export default function CarTypeManagement({
       // Nếu là trường name, tự động tạo slug
       if (field === 'name') {
          const slug = `car-${value}`
-         
+
          // Kiểm tra bắt buộc cho tên loại xe
          if (!value || value.trim() === '') {
-            setErrors(prev => ({
+            setErrors((prev) => ({
                ...prev,
-               name: 'Tên loại xe là bắt buộc'
+               name: 'Tên loại xe là bắt buộc',
             }))
             return
          }
 
          // Xóa lỗi nếu input hợp lệ
-         setErrors(prev => ({
+         setErrors((prev) => ({
             ...prev,
-            name: undefined
+            name: undefined,
          }))
-         
+
          onCarTypeFormChange({ ...carTypeForm, name: value, slug })
       } else {
          onCarTypeFormChange({ ...carTypeForm, [field]: value })
@@ -67,26 +67,26 @@ export default function CarTypeManagement({
    const handlePriceInputChange = (value: string) => {
       // Kiểm tra bắt buộc cho giá
       if (!value || value.trim() === '') {
-         setErrors(prev => ({
+         setErrors((prev) => ({
             ...prev,
-            description_price: 'Giá là bắt buộc'
+            description_price: 'Giá là bắt buộc',
          }))
          return
       }
 
       // Kiểm tra xem có phải toàn số không
       if (value && !/^\d+$/.test(value)) {
-         setErrors(prev => ({
+         setErrors((prev) => ({
             ...prev,
-            description_price: 'Chỉ được nhập số nguyên từ 0-9'
+            description_price: 'Chỉ được nhập số nguyên từ 0-9',
          }))
          return
       }
 
       // Xóa lỗi nếu input hợp lệ
-      setErrors(prev => ({
+      setErrors((prev) => ({
          ...prev,
-         description_price: undefined
+         description_price: undefined,
       }))
 
       onCarTypeFormChange({ ...carTypeForm, description_price: value })
@@ -113,7 +113,7 @@ export default function CarTypeManagement({
          <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
             <h2 className="text-xl font-semibold mb-4 text-slate-800 flex items-center gap-2">
                <span className="text-blue-600">🚙</span>
-               {editingCarTypeId ? 'Sửa loại xe' : 'Thêm loại xe mới'}
+               {editingCarTypeId ? 'Sửa danh mục xe' : 'Thêm danh mục xe mới'}
             </h2>
 
             <form onSubmit={onCarTypeSubmit} className="space-y-4">
@@ -141,18 +141,27 @@ export default function CarTypeManagement({
                      onKeyDown={(e) => {
                         // Cho phép: số, backspace, delete, arrow keys, tab, enter
                         const allowedKeys = [
-                           'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
+                           'Backspace',
+                           'Delete',
+                           'Tab',
+                           'Enter',
+                           'ArrowLeft',
+                           'ArrowRight',
+                           'ArrowUp',
+                           'ArrowDown',
                         ]
                         const isNumber = /[0-9]/.test(e.key)
                         const isAllowedKey = allowedKeys.includes(e.key)
-                        
+
                         if (!isNumber && !isAllowedKey) {
                            e.preventDefault()
                         }
                      }}
                   />
                   {errors.description_price && (
-                     <p className="text-red-500 text-xs mt-1">{errors.description_price}</p>
+                     <p className="text-red-500 text-xs mt-1">
+                        {errors.description_price}
+                     </p>
                   )}
                </div>
 
@@ -206,7 +215,7 @@ export default function CarTypeManagement({
                         </div>
                      </div>
                   )}
-                  
+
                   {/* No Image Message */}
                   {!carTypeForm.image && (
                      <div className="text-sm text-slate-500 bg-slate-100 p-3 rounded-lg border border-slate-200">

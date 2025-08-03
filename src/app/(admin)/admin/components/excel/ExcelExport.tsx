@@ -66,23 +66,23 @@ export default function ExcelExport({ cars }: ExcelExportProps) {
               <table className="min-w-full text-sm">
                 <thead>
                   <tr className="bg-slate-50">
-                    <th className="px-3 py-2 text-left border">Tỉnh</th>
-                    <th className="px-3 py-2 text-left border">Điểm đến</th>
-                    <th className="px-3 py-2 text-left border">Quãng đường</th>
-                    <th className="px-3 py-2 text-left border">Loại xe</th>
-                    <th className="px-3 py-2 text-left border">Giá</th>
-                    <th className="px-3 py-2 text-left border">Thời gian</th>
+                    <th className="px-3 py-2 text-left border text-slate-800">Tỉnh</th>
+                    <th className="px-3 py-2 text-left border text-slate-800">Điểm đến</th>
+                    <th className="px-3 py-2 text-left border text-slate-800">Quãng đường</th>
+                    <th className="px-3 py-2 text-left border text-slate-800">Loại xe</th>
+                    <th className="px-3 py-2 text-left border text-slate-800">Giá</th>
+                    <th className="px-3 py-2 text-left border text-slate-800">Thời gian</th>
                   </tr>
                 </thead>
                 <tbody>
                   {cars.slice(0, 5).map((car, index) => (
                     <tr key={car.id} className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                      <td className="px-3 py-2 border">{car.province}</td>
-                      <td className="px-3 py-2 border">{car.end_location}</td>
-                      <td className="px-3 py-2 border">{car.distance || 0} km</td>
-                      <td className="px-3 py-2 border">{car.slug || '-'}</td>
-                      <td className="px-3 py-2 border">{car.price || 0} VNĐ</td>
-                      <td className="px-3 py-2 border">{car.time || 0} ngày</td>
+                      <td className="px-3 py-2 border text-slate-700">{car.province}</td>
+                      <td className="px-3 py-2 border text-slate-700">{car.end_location}</td>
+                      <td className="px-3 py-2 border text-slate-700">{car.distance || 0} km</td>
+                      <td className="px-3 py-2 border text-slate-700">{car.slug || '-'}</td>
+                      <td className="px-3 py-2 border text-slate-700">{car.price || 0} VNĐ</td>
+                      <td className="px-3 py-2 border text-slate-700">{car.time || 0} ngày</td>
                     </tr>
                   ))}
                 </tbody>
