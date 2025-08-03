@@ -30,7 +30,20 @@ export function useCarManagement() {
       try {
          // Validate required fields
          if (!carForm.province || !carForm.end_location) {
-            alert('Vui lòng nhập đầy đủ điểm đi và điểm đến!')
+            alert('Vui lòng nhập đầy đủ tỉnh và điểm đến!')
+            setLoading(false)
+            return
+         }
+
+         // Validate required number fields
+         if (!carForm.distance || carForm.distance === 0) {
+            alert('Vui lòng nhập quãng đường!')
+            setLoading(false)
+            return
+         }
+
+         if (!carForm.time || carForm.time === 0) {
+            alert('Vui lòng nhập thời gian!')
             setLoading(false)
             return
          }

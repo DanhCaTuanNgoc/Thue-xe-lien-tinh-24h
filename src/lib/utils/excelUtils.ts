@@ -133,12 +133,14 @@ export function createExcelTemplate(): void {
   // Tạo header row
   const headers = ['tỉnh', 'điểm đến', 'quãng đường', 'loại xe', 'giá', 'thời gian']
   
-  // Tạo dữ liệu mẫu
+  // Tạo dữ liệu mẫu với slug tiếng Việt và ký tự đặc biệt
   const templateData = [
     headers, // Header row
-    ['Hà Nội', 'Hồ Chí Minh', 1700, 'xe-khach', 500000, 2],
-    ['Hà Nội', 'Đà Nẵng', 800, 'xe-khach', 300000, 1],
-    ['Hồ Chí Minh', 'Nha Trang', 450, 'xe-khach', 200000, 1]
+    ['Hà Nội', 'Hồ Chí Minh', 1700, 'car-xe-khach', 500000, 2],
+    ['Hà Nội', 'Đà Nẵng', 800, 'car-xe-4-cho', 300000, 1],
+    ['Hồ Chí Minh', 'Nha Trang', 450, 'car-xe-bus', 200000, 1],
+    ['Hà Nội', 'Hải Phòng', 120, 'car-xe-4-cho-vip', 150000, 1],
+    ['Hồ Chí Minh', 'Vũng Tàu', 125, 'car-xe-khach-bus', 180000, 1]
   ]
   
   // Tạo workbook

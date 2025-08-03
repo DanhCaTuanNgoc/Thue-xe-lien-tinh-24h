@@ -1,8 +1,8 @@
 'use client'
 
 import React from 'react'
-import { exportToExcel } from '../../../../lib/utils/excelUtils'
-import type { Car } from '../../../../lib/models/car'
+import { exportToExcel } from '../../../../../lib/utils/excelUtils'
+import type { Car } from '../../../../../lib/models/car'
 
 interface ExcelExportProps {
   cars: Car[]

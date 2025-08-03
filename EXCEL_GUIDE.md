@@ -15,11 +15,26 @@ Hệ thống hỗ trợ import và export dữ liệu xe thông qua file Excel �
 
 ### Ví dụ dữ liệu:
 ```
-tỉnh        | điểm đến    | quãng đường | loại xe   | giá     | thời gian
-Hà Nội      | Hồ Chí Minh | 1700        | xe-khach  | 500000  | 2
-Hà Nội      | Đà Nẵng     | 800         | xe-khach  | 300000  | 1
-Hồ Chí Minh | Nha Trang   | 450         | xe-khach  | 200000  | 1
+tỉnh        | điểm đến    | quãng đường | loại xe        | giá     | thời gian
+Hà Nội      | Hồ Chí Minh | 1700        | car-xe-khach   | 500000  | 2
+Hà Nội      | Đà Nẵng     | 800         | car-xe-4-cho   | 300000  | 1
+Hồ Chí Minh | Nha Trang   | 450         | car-xe-bus     | 200000  | 1
 ```
+
+### Quy tắc tạo slug loại xe:
+- **Format**: `car-{tên loại xe}`
+- **Ví dụ**: 
+  - "Xe 4 chỗ" → `car-xe-4-cho`
+  - "Xe khách" → `car-xe-khach`
+  - "Xe bus" → `car-xe-bus`
+  - "Xe tải" → `car-xe-tai`
+  - "Xe 4 chỗ (VIP)" → `car-xe-4-cho-vip`
+  - "Xe khách & Bus" → `car-xe-khach-bus`
+  - "🚗 Xe siêu sang" → `car-xe-sieu-sang`
+  - "Xe @#$%^&*()" → `car-xe`
+- **Hỗ trợ tiếng Việt**: Hệ thống tự động loại bỏ dấu và chuyển thành slug URL-friendly
+- **Không giới hạn ký tự**: Tên loại xe có thể chứa bất kỳ ký tự nào (emoji, ký tự đặc biệt, v.v.)
+- **Slug tự động**: Chỉ giữ lại chữ cái, số và khoảng trắng, loại bỏ tất cả ký tự khác
 
 ## Cách sử dụng
 
@@ -46,7 +61,7 @@ Hồ Chí Minh | Nha Trang   | 450         | xe-khach  | 200000  | 1
 - Dòng đầu tiên phải là header với đúng tên cột
 - Tỉnh và điểm đến không được để trống
 - Quãng đường, giá, thời gian phải là số >= 0
-- Loại xe phải khớp với slug trong hệ thống
+- **Loại xe phải khớp với slug trong hệ thống** (format: `car-{name}`)
 - Hệ thống sẽ import từng dòng và gọi hàm `addCar` cho mỗi dòng
 
 ### Export:
@@ -69,12 +84,13 @@ Hồ Chí Minh | Nha Trang   | 450         | xe-khach  | 200000  | 1
 
 4. **"Loại xe phải khớp với slug trong hệ thống"**
    - Kiểm tra slug loại xe trong tab "Quản lý loại xe"
-   - Sử dụng đúng slug (ví dụ: xe-khach, xe-bus, etc.)
+   - Sử dụng đúng format: `car-{name}` (ví dụ: car-xe-khach, car-xe-4-cho)
+   - Slug được tạo tự động khi thêm loại xe mới
 
 ## Template mẫu
 Hệ thống cung cấp template Excel mẫu với:
 - Header đúng định dạng
-- 3 dòng dữ liệu mẫu
+- 3 dòng dữ liệu mẫu với slug tiếng Việt
 - Định dạng cột chuẩn
 
 Tải template và điền dữ liệu theo mẫu để đảm bảo import thành công. 

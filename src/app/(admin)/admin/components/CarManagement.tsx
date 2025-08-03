@@ -3,8 +3,8 @@
 import React, { useState, useMemo } from 'react'
 import type { Car } from '../../../../lib/models/car'
 import type { CarType } from '../../../../lib/models/car_type'
-import ExcelImport from './ExcelImport'
-import ExcelExport from './ExcelExport'
+import ExcelImport from './excel/ExcelImport'
+import ExcelExport from './excel/ExcelExport'
 
 interface CarManagementProps {
    cars: Car[]
@@ -58,7 +58,16 @@ export default function CarManagement({
 
    // Hàm xử lý input text với validation
    const handleTextInputChange = (field: string, value: string) => {
-      // Kiểm tra từng ký tự
+      // Bỏ qua validation cho tỉnh và điểm đến
+      if (field === 'province' || field === 'end_location') {
+         onCarFormChange({
+            ...carForm,
+            [field]: value
+         })
+         return
+      }
+
+      // Kiểm tra từng ký tự cho các trường khác
       const invalidChars = value.split('').filter(char => !isValidTextCharacter(char))
       
       if (invalidChars.length > 0) {
@@ -88,6 +97,15 @@ export default function CarManagement({
          setErrors(prev => ({
             ...prev,
             [field]: 'Chỉ được nhập số nguyên từ 0-9'
+         }))
+         return
+      }
+
+      // Kiểm tra bắt buộc cho quãng đường và thời gian
+      if ((field === 'distance' || field === 'time') && (!value || value === '')) {
+         setErrors(prev => ({
+            ...prev,
+            [field]: field === 'distance' ? 'Quãng đường là bắt buộc' : 'Thời gian là bắt buộc'
          }))
          return
       }
@@ -198,60 +216,25 @@ export default function CarManagement({
                   <input
                      required
                      placeholder="Tỉnh"
-                     className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
-                        errors.province ? 'border-red-500' : 'border-slate-200'
-                     }`}
+                     className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
                      value={carForm.province || ''}
                      onChange={(e) =>
                         handleTextInputChange('province', e.target.value)
                      }
-                     onKeyDown={(e) => {
-                        // Cho phép: chữ cái, số, khoảng trắng, backspace, delete, arrow keys, tab, enter
-                        const allowedKeys = [
-                           'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '
-                        ]
-                        const isLetter = /[a-zA-ZÀ-ỹ]/.test(e.key)
-                        const isNumber = /[0-9]/.test(e.key)
-                        const isAllowedKey = allowedKeys.includes(e.key)
-                        
-                        if (!isLetter && !isNumber && !isAllowedKey) {
-                           e.preventDefault()
-                        }
-                     }}
                   />
-                  {errors.province && (
-                     <p className="text-red-500 text-xs mt-1">{errors.province}</p>
-                  )}
                   <input
                      required
                      placeholder="Điểm đến"
-                     className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
-                        errors.end_location ? 'border-red-500' : 'border-slate-200'
-                     }`}
+                     className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
                      value={carForm.end_location || ''}
                      onChange={(e) =>
                         handleTextInputChange('end_location', e.target.value)
                      }
-                     onKeyDown={(e) => {
-                        // Cho phép: chữ cái, số, khoảng trắng, backspace, delete, arrow keys, tab, enter
-                        const allowedKeys = [
-                           'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '
-                        ]
-                        const isLetter = /[a-zA-ZÀ-ỹ]/.test(e.key)
-                        const isNumber = /[0-9]/.test(e.key)
-                        const isAllowedKey = allowedKeys.includes(e.key)
-                        
-                        if (!isLetter && !isNumber && !isAllowedKey) {
-                           e.preventDefault()
-                        }
-                     }}
                   />
-                  {errors.end_location && (
-                     <p className="text-red-500 text-xs mt-1">{errors.end_location}</p>
-                  )}
                   <input
                      type="number"
-                     placeholder="Quãng đường (km)"
+                     required
+                     placeholder="Quãng đường (km) *"
                      className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
                         errors.distance ? 'border-red-500' : 'border-slate-200'
                      }`}
@@ -317,7 +300,8 @@ export default function CarManagement({
                   )}
                   <input
                      type="number"
-                     placeholder="Thời gian (ngày)"
+                     required
+                     placeholder="Thời gian (ngày) *"
                      className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
                         errors.time ? 'border-red-500' : 'border-slate-200'
                      }`}
