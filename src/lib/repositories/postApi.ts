@@ -75,25 +75,40 @@ export async function updatePost(
    id: string,
    post: Partial<Omit<Post, 'id'>> & { images?: File[] },
 ) {
-   const imageUrls: string[] = []
-   if (post.images && post.images.length > 0) {
-      for (const file of post.images) {
-         const fileName = `${Date.now()}_${file.name}`
-         const url = await uploadImageToBucket(file, fileName)
-         imageUrls.push(url)
+   try {
+      const imageUrls: string[] = []
+      if (post.images && post.images.length > 0) {
+         for (const file of post.images) {
+            const fileName = `${Date.now()}_${file.name}`
+            const url = await uploadImageToBucket(file, fileName)
+            imageUrls.push(url)
+         }
       }
+      
+      const { images, ...rest } = post
+      
+      // Tạo updateData - nếu có ảnh mới thì dùng ảnh mới, không thì giữ nguyên image cũ
+      const updateData = {
+         ...rest,
+         ...(imageUrls.length > 0 && { image: imageUrls.join('|') }),
+      }
+      
+      const { data, error } = await supabase
+         .from('posts')
+         .update(updateData)
+         .eq('id', id)
+         .select()
+      
+      if (error) {
+         console.error('Error updating post:', error)
+         throw new Error(`Lỗi cập nhật bài viết: ${error.message}`)
+      }
+      
+      return data?.[0]
+   } catch (error) {
+      console.error('Error in updatePost:', error)
+      throw error
    }
-   const { ...rest } = post
-   // Nếu có ảnh mới thì dùng ảnh mới, không thì giữ nguyên image cũ
-   const updateData =
-      imageUrls.length > 0 ? { ...rest, image: imageUrls.join('|') } : rest
-   const { data, error } = await supabase
-      .from('posts')
-      .update(updateData)
-      .eq('id', id)
-      .select()
-   if (error) throw error
-   return data?.[0]
 }
 
 export async function deletePost(id: string) {
