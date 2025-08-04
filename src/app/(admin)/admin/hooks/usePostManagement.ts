@@ -80,18 +80,26 @@ export function usePostManagement() {
             ...postForm,
             images: postFiles,
          }
+         
+         console.log('Submitting post data:', postData)
+         
          if (editingPostId) {
             await updatePost(editingPostId, postData)
+            alert('Cập nhật bài viết thành công!')
          } else {
             await addPost(postData as Omit<Post, 'id'> & { images: File[] })
+            alert('Thêm bài viết mới thành công!')
          }
+         
          setPostForm({})
          setPostImages([])
          setPostFiles([])
          setEditingPostId(null)
          await loadPosts()
       } catch (err) {
-         alert('Lỗi thao tác bài viết!')
+         console.error('Error submitting post:', err)
+         const errorMessage = err instanceof Error ? err.message : 'Lỗi thao tác bài viết!'
+         alert(`Lỗi: ${errorMessage}`)
       } finally {
          setLoading(false)
       }
