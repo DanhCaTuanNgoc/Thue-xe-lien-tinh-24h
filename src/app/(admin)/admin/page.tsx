@@ -90,11 +90,16 @@ export default function AdminPage() {
                   carTypeForm={carTypeManagement.carTypeForm}
                   editingCarTypeId={carTypeManagement.editingCarTypeId}
                   loading={carTypeManagement.loading}
+                  imageFile={carTypeManagement.imageFile}
+                  imagePreview={carTypeManagement.imagePreview}
+                  fileInputRef={carTypeManagement.fileInputRef}
                   onCarTypeFormChange={carTypeManagement.setCarTypeForm}
                   onCarTypeSubmit={carTypeManagement.handleCarTypeSubmit}
                   onCarTypeEdit={carTypeManagement.handleCarTypeEdit}
                   onCarTypeDelete={carTypeManagement.handleCarTypeDelete}
                   onCancelEdit={carTypeManagement.handleCancelEdit}
+                  onImageUpload={carTypeManagement.handleImageUpload}
+                  onRemoveImage={carTypeManagement.removeImage}
                />
             )}
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import {
    fetchCarTypes,
    addCarType,
@@ -12,6 +12,9 @@ export function useCarTypeManagement() {
    const [carTypeForm, setCarTypeForm] = useState<Partial<Omit<CarType, 'id'>>>({})
    const [editingCarTypeId, setEditingCarTypeId] = useState<number | null>(null)
    const [loading, setLoading] = useState(false)
+   const [imageFile, setImageFile] = useState<File | null>(null)
+   const [imagePreview, setImagePreview] = useState<string>('')
+   const fileInputRef = useRef<HTMLInputElement>(null)
 
    const loadCarTypes = async () => {
       try {
@@ -19,6 +22,31 @@ export function useCarTypeManagement() {
          setCarTypes(data)
       } catch (error) {
          console.error('Error loading car types:', error)
+      }
+   }
+
+   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0]
+      if (!file) return
+      
+      setImageFile(file)
+      
+      // Preview ảnh
+      if (file.type.startsWith('image/')) {
+         const reader = new FileReader()
+         reader.onload = (event) => {
+            const result = event.target?.result as string
+            setImagePreview(result)
+         }
+         reader.readAsDataURL(file)
+      }
+   }
+
+   const removeImage = () => {
+      setImageFile(null)
+      setImagePreview('')
+      if (fileInputRef.current) {
+         fileInputRef.current.value = ''
       }
    }
 
@@ -40,33 +68,33 @@ export function useCarTypeManagement() {
             return
          }
 
-         // // Validate giá chỉ được nhập số
-         // if (!/^\d+$/.test(carTypeForm.description_price)) {
-         //   alert('Giá chỉ được nhập số nguyên!');
-         //   setLoading(false);
-         //   return;
-         // }
-
          console.log('Submitting car type form:', carTypeForm)
+
+         const carTypeData = {
+            ...carTypeForm,
+            imageFile: imageFile || undefined,
+         }
 
          if (editingCarTypeId) {
             console.log('Updating car type with ID:', editingCarTypeId)
-            await updateCarType(editingCarTypeId, carTypeForm)
+            await updateCarType(editingCarTypeId, carTypeData)
+            alert('Cập nhật loại xe thành công!')
          } else {
             console.log('Adding new car type')
-            const newCarType = await addCarType(carTypeForm as Omit<CarType, 'id'>)
+            const newCarType = await addCarType(carTypeData as Omit<CarType, 'id'> & { imageFile?: File })
             console.log('New car type added:', newCarType)
-         }
-         if (!carTypeForm.image) {
-            carTypeForm.image = undefined
+            alert('Thêm loại xe mới thành công!')
          }
 
          setCarTypeForm({})
+         setImageFile(null)
+         setImagePreview('')
          setEditingCarTypeId(null)
          await loadCarTypes()
       } catch (err) {
          console.error('Error submitting car type:', err)
-         alert('Lỗi thao tác loại xe! Vui lòng kiểm tra console để biết thêm chi tiết.')
+         const errorMessage = err instanceof Error ? err.message : 'Lỗi thao tác loại xe!'
+         alert(`Lỗi: ${errorMessage}`)
       } finally {
          setLoading(false)
       }
@@ -75,6 +103,8 @@ export function useCarTypeManagement() {
    const handleCarTypeEdit = (carType: CarType) => {
       setCarTypeForm(carType)
       setEditingCarTypeId(carType.id)
+      setImagePreview(carType.image || '')
+      setImageFile(null)
    }
 
    const handleCarTypeDelete = async (id: number) => {
@@ -92,6 +122,8 @@ export function useCarTypeManagement() {
 
    const handleCancelEdit = () => {
       setCarTypeForm({})
+      setImageFile(null)
+      setImagePreview('')
       setEditingCarTypeId(null)
    }
 
@@ -100,11 +132,16 @@ export function useCarTypeManagement() {
       carTypeForm,
       editingCarTypeId,
       loading,
+      imageFile,
+      imagePreview,
+      fileInputRef,
       setCarTypeForm,
       handleCarTypeSubmit,
       handleCarTypeEdit,
       handleCarTypeDelete,
       handleCancelEdit,
+      handleImageUpload,
+      removeImage,
       loadCarTypes,
    }
 }
