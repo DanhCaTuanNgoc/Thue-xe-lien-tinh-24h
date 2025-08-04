@@ -8,12 +8,16 @@ interface CarTypeManagementProps {
    carTypeForm: Partial<Omit<CarType, 'id'>>
    editingCarTypeId: number | null
    loading: boolean
+   imageFile: File | null
+   imagePreview: string
+   fileInputRef: React.RefObject<HTMLInputElement | null>
    onCarTypeFormChange: (form: Partial<Omit<CarType, 'id'>>) => void
    onCarTypeSubmit: (e: React.FormEvent) => void
    onCarTypeEdit: (carType: CarType) => void
    onCarTypeDelete: (id: number) => void
    onCancelEdit: () => void
-   onImageUpload?: (e: React.ChangeEvent<HTMLInputElement>) => void
+   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
+   onRemoveImage: () => void
 }
 
 export default function CarTypeManagement({
@@ -21,15 +25,17 @@ export default function CarTypeManagement({
    carTypeForm,
    editingCarTypeId,
    loading,
+   imageFile,
+   imagePreview,
+   fileInputRef,
    onCarTypeFormChange,
    onCarTypeSubmit,
    onCarTypeEdit,
    onCarTypeDelete,
    onCancelEdit,
    onImageUpload,
+   onRemoveImage,
 }: CarTypeManagementProps) {
-   const fileInputRef = useRef<HTMLInputElement>(null)
-
    // State cho validation errors
    const [errors, setErrors] = useState<{
       name?: string
@@ -56,24 +62,6 @@ export default function CarTypeManagement({
 
    // Hàm xử lý input số cho giá
    const handlePriceInputChange = (value: string) => {
-      // // Kiểm tra bắt buộc cho giá
-      // if (!value || value.trim() === '') {
-      //    setErrors((prev) => ({
-      //       ...prev,
-      //       description_price: 'Giá là bắt buộc',
-      //    }))
-      //    return
-      // }
-
-      // // Kiểm tra xem có phải toàn số không
-      // if (value && !/^\d+$/.test(value)) {
-      //    setErrors((prev) => ({
-      //       ...prev,
-      //       description_price: 'Chỉ được nhập số nguyên từ 0-9',
-      //    }))
-      //    return
-      // }
-
       // Xóa lỗi nếu input hợp lệ
       setErrors((prev) => ({
          ...prev,
@@ -81,21 +69,6 @@ export default function CarTypeManagement({
       }))
 
       onCarTypeFormChange({ ...carTypeForm, description_price: value })
-   }
-
-   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const files = e.target.files
-      if (!files) return
-
-      const file = files[0]
-      if (file && file.type.startsWith('image/')) {
-         const reader = new FileReader()
-         reader.onload = (event) => {
-            const result = event.target?.result as string
-            onCarTypeFormChange({ ...carTypeForm, image: result })
-         }
-         reader.readAsDataURL(file)
-      }
    }
 
    return (
@@ -148,7 +121,7 @@ export default function CarTypeManagement({
                         ref={fileInputRef}
                         type="file"
                         accept="image/*"
-                        onChange={handleImageUpload}
+                        onChange={onImageUpload}
                         className="hidden"
                      />
                      <button
@@ -164,32 +137,35 @@ export default function CarTypeManagement({
                   </div>
 
                   {/* Image Preview */}
-                  {carTypeForm.image && (
+                  {(imagePreview || carTypeForm.image) && (
                      <div className="space-y-3">
                         <h4 className="text-sm font-semibold text-slate-700">
                            Ảnh đã chọn
                         </h4>
                         <div className="relative inline-block">
                            <img
-                              src={carTypeForm.image}
+                              src={imagePreview || carTypeForm.image}
                               alt="Preview"
                               className="w-32 h-32 object-cover rounded-lg border-2 border-slate-200"
                            />
                            <button
                               type="button"
-                              onClick={() =>
-                                 onCarTypeFormChange({ ...carTypeForm, image: '' })
-                              }
+                              onClick={onRemoveImage}
                               className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600 transition-colors cursor-pointer"
                            >
                               ×
                            </button>
                         </div>
+                        {imageFile && (
+                           <p className="text-xs text-slate-500">
+                              File: {imageFile.name}
+                           </p>
+                        )}
                      </div>
                   )}
 
                   {/* No Image Message */}
-                  {!carTypeForm.image && (
+                  {!imagePreview && !carTypeForm.image && (
                      <div className="text-sm text-slate-500 bg-slate-100 p-3 rounded-lg border border-slate-200">
                         <div className="flex items-center gap-2">
                            <span>ℹ️</span>
