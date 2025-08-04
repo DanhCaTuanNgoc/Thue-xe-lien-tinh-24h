@@ -33,23 +33,18 @@ export async function fetchCarTypeById(id: number): Promise<CarType | null> {
 }
 
 // Lấy loại xe theo slug
-export async function fetchCarTypeBySlug(slug: string): Promise<CarType | null> {
+export async function fetchCarTypeBySlug(slug: string) {
    const { data, error } = await supabase
       .from('car_types')
       .select('*')
       .eq('slug', slug)
       .single()
-   if (error) throw error
-   if (!data) return null
-   return {
-      id: data.id,
-      name: data.name,
-      slug: data.slug,
-      description_price: data.description_price,
-      image: data.img_url,
-   } as CarType
+   if (error) {
+      console.error(error)
+      return null
+   }
+   return data
 }
-
 // Thêm loại xe mới
 export async function addCarType(carType: Omit<CarType, 'id'>) {
    const { data, error } = await supabase
@@ -77,10 +72,10 @@ export async function addCarType(carType: Omit<CarType, 'id'>) {
 // Cập nhật loại xe
 export async function updateCarType(id: number, carType: Partial<Omit<CarType, 'id'>>) {
    const updateData: {
-      name?: string;
-      slug?: string;
-      description_price?: string;
-      img_url?: string | null;
+      name?: string
+      slug?: string
+      description_price?: string
+      img_url?: string | null
    } = {}
    if (carType.name) updateData.name = carType.name
    if (carType.slug) updateData.slug = carType.slug

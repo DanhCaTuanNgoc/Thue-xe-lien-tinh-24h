@@ -40,7 +40,7 @@ export default function CarTypeManagement({
    const handleTextInputChange = (field: string, value: string) => {
       // Nếu là trường name, tự động tạo slug
       if (field === 'name') {
-         const slug = `car-${value}`
+         const slug = `cars-${value.replace(/\s+/g, '')}`
 
          // Xóa lỗi nếu input hợp lệ
          setErrors((prev) => ({
