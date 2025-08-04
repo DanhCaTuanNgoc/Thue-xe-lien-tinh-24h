@@ -40,16 +40,7 @@ export default function CarTypeManagement({
    const handleTextInputChange = (field: string, value: string) => {
       // Nếu là trường name, tự động tạo slug
       if (field === 'name') {
-         const slug = `car-${value}`
-
-         // Kiểm tra bắt buộc cho tên loại xe
-         if (!value || value.trim() === '') {
-            setErrors((prev) => ({
-               ...prev,
-               name: 'Tên loại xe là bắt buộc',
-            }))
-            return
-         }
+         const slug = `cars-${value.replace(/\s+/g, '')}`
 
          // Xóa lỗi nếu input hợp lệ
          setErrors((prev) => ({
@@ -65,23 +56,23 @@ export default function CarTypeManagement({
 
    // Hàm xử lý input số cho giá
    const handlePriceInputChange = (value: string) => {
-      // Kiểm tra bắt buộc cho giá
-      if (!value || value.trim() === '') {
-         setErrors((prev) => ({
-            ...prev,
-            description_price: 'Giá là bắt buộc',
-         }))
-         return
-      }
+      // // Kiểm tra bắt buộc cho giá
+      // if (!value || value.trim() === '') {
+      //    setErrors((prev) => ({
+      //       ...prev,
+      //       description_price: 'Giá là bắt buộc',
+      //    }))
+      //    return
+      // }
 
-      // Kiểm tra xem có phải toàn số không
-      if (value && !/^\d+$/.test(value)) {
-         setErrors((prev) => ({
-            ...prev,
-            description_price: 'Chỉ được nhập số nguyên từ 0-9',
-         }))
-         return
-      }
+      // // Kiểm tra xem có phải toàn số không
+      // if (value && !/^\d+$/.test(value)) {
+      //    setErrors((prev) => ({
+      //       ...prev,
+      //       description_price: 'Chỉ được nhập số nguyên từ 0-9',
+      //    }))
+      //    return
+      // }
 
       // Xóa lỗi nếu input hợp lệ
       setErrors((prev) => ({
@@ -132,31 +123,12 @@ export default function CarTypeManagement({
                   )}
                   <input
                      required
-                     placeholder="Giá (chỉ nhập số) *"
+                     placeholder="Giá tham khảo (VD: 850.000đ) *"
                      className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
                         errors.description_price ? 'border-red-500' : 'border-slate-200'
                      }`}
                      value={carTypeForm.description_price || ''}
                      onChange={(e) => handlePriceInputChange(e.target.value)}
-                     onKeyDown={(e) => {
-                        // Cho phép: số, backspace, delete, arrow keys, tab, enter
-                        const allowedKeys = [
-                           'Backspace',
-                           'Delete',
-                           'Tab',
-                           'Enter',
-                           'ArrowLeft',
-                           'ArrowRight',
-                           'ArrowUp',
-                           'ArrowDown',
-                        ]
-                        const isNumber = /[0-9]/.test(e.key)
-                        const isAllowedKey = allowedKeys.includes(e.key)
-
-                        if (!isNumber && !isAllowedKey) {
-                           e.preventDefault()
-                        }
-                     }}
                   />
                   {errors.description_price && (
                      <p className="text-red-500 text-xs mt-1">

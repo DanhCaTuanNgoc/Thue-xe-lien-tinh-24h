@@ -1,23 +1,24 @@
 import { createClient } from '@supabase/supabase-js'
 import Image from 'next/image'
 import CarSearchClient from './CarSearchClient'
+import { fetchCarTypeBySlug } from '@/lib/repositories/car_typeApi'
 
 const supabase = createClient(
    process.env.NEXT_PUBLIC_SUPABASE_URL!,
    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 )
 
-export default async function CarTypePage({ params }: { params: { slug: string } }) {
-   // Fetch dữ liệu từ Supabase
-   const { data, error } = await supabase
-      .from('car_types')
-      .select('*')
-      .eq('slug', params.slug)
-      .single()
+export default async function CarTypePage(props: { params: { slug: string } }) {
+   const params = props.params
+   const decodedSlug = decodeURIComponent(params.slug)
 
-   if (error || !data) {
+   const data = await fetchCarTypeBySlug(decodedSlug)
+
+   if (!data) {
       return (
-         <div className="text-center py-20 text-red-600">Không tìm thấy danh mục xe!</div>
+         <div className="max-h-screen text-center py-20 text-red-600">
+            Không tìm thấy danh mục xe!
+         </div>
       )
    }
 

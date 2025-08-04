@@ -75,6 +75,7 @@ export function useCarManagement() {
             }
             console.log('Updating car with ID:', editingCarId)
             await updateCar(editingCarId, formattedCarForm)
+            alert('Cập nhật xe thành công!')
          } else {
             // ... trong handleCarSubmit:
             const formattedCarForm = {
@@ -84,6 +85,7 @@ export function useCarManagement() {
             console.log('Adding new car')
             const newCar = await addCar(formattedCarForm as Omit<Car, 'id'>)
             console.log('New car added:', newCar)
+            alert('Thêm xe mới thành công!')
          }
 
          setCarForm({})

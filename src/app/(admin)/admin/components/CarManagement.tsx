@@ -59,35 +59,26 @@ export default function CarManagement({
 
    // Hàm xử lý input text với validation
    const handleTextInputChange = (field: string, value: string) => {
-      // Bỏ qua validation cho tỉnh và điểm đến
-      if (field === 'province' || field === 'end_location') {
-         onCarFormChange({
-            ...carForm,
-            [field]: value
-         })
-         return
-      }
+      // Kiểm tra từng ký tự cho tất cả các trường
+      const invalidChars = value.split('').filter((char) => !isValidTextCharacter(char))
 
-      // Kiểm tra từng ký tự cho các trường khác
-      const invalidChars = value.split('').filter(char => !isValidTextCharacter(char))
-      
       if (invalidChars.length > 0) {
-         setErrors(prev => ({
+         setErrors((prev) => ({
             ...prev,
-            [field]: `Không được chứa ký tự đặc biệt: ${invalidChars.join(', ')}`
+            [field]: `Không được chứa ký tự đặc biệt: ${invalidChars.join(', ')}`,
          }))
          return
       }
 
       // Xóa lỗi nếu input hợp lệ
-      setErrors(prev => ({
+      setErrors((prev) => ({
          ...prev,
-         [field]: undefined
+         [field]: undefined,
       }))
 
       onCarFormChange({
          ...carForm,
-         [field]: value
+         [field]: value,
       })
    }
 
@@ -95,48 +86,51 @@ export default function CarManagement({
    const handleNumberInputChange = (field: string, value: string) => {
       // Kiểm tra xem có phải toàn số không (không có dấu chấm)
       if (value && !/^\d+$/.test(value)) {
-         setErrors(prev => ({
+         setErrors((prev) => ({
             ...prev,
-            [field]: 'Chỉ được nhập số nguyên từ 0-9'
+            [field]: 'Chỉ được nhập số nguyên từ 0-9',
          }))
          return
       }
 
-      // Kiểm tra bắt buộc cho quãng đường và thời gian
-      if ((field === 'distance' || field === 'time') && (!value || value === '')) {
-         setErrors(prev => ({
+      if (!value.trim()) {
+         setErrors((prev) => ({
             ...prev,
-            [field]: field === 'distance' ? 'Quãng đường là bắt buộc' : 'Thời gian là bắt buộc'
+            [field]: `Trường này là bắt buộc`,
          }))
-         return
+      } else {
+         setErrors((prev) => ({
+            ...prev,
+            [field]: undefined,
+         }))
       }
 
       // Xóa lỗi nếu input hợp lệ
-      setErrors(prev => ({
+      setErrors((prev) => ({
          ...prev,
-         [field]: undefined
+         [field]: undefined,
       }))
 
       onCarFormChange({
          ...carForm,
-         [field]: value ? Number(value) : undefined
+         [field]: value ? Number(value) : undefined,
       })
    }
 
    // Hàm xử lý select loại xe với validation
    const handleCarTypeChange = (value: string) => {
       if (!value || value === '') {
-         setErrors(prev => ({
+         setErrors((prev) => ({
             ...prev,
-            slug: 'Vui lòng chọn loại xe'
+            slug: 'Vui lòng chọn loại xe',
          }))
          return
       }
 
       // Xóa lỗi nếu input hợp lệ
-      setErrors(prev => ({
+      setErrors((prev) => ({
          ...prev,
-         slug: undefined
+         slug: undefined,
       }))
 
       onCarFormChange({ ...carForm, slug: value })
@@ -238,9 +232,7 @@ export default function CarManagement({
                      placeholder="Tỉnh*"
                      className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
                      value={carForm.province || ''}
-                     onChange={(e) =>
-                        handleTextInputChange('province', e.target.value)
-                     }
+                     onChange={(e) => handleTextInputChange('province', e.target.value)}
                   />
                   <input
                      required
@@ -259,17 +251,22 @@ export default function CarManagement({
                         errors.distance ? 'border-red-500' : 'border-slate-200'
                      }`}
                      value={carForm.distance || ''}
-                     onChange={(e) =>
-                        handleNumberInputChange('distance', e.target.value)
-                     }
+                     onChange={(e) => handleNumberInputChange('distance', e.target.value)}
                      onKeyDown={(e) => {
                         // Cho phép: số, backspace, delete, arrow keys, tab, enter
                         const allowedKeys = [
-                           'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
+                           'Backspace',
+                           'Delete',
+                           'Tab',
+                           'Enter',
+                           'ArrowLeft',
+                           'ArrowRight',
+                           'ArrowUp',
+                           'ArrowDown',
                         ]
                         const isNumber = /[0-9]/.test(e.key)
                         const isAllowedKey = allowedKeys.includes(e.key)
-                        
+
                         if (!isNumber && !isAllowedKey) {
                            e.preventDefault()
                         }
@@ -284,9 +281,7 @@ export default function CarManagement({
                         errors.slug ? 'border-red-500' : 'border-slate-200'
                      }`}
                      value={carForm.slug || ''}
-                     onChange={(e) =>
-                        handleCarTypeChange(e.target.value)
-                     }
+                     onChange={(e) => handleCarTypeChange(e.target.value)}
                   >
                      <option value="">-- Chọn loại xe * --</option>
                      {carTypes.map((carType) => (
@@ -305,17 +300,22 @@ export default function CarManagement({
                         errors.price ? 'border-red-500' : 'border-slate-200'
                      }`}
                      value={carForm.price || ''}
-                     onChange={(e) =>
-                        handleNumberInputChange('price', e.target.value)
-                     }
+                     onChange={(e) => handleNumberInputChange('price', e.target.value)}
                      onKeyDown={(e) => {
                         // Cho phép: số, backspace, delete, arrow keys, tab, enter
                         const allowedKeys = [
-                           'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
+                           'Backspace',
+                           'Delete',
+                           'Tab',
+                           'Enter',
+                           'ArrowLeft',
+                           'ArrowRight',
+                           'ArrowUp',
+                           'ArrowDown',
                         ]
                         const isNumber = /[0-9]/.test(e.key)
                         const isAllowedKey = allowedKeys.includes(e.key)
-                        
+
                         if (!isNumber && !isAllowedKey) {
                            e.preventDefault()
                         }
@@ -332,17 +332,22 @@ export default function CarManagement({
                         errors.time ? 'border-red-500' : 'border-slate-200'
                      }`}
                      value={carForm.time || ''}
-                     onChange={(e) =>
-                        handleNumberInputChange('time', e.target.value)
-                     }
+                     onChange={(e) => handleNumberInputChange('time', e.target.value)}
                      onKeyDown={(e) => {
                         // Cho phép: số, backspace, delete, arrow keys, tab, enter
                         const allowedKeys = [
-                           'Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
+                           'Backspace',
+                           'Delete',
+                           'Tab',
+                           'Enter',
+                           'ArrowLeft',
+                           'ArrowRight',
+                           'ArrowUp',
+                           'ArrowDown',
                         ]
                         const isNumber = /[0-9]/.test(e.key)
                         const isAllowedKey = allowedKeys.includes(e.key)
-                        
+
                         if (!isNumber && !isAllowedKey) {
                            e.preventDefault()
                         }
@@ -355,7 +360,7 @@ export default function CarManagement({
                <div className="flex gap-3">
                   <button
                      type="submit"
-                     className="bg-blue-600 text-white rounded-lg px-6 py-3 font-semibold hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50"
+                     className="bg-blue-600 text-white rounded-lg px-6 py-3 font-semibold hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 cursor-pointer"
                      disabled={loading}
                   >
                      {loading
