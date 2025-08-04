@@ -1,6 +1,15 @@
 import { supabase } from '../supabaseClient'
 import type { Post } from '../models/post'
 
+// Hàm tạo UUID
+function generateUUID(): string {
+   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0
+      const v = c === 'x' ? r : (r & 0x3 | 0x8)
+      return v.toString(16)
+   })
+}
+
 // Hàm upload ảnh lên bucket images
 export async function uploadImageToBucket(file: File, fileName: string): Promise<string> {
    const { error } = await supabase.storage
@@ -28,21 +37,37 @@ export async function fetchPostById(id: string) {
 
 // Sửa addPost để nhận images: File[] và upload lên bucket
 export async function addPost(post: Omit<Post, 'id'> & { images?: File[] }) {
-   const imageUrls: string[] = []
-   if (post.images && post.images.length > 0) {
-      for (const file of post.images) {
-         const fileName = `${Date.now()}_${file.name}`
-         const url = await uploadImageToBucket(file, fileName)
-         imageUrls.push(url)
+   try {
+      const imageUrls: string[] = []
+      if (post.images && post.images.length > 0) {
+         for (const file of post.images) {
+            const fileName = `${Date.now()}_${file.name}`
+            const url = await uploadImageToBucket(file, fileName)
+            imageUrls.push(url)
+         }
       }
+      
+      const { images, ...rest } = post
+      const postData = {
+         ...rest,
+         image: imageUrls.join('|') || null,
+      }
+      
+      const { data, error } = await supabase
+         .from('posts')
+         .insert([postData])
+         .select()
+      
+      if (error) {
+         console.error('Error adding post:', error)
+         throw new Error(`Lỗi thêm bài viết: ${error.message}`)
+      }
+      
+      return data?.[0]
+   } catch (error) {
+      console.error('Error in addPost:', error)
+      throw error
    }
-   const { ...rest } = post
-   const { data, error } = await supabase
-      .from('posts')
-      .insert([{ ...rest, image: imageUrls.join('|') }])
-      .select()
-   if (error) throw error
-   return data?.[0]
 }
 
 // Sửa updatePost để nhận images: File[] và upload lên bucket nếu có
