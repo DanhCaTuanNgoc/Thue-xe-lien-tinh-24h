@@ -76,17 +76,26 @@ export function usePostManagement() {
             return
          }
 
-         const postData = {
-            ...postForm,
-            images: postFiles,
-         }
-         
-         console.log('Submitting post data:', postData)
+         console.log('Submitting post data:', postForm)
+         console.log('Post files:', postFiles)
+         console.log('Post images:', postImages)
          
          if (editingPostId) {
-            await updatePost(editingPostId, postData)
+            // Cập nhật bài viết
+            const updateData = {
+               ...postForm,
+               images: postFiles.length > 0 ? postFiles : undefined,
+            }
+            console.log('Updating post with ID:', editingPostId)
+            await updatePost(editingPostId, updateData)
             alert('Cập nhật bài viết thành công!')
          } else {
+            // Thêm bài viết mới
+            const postData = {
+               ...postForm,
+               images: postFiles,
+            }
+            console.log('Adding new post')
             await addPost(postData as Omit<Post, 'id'> & { images: File[] })
             alert('Thêm bài viết mới thành công!')
          }
@@ -108,13 +117,16 @@ export function usePostManagement() {
    const handlePostEdit = (post: Post) => {
       setPostForm(post)
       setEditingPostId(post.id)
-      // Không set lại postFiles khi edit, chỉ preview ảnh cũ
+      
+      // Xử lý ảnh cũ - hiển thị preview
       if (post.image) {
-         const images = post.image.split('|')
+         const images = post.image.split('|').filter(img => img.trim() !== '')
          setPostImages(images)
       } else {
          setPostImages([])
       }
+      
+      // Reset ảnh mới
       setPostFiles([])
    }
 
