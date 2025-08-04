@@ -15,6 +15,7 @@ export default function ExcelImport({ onImportComplete, onError }: ExcelImportPr
   const [importProgress, setImportProgress] = useState(0)
   const [totalRows, setTotalRows] = useState(0)
   const [currentRow, setCurrentRow] = useState(0)
+  const [skipInvalidRows, setSkipInvalidRows] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,19 +33,19 @@ export default function ExcelImport({ onImportComplete, onError }: ExcelImportPr
     setCurrentRow(0)
 
     try {
-      // Đọc file Excel
+      // Đọc file Excel - nếu có lỗi validation sẽ throw error và dừng ngay
       const excelData = await readExcelFile(file)
       setTotalRows(excelData.length)
 
       if (excelData.length === 0) {
         onError('File Excel không có dữ liệu hợp lệ')
-        setIsImporting(false)
         return
       }
 
-      // Import từng dòng
+      // Import dữ liệu
       let successCount = 0
-      let errorCount = 0
+      const errors: string[] = []
+      const skippedRows: number[] = []
 
       for (let i = 0; i < excelData.length; i++) {
         try {
@@ -58,8 +59,17 @@ export default function ExcelImport({ onImportComplete, onError }: ExcelImportPr
           
           successCount++
         } catch (error) {
-          console.error(`Lỗi import dòng ${i + 1}:`, error)
-          errorCount++
+          const errorMessage = `Dòng ${i + 2}: ${(error as Error).message}`
+          errors.push(errorMessage)
+          skippedRows.push(i + 2)
+          console.error(errorMessage, error)
+          
+          // Nếu không bỏ qua lỗi thì dừng ngay
+          if (!skipInvalidRows) {
+            const fullErrorMessage = `Import thất bại!\n\nLỗi gặp phải:\n${errorMessage}\n\nVui lòng sửa lỗi và thử lại.`
+            onError(fullErrorMessage)
+            return
+          }
         }
 
         // Cập nhật progress
@@ -67,12 +77,24 @@ export default function ExcelImport({ onImportComplete, onError }: ExcelImportPr
         setImportProgress(((i + 1) / excelData.length) * 100)
       }
 
+      // Kiểm tra kết quả
+      if (errors.length > 0 && !skipInvalidRows) {
+        // Có lỗi và không bỏ qua - dừng và hiển thị tất cả lỗi
+        const errorMessage = `Import thất bại!\n\nCác lỗi gặp phải:\n${errors.join('\n')}\n\nVui lòng sửa lỗi và thử lại.`
+        onError(errorMessage)
+        return
+      }
+
       // Thông báo kết quả
-      if (errorCount === 0) {
+      if (errors.length > 0) {
+        // Có lỗi nhưng đã bỏ qua
+        const resultMessage = `Import hoàn tất!\n\n✅ Thành công: ${successCount} xe\n❌ Bỏ qua: ${errors.length} dòng có lỗi\n\nCác dòng bị bỏ qua: ${skippedRows.join(', ')}\n\nLỗi chi tiết:\n${errors.join('\n')}`
+        alert(resultMessage)
+        onImportComplete()
+      } else {
+        // Thành công hoàn toàn
         onImportComplete()
         alert(`Import thành công ${successCount} xe!`)
-      } else {
-        alert(`Import hoàn tất: ${successCount} thành công, ${errorCount} lỗi`)
       }
 
     } catch (error) {
@@ -112,6 +134,25 @@ export default function ExcelImport({ onImportComplete, onError }: ExcelImportPr
             <li>• Quãng đường, giá, thời gian phải là số</li>
             <li>• Loại xe phải khớp với slug trong hệ thống</li>
           </ul>
+        </div>
+
+        {/* Tùy chọn xử lý lỗi */}
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="skip-invalid-rows"
+              checked={skipInvalidRows}
+              onChange={(e) => setSkipInvalidRows(e.target.checked)}
+              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <label htmlFor="skip-invalid-rows" className="text-sm font-medium text-yellow-800">
+              Bỏ qua các dòng có lỗi và tiếp tục import
+            </label>
+          </div>
+          <p className="text-xs text-yellow-700 mt-1">
+            Khi bật: Hệ thống sẽ bỏ qua các dòng có lỗi và chỉ import các dòng hợp lệ
+          </p>
         </div>
 
         {/* Download template */}

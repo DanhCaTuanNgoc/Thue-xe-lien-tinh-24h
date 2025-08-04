@@ -35,6 +35,32 @@ export function carToExcelData(car: Car): ExcelCarData {
    }
 }
 
+// Hàm helper để chuyển đổi string số có dấu phẩy/dấu chấm thành number
+function parseNumber(value: any, fieldName: string, rowIndex: number): number {
+   if (typeof value === 'number') {
+      return value
+   }
+
+   if (typeof value === 'string') {
+      const trimmedValue = value.trim()
+      
+      // Kiểm tra xem có chứa chữ cái không (ngoại trừ dấu phẩy, dấu chấm, dấu trừ, dấu cộng)
+      // Chỉ cho phép: số, dấu phẩy, dấu chấm, dấu trừ, dấu cộng, khoảng trắng
+      const validNumberPattern = /^[\d\s,.\-+]+$/
+      
+      if (!validNumberPattern.test(trimmedValue)) {
+         throw new Error(`Dòng ${rowIndex + 2}: ${fieldName} chứa ký tự không hợp lệ. Giá trị: "${trimmedValue}". Chỉ cho phép số, dấu phẩy, dấu chấm, dấu trừ, dấu cộng`)
+      }
+      
+      // Loại bỏ khoảng trắng và chuyển dấu phẩy thành dấu chấm
+      const cleanedValue = trimmedValue.replace(/,/g, '.')
+      const parsed = parseFloat(cleanedValue)
+      return isNaN(parsed) ? 0 : parsed
+   }
+
+   return 0
+}
+
 // Đọc file Excel
 export function readExcelFile(file: File): Promise<ExcelCarData[]> {
    return new Promise((resolve, reject) => {
@@ -75,10 +101,10 @@ export function readExcelFile(file: File): Promise<ExcelCarData[]> {
                   const car = {
                      tỉnh: String(row[0] || '').trim(),
                      'điểm đến': String(row[1] || '').trim(),
-                     'quãng đường': Number(row[2] || 0),
+                     'quãng đường': parseNumber(row[2], 'Quãng đường', index),
                      'loại xe': String(row[3] || '').trim(),
-                     giá: Number(row[4] || 0),
-                     'thời gian': Number(row[5] || 0),
+                     giá: parseNumber(row[4], 'Giá', index),
+                     'thời gian': parseNumber(row[5], 'Thời gian', index),
                   }
 
                   // Validation
@@ -88,15 +114,15 @@ export function readExcelFile(file: File): Promise<ExcelCarData[]> {
                      )
                   }
 
-                  if (car['quãng đường'] < 0) {
+                  if (car['quãng đường'] <= 0) {
                      throw new Error(`Dòng ${index + 2}: Quãng đường phải >= 0`)
                   }
 
-                  if (car.giá < 0) {
+                  if (car.giá <= 0) {
                      throw new Error(`Dòng ${index + 2}: Giá phải >= 0`)
                   }
 
-                  if (car['thời gian'] < 0) {
+                  if (car['thời gian'] <= 0) {
                      throw new Error(`Dòng ${index + 2}: Thời gian phải >= 0`)
                   }
 
