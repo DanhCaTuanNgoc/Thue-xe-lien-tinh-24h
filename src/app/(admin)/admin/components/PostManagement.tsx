@@ -44,22 +44,16 @@ export default function PostManagement({
 
    // Hàm xử lý input với validation
    const handleInputChange = (field: string, value: string) => {
-      // Kiểm tra bắt buộc cho các trường
-      if (!value || value.trim() === '') {
+      // Luôn cập nhật giá trị, không validate real-time
+      onPostFormChange({ ...postForm, [field]: value })
+      
+      // Chỉ xóa lỗi nếu có giá trị hợp lệ
+      if (value && value.trim() !== '') {
          setErrors(prev => ({
             ...prev,
-            [field]: `${field === 'title' ? 'Tiêu đề' : field === 'description' ? 'Mô tả' : field === 'content' ? 'Nội dung' : 'Tác giả'} là bắt buộc`
+            [field]: undefined
          }))
-         return
       }
-
-      // Xóa lỗi nếu input hợp lệ
-      setErrors(prev => ({
-         ...prev,
-         [field]: undefined
-      }))
-
-      onPostFormChange({ ...postForm, [field]: value })
    }
 
    return (
