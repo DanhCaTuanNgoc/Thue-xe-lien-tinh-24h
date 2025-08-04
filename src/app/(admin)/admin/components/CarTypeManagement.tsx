@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import type { CarType } from '../../../../lib/models/car_type'
 
 interface CarTypeManagementProps {

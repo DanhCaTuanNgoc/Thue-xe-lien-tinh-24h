@@ -171,13 +171,6 @@ export default function CarManagement({
       })
    }, [cars, searchLocation, selectedCarType, priceMin, priceMax])
 
-   const clearFilters = () => {
-      setSearchLocation('')
-      setSelectedCarType('')
-      setPriceMin('')
-      setPriceMax('')
-   }
-
    // Handlers cho Excel import/export
    const handleImportComplete = () => {
       // Reload cars sau khi import

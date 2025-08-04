@@ -36,7 +36,7 @@ export function carToExcelData(car: Car): ExcelCarData {
 }
 
 // Hàm helper để chuyển đổi string số có dấu phẩy/dấu chấm thành number
-function parseNumber(value: any, fieldName: string, rowIndex: number): number {
+function parseNumber(value: unknown, fieldName: string, rowIndex: number): number {
    if (typeof value === 'number') {
       return value
    }

@@ -1,15 +1,6 @@
 import { supabase } from '../supabaseClient'
 import type { Post } from '../models/post'
 
-// Hàm tạo UUID
-function generateUUID(): string {
-   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      const r = Math.random() * 16 | 0
-      const v = c === 'x' ? r : (r & 0x3 | 0x8)
-      return v.toString(16)
-   })
-}
-
 // Hàm upload ảnh lên bucket images
 export async function uploadImageToBucket(file: File, fileName: string): Promise<string> {
    const { error } = await supabase.storage
@@ -47,7 +38,7 @@ export async function addPost(post: Omit<Post, 'id'> & { images?: File[] }) {
          }
       }
       
-      const { images, ...rest } = post
+      const { images: _, ...rest } = post
       const postData = {
          ...rest,
          image: imageUrls.join('|') || null,
@@ -85,7 +76,7 @@ export async function updatePost(
          }
       }
       
-      const { images, ...rest } = post
+      const { images: _, ...rest } = post
       
       // Tạo updateData - nếu có ảnh mới thì dùng ảnh mới, không thì giữ nguyên image cũ
       const updateData = {
