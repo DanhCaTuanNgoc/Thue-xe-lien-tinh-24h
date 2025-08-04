@@ -8,8 +8,8 @@ const supabase = createClient(
    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 )
 
-export default async function CarTypePage(props: { params: { slug: string } }) {
-   const params = props.params
+export default async function CarTypePage(props: { params: Promise<{ slug: string }> }) {
+   const params = await props.params
    const decodedSlug = decodeURIComponent(params.slug)
 
    const data = await fetchCarTypeBySlug(decodedSlug)

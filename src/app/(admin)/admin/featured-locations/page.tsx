@@ -10,17 +10,22 @@ export default function FeaturedLocationsPage() {
       locationForm,
       editingLocationId,
       loading,
+      imageFile,
+      imagePreview,
+      fileInputRef,
       setLocationForm,
       handleLocationSubmit,
       handleLocationEdit,
       handleLocationDelete,
       handleCancelEdit,
+      handleImageUpload,
+      removeImage,
       loadLocations,
    } = useFeaturedLocationManagement()
 
    useEffect(() => {
       loadLocations()
-   }, [])
+   }, [loadLocations])
 
    return (
       <div className="min-h-screen bg-slate-50 p-6">
@@ -39,11 +44,16 @@ export default function FeaturedLocationsPage() {
                locationForm={locationForm}
                editingLocationId={editingLocationId}
                loading={loading}
+               imageFile={imageFile}
+               imagePreview={imagePreview}
+               fileInputRef={fileInputRef}
                onLocationFormChange={setLocationForm}
                onLocationSubmit={handleLocationSubmit}
                onLocationEdit={handleLocationEdit}
                onLocationDelete={handleLocationDelete}
                onCancelEdit={handleCancelEdit}
+               onImageUpload={handleImageUpload}
+               onRemoveImage={removeImage}
             />
          </div>
       </div>
