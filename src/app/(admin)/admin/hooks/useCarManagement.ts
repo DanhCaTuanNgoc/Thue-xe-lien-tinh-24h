@@ -71,7 +71,7 @@ export function useCarManagement() {
          if (editingCarId) {
             const formattedCarForm = {
                ...carForm,
-               price: formatNumberVND(carForm.price || 0),
+               price: carForm.price || 0,
             }
             console.log('Updating car with ID:', editingCarId)
             await updateCar(editingCarId, formattedCarForm)
@@ -80,7 +80,7 @@ export function useCarManagement() {
             // ... trong handleCarSubmit:
             const formattedCarForm = {
                ...carForm,
-               price: formatNumberVND(carForm.price || 0),
+               price: carForm.price || 0,  
             }
             console.log('Adding new car')
             const newCar = await addCar(formattedCarForm as Omit<Car, 'id'>)

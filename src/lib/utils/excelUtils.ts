@@ -18,7 +18,7 @@ export function excelDataToCar(excelData: ExcelCarData): Omit<Car, 'id'> {
       end_location: excelData['điểm đến'],
       distance: excelData['quãng đường'],
       slug: excelData['loại xe'],
-      price: excelData.giá.toString(),
+      price: excelData.giá,
       time: excelData['thời gian'],
    }
 }
@@ -30,7 +30,7 @@ export function carToExcelData(car: Car): ExcelCarData {
       'điểm đến': car.end_location,
       'quãng đường': car.distance || 0,
       'loại xe': car.slug || '',
-      giá: parseInt(car.price || '0'),
+      giá: car.price || 0,
       'thời gian': car.time || 0,
    }
 }

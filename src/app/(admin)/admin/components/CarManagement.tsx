@@ -47,7 +47,7 @@ export default function CarManagement({
       province?: string
       end_location?: string
       distance?: string
-      price?: string
+      price?: number
       time?: string
       slug?: string // Thêm validation cho loại xe
    }>({})
@@ -55,6 +55,12 @@ export default function CarManagement({
    // Hàm kiểm tra ký tự hợp lệ cho text
    const isValidTextCharacter = (char: string) => {
       return /[a-zA-ZÀ-ỹ0-9\s]/.test(char)
+   }
+
+   const formatPrice = (price: number | string) => {
+      if (typeof price === 'string') price = Number(price.replace(/,/g, ''))
+      if (isNaN(price)) return ''
+      return price.toLocaleString('en-US')
    }
 
    // Hàm xử lý input text với validation
@@ -473,9 +479,7 @@ export default function CarManagement({
                               {car.distance && (
                                  <span className="mr-2">• {car.distance}km</span>
                               )}
-                              {car.price && (
-                                 <span>• {car.price.toLocaleString()} VNĐ</span>
-                              )}
+                              {car.price && <span>• {formatPrice(car.price)} VNĐ</span>}
                               {car.time && <span>• {car.time} ngày</span>}
                            </div>
                         </div>

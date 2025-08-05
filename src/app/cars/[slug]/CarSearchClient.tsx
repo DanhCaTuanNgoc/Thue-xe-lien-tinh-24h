@@ -3,10 +3,16 @@ import { useEffect, useState, useMemo } from 'react'
 import type { Car } from '../../../lib/models/car'
 import { fetchCarBySlug } from '../../../lib/repositories/carApi'
 
+function formatPrice(price: number | string) {
+   if (typeof price === 'string') price = Number(price.replace(/,/g, ''))
+   if (isNaN(price)) return ''
+   return price.toLocaleString('en-US')
+}
+
 export default function CarSearchClient({ slug }: { slug: string }) {
    const [cars, setCars] = useState<Car[]>([])
    const [loading, setLoading] = useState(false)
-   
+
    // Search state
    const [searchLocation, setSearchLocation] = useState('')
    const [priceMin, setPriceMin] = useState('')
@@ -26,7 +32,8 @@ export default function CarSearchClient({ slug }: { slug: string }) {
    const filteredCars = useMemo(() => {
       return cars.filter((car) => {
          // Filter by location (province or end_location)
-         const locationMatch = !searchLocation || 
+         const locationMatch =
+            !searchLocation ||
             car.province.toLowerCase().includes(searchLocation.toLowerCase()) ||
             car.end_location.toLowerCase().includes(searchLocation.toLowerCase())
 
@@ -34,18 +41,18 @@ export default function CarSearchClient({ slug }: { slug: string }) {
          const priceMatch = (() => {
             // If no price filters are set, return true
             if (!priceMin && !priceMax) return true
-            
+
             // Convert car price to number for comparison (remove commas first)
             const carPriceString = String(car.price || '').replace(/,/g, '')
             const carPrice = Number(carPriceString)
             if (isNaN(carPrice)) return false
-            
+
             // Check min price
             if (priceMin && carPrice < Number(priceMin)) return false
-            
+
             // Check max price
             if (priceMax && carPrice > Number(priceMax)) return false
-            
+
             return true
          })()
 
@@ -88,7 +95,7 @@ export default function CarSearchClient({ slug }: { slug: string }) {
                   className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 placeholder:font-semibold placeholder:text-[14px] text-black bg-white"
                />
             </div>
-            
+
             {/* Khoảng giá */}
             <div className="flex flex-col w-full md:w-1/3">
                <label
@@ -204,13 +211,18 @@ export default function CarSearchClient({ slug }: { slug: string }) {
                   {!loading && filteredCars.length === 0 && (
                      <tr>
                         <td colSpan={5} className="text-center py-4 text-gray-400">
-                           {cars.length === 0 ? 'Hiện chưa có dữ liệu' : 'Không tìm thấy xe phù hợp với bộ lọc'}
+                           {cars.length === 0
+                              ? 'Hiện chưa có dữ liệu'
+                              : 'Không tìm thấy xe phù hợp với bộ lọc'}
                         </td>
                      </tr>
                   )}
                   {!loading &&
                      filteredCars.map((item) => (
-                        <tr key={item.id} className="bg-white text-gray-700 hover:bg-gray-50 transition-colors">
+                        <tr
+                           key={item.id}
+                           className="bg-white text-gray-700 hover:bg-gray-50 transition-colors"
+                        >
                            <td className="px-4 py-2 border-b text-gray-700">
                               {item.province}
                            </td>
@@ -224,7 +236,7 @@ export default function CarSearchClient({ slug }: { slug: string }) {
                               {item.distance}
                            </td>
                            <td className="px-4 py-2 border-b text-center text-gray-700">
-                              {item.price}đ
+                              {formatPrice(item.price || 0)}đ
                            </td>
                         </tr>
                      ))}

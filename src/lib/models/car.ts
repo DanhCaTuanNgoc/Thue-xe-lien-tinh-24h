@@ -4,6 +4,6 @@ export type Car = {
   end_location: string;
   distance?: number;
   slug?: string;
-  price?: string;
+  price?: number;
   time?: number;
 }; 
