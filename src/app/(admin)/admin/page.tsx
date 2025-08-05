@@ -126,11 +126,16 @@ export default function AdminPage() {
                   locationForm={featuredLocationManagement.locationForm}
                   editingLocationId={featuredLocationManagement.editingLocationId}
                   loading={featuredLocationManagement.loading}
+                  imageFile={featuredLocationManagement.imageFile}
+                  imagePreview={featuredLocationManagement.imagePreview}
+                  fileInputRef={featuredLocationManagement.fileInputRef}
                   onLocationFormChange={featuredLocationManagement.setLocationForm}
                   onLocationSubmit={featuredLocationManagement.handleLocationSubmit}
                   onLocationEdit={featuredLocationManagement.handleLocationEdit}
                   onLocationDelete={featuredLocationManagement.handleLocationDelete}
                   onCancelEdit={featuredLocationManagement.handleCancelEdit}
+                  onImageUpload={featuredLocationManagement.handleImageUpload}
+                  onRemoveImage={featuredLocationManagement.removeImage}
                />
             )}
          </div>

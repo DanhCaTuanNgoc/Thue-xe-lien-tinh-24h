@@ -8,11 +8,16 @@ interface FeaturedLocationManagementProps {
    locationForm: Partial<Omit<FeaturedLocation, 'id'>>
    editingLocationId: number | null
    loading: boolean
+   imageFile: File | null
+   imagePreview: string
+   fileInputRef: React.RefObject<HTMLInputElement | null>
    onLocationFormChange: (form: Partial<Omit<FeaturedLocation, 'id'>>) => void
    onLocationSubmit: (e: React.FormEvent) => void
    onLocationEdit: (location: FeaturedLocation) => void
    onLocationDelete: (id: number) => void
    onCancelEdit: () => void
+   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
+   onRemoveImage: () => void
 }
 
 export default function FeaturedLocationManagement({
@@ -20,16 +25,19 @@ export default function FeaturedLocationManagement({
    locationForm,
    editingLocationId,
    loading,
+   imageFile,
+   imagePreview,
+   fileInputRef,
    onLocationFormChange,
    onLocationSubmit,
    onLocationEdit,
    onLocationDelete,
    onCancelEdit,
+   onImageUpload,
+   onRemoveImage,
 }: FeaturedLocationManagementProps) {
    // State cho tìm kiếm
    const [searchTitle, setSearchTitle] = useState('')
-   const [imagePreview, setImagePreview] = useState<string | null>(null)
-   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
    // State cho validation errors
    const [errors, setErrors] = useState<{
@@ -40,7 +48,6 @@ export default function FeaturedLocationManagement({
       price?: string
       distance_km?: string
       duration_days?: string
-      image_url?: string
    }>({})
 
    // Hàm kiểm tra ký tự hợp lệ
@@ -121,107 +128,6 @@ export default function FeaturedLocationManagement({
       setSearchTitle('')
    }
 
-   // Hàm xử lý upload ảnh với validation
-   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0]
-      if (file) {
-         // Create a preview URL for the selected image
-         const reader = new FileReader()
-         reader.onload = (event) => {
-            setImagePreview(event.target?.result as string)
-         }
-         reader.readAsDataURL(file)
-
-         // For now, we'll just store the file name as the image URL
-         // In a real application, you'd upload the file to a server and get back a URL
-         onLocationFormChange({ ...locationForm, image_url: file.name })
-
-         // Xóa lỗi ảnh nếu có
-         setErrors((prev) => ({
-            ...prev,
-            image_url: undefined,
-         }))
-      } else {
-         // Nếu không chọn file, hiển thị lỗi
-         setErrors((prev) => ({
-            ...prev,
-            image_url: 'Vui lòng chọn một ảnh',
-         }))
-      }
-   }
-
-   // Hàm kiểm tra ảnh khi blur khỏi upload area
-   const handleImageAreaBlur = () => {
-      if (!locationForm.image_url && !imagePreview) {
-         setErrors((prev) => ({
-            ...prev,
-            image_url: 'Vui lòng chọn một ảnh',
-         }))
-      }
-   }
-
-   const clearImagePreview = () => {
-      setImagePreview(null)
-      onLocationFormChange({ ...locationForm, image_url: '' })
-      // Clear the file input
-      if (fileInputRef.current) {
-         fileInputRef.current.value = ''
-      }
-      // Xóa lỗi ảnh nếu có
-      setErrors((prev) => ({
-         ...prev,
-         image_url: undefined,
-      }))
-   }
-
-   // Handle editing a location - clear image preview when starting to edit
-   const handleEditLocation = (location: FeaturedLocation) => {
-      setImagePreview(null) // Clear any existing image preview
-      onLocationEdit(location)
-      // Clear the file input
-      if (fileInputRef.current) {
-         fileInputRef.current.value = ''
-      }
-   }
-
-   // Reset image preview when form is cleared (after submit or cancel)
-   React.useEffect(() => {
-      // Check if form is empty (no data in any field)
-      const isFormEmpty =
-         !locationForm.title &&
-         !locationForm.name &&
-         !locationForm.subtitle &&
-         !locationForm.price &&
-         !locationForm.distance_km &&
-         !locationForm.duration_days &&
-         !locationForm.car_description &&
-         !locationForm.image_url
-
-      if (isFormEmpty && !editingLocationId) {
-         setImagePreview(null)
-      }
-   }, [editingLocationId, locationForm])
-
-   // Kiểm tra validation ảnh khi form thay đổi
-   React.useEffect(() => {
-      // Nếu có dữ liệu khác nhưng không có ảnh, hiển thị lỗi
-      const hasOtherData =
-         locationForm.title ||
-         locationForm.name ||
-         locationForm.subtitle ||
-         locationForm.price ||
-         locationForm.distance_km ||
-         locationForm.duration_days ||
-         locationForm.car_description
-
-      if (hasOtherData && !locationForm.image_url && !imagePreview) {
-         setErrors((prev) => ({
-            ...prev,
-            image_url: 'Vui lòng chọn một ảnh',
-         }))
-      }
-   }, [locationForm, imagePreview])
-
    // Hàm kiểm tra form có hợp lệ không
    const isFormValid = () => {
       return !Object.values(errors).some((error) => error !== undefined)
@@ -238,11 +144,16 @@ export default function FeaturedLocationManagement({
          'price',
          'distance_km',
          'duration_days',
-         'image_url',
       ]
       const missingFields = requiredFields.filter(
          (field) => !locationForm[field as keyof typeof locationForm],
       )
+
+      // Kiểm tra ảnh - bắt buộc khi thêm mới, tùy chọn khi edit
+      if (!editingLocationId && !imageFile) {
+         alert('Vui lòng chọn một ảnh!')
+         return
+      }
 
       if (missingFields.length > 0) {
          setErrors((prev) => ({
@@ -473,35 +384,18 @@ export default function FeaturedLocationManagement({
                   </h3>
 
                   {/* File Upload */}
-                  <div
-                     className={`border-2 border-dashed rounded-lg p-6 text-center hover:border-blue-400 transition-colors ${
-                        errors.image_url ? 'border-red-500' : 'border-slate-300'
-                     }`}
-                     onBlur={handleImageAreaBlur}
-                  >
+                  <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
                      <input
                         ref={fileInputRef}
                         type="file"
                         accept="image/*"
-                        onChange={handleImageUpload}
+                        onChange={onImageUpload}
                         className="hidden"
                         id="image-upload"
-                        required
                      />
                      <button
                         type="button"
-                        onClick={() => {
-                           fileInputRef.current?.click()
-                           // Nếu không có ảnh, hiển thị lỗi sau khi click
-                           setTimeout(() => {
-                              if (!locationForm.image_url && !imagePreview) {
-                                 setErrors((prev) => ({
-                                    ...prev,
-                                    image_url: 'Vui lòng chọn một ảnh',
-                                 }))
-                              }
-                           }, 100)
-                        }}
+                        onClick={() => fileInputRef.current?.click()}
                         className="bg-blue-600 text-white rounded-lg px-6 py-3 font-semibold hover:bg-blue-700 transition-all duration-200"
                      >
                         📁 Chọn ảnh từ máy tính
@@ -511,42 +405,43 @@ export default function FeaturedLocationManagement({
                      </p>
                   </div>
 
-                  {errors.image_url && (
-                     <p className="text-red-500 text-xs mt-1">{errors.image_url}</p>
-                  )}
-
                   {/* Image Preview */}
-                  {imagePreview && (
+                  {(imagePreview || locationForm.image_url) && (
                      <div className="mt-4 space-y-3">
                         <h4 className="text-sm font-semibold text-slate-700">
-                           Xem trước ảnh
+                           Ảnh đã chọn
                         </h4>
-                        <div className="relative group">
+                        <div className="relative inline-block">
                            <img
-                              src={imagePreview}
+                              src={imagePreview || locationForm.image_url}
                               alt="Preview"
                               className="w-40 h-40 object-cover rounded-lg border-2 border-slate-200 shadow-md"
                            />
                            <button
                               type="button"
-                              onClick={clearImagePreview}
+                              onClick={onRemoveImage}
                               className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600 transition-colors"
                            >
                               ×
                            </button>
                         </div>
+                        {imageFile && (
+                           <p className="text-xs text-slate-500">
+                              File: {imageFile.name}
+                           </p>
+                        )}
                      </div>
                   )}
 
-                  {/* Existing Image Display */}
-                  {locationForm.image_url && !imagePreview && (
-                     <div className="mt-4 text-sm text-slate-600 bg-white p-3 rounded-lg border border-slate-200">
+                  {/* No Image Message */}
+                  {!imagePreview && !locationForm.image_url && (
+                     <div className="mt-4 text-sm text-slate-500 bg-slate-100 p-3 rounded-lg border border-slate-200">
                         <div className="flex items-center gap-2">
-                           <span>📄</span>
-                           <span>Hình ảnh hiện tại: {locationForm.image_url}</span>
+                           <span>ℹ️</span>
+                           <span>Chưa có hình ảnh cho địa điểm này</span>
                         </div>
-                        <p className="text-xs text-slate-500 mt-1">
-                           Chọn ảnh mới để thay thế hoặc giữ nguyên ảnh hiện tại
+                        <p className="text-xs text-slate-400 mt-1">
+                           Vui lòng chọn một ảnh để hiển thị cho địa điểm
                         </p>
                      </div>
                   )}
@@ -652,7 +547,7 @@ export default function FeaturedLocationManagement({
                         <div className="flex gap-2">
                            <button
                               className="px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-semibold cursor-pointer"
-                              onClick={() => handleEditLocation(location)}
+                              onClick={() => onLocationEdit(location)}
                            >
                               ✏️ Sửa
                            </button>

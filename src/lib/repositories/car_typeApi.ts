@@ -69,7 +69,7 @@ export async function addCarType(carType: Omit<CarType, 'id'> & { imageFile?: Fi
          imageUrl = carType.image
       }
       
-      const { imageFile, ...rest } = carType
+      const { imageFile: _, ...rest } = carType
       const carTypeData = {
          ...rest,
          img_url: imageUrl,
