@@ -29,6 +29,12 @@ export default function RootLayout({
          <Head>
             {/* Primary Meta Tags */}
             <title>Thuê xe liên tỉnh 24H - Dịch vụ thuê xe uy tín, chất lượng cao</title>
+            {/* Favicon */}
+            <link rel="icon" type="image/png" href="/car-icon.ico" />
+            <link rel="icon" href="/car-icon.png" />
+            <link rel="apple-touch-icon" sizes="180x180" href="/car-icon.ico" />
+            <link rel="icon" type="image/png" sizes="32x32" href="/car-icon.ico" />
+            <link rel="icon" type="image/png" sizes="16x16" href="/car-icon.ico" />
             <meta
                name="title"
                content="Thuê xe liên tỉnh 24H - Dịch vụ thuê xe uy tín, chất lượng cao"
@@ -49,7 +55,7 @@ export default function RootLayout({
 
             {/* Open Graph / Facebook */}
             <meta property="og:type" content="website" />
-            <meta property="og:url" content="https://thue-xe-lien-tinh-24h.vercel.app/" />
+            <meta property="og:url" content="https://dulichlientinh24h.com/" />
             <meta
                property="og:title"
                content="Thuê xe liên tỉnh 24H - Dịch vụ thuê xe uy tín, chất lượng cao"
@@ -67,10 +73,7 @@ export default function RootLayout({
 
             {/* Twitter */}
             <meta property="twitter:card" content="summary_large_image" />
-            <meta
-               property="twitter:url"
-               content="https://thue-xe-lien-tinh-24h.vercel.app/"
-            />
+            <meta property="twitter:url" content="https://dulichlientinh24h.com/" />
             <meta
                property="twitter:title"
                content="Thuê xe liên tỉnh 24H - Dịch vụ thuê xe uy tín, chất lượng cao"
@@ -81,7 +84,7 @@ export default function RootLayout({
             />
             <meta
                property="twitter:image"
-               content="https://thue-xe-lien-tinh-24h.vercel.app/banner.jpg"
+               content="https://dulichlientinh24h.com/banner.jpg"
             />
 
             {/* Additional SEO Meta Tags */}
@@ -92,13 +95,7 @@ export default function RootLayout({
             <meta name="apple-mobile-web-app-title" content="Thuê xe liên tỉnh 24H" />
 
             {/* Canonical URL */}
-            <link rel="canonical" href="https://thue-xe-lien-tinh-24h.vercel.app/" />
-
-            {/* Favicon */}
-            <link rel="icon" href="/favicon.ico" />
-            <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico" />
-            <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico" />
-            <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico" />
+            <link rel="canonical" href="https://dulichlientinh24h.com/" />
 
             {/* Structured Data / JSON-LD */}
             <script
@@ -109,7 +106,7 @@ export default function RootLayout({
                      '@type': 'LocalBusiness',
                      name: 'Thuê xe liên tỉnh 24H',
                      description: 'Dịch vụ thuê xe liên tỉnh chất lượng cao',
-                     url: 'https://thue-xe-lien-tinh-24h.vercel.app/',
+                     url: 'https://dulichlientinh24h.com/',
                      telephone: '+84978971421',
                      address: {
                         '@type': 'PostalAddress',

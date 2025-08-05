@@ -11,7 +11,7 @@ export default function manifest(): MetadataRoute.Manifest {
       theme_color: '#dc2626',
       icons: [
          {
-            src: '/favicon.ico',
+            src: '/car-icon.png',
             sizes: 'any',
             type: 'image/x-icon',
          },
@@ -26,7 +26,7 @@ export default function manifest(): MetadataRoute.Manifest {
             type: 'image/png',
          },
       ],
-      categories: ['travel', 'transportation'],
+      categories: ['travel', 'transportation', 'limousine', 'rental'],
       lang: 'vi',
       dir: 'ltr',
       orientation: 'portrait',
