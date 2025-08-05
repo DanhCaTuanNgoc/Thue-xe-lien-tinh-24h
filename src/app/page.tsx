@@ -22,17 +22,9 @@ export default function Home() {
       {
          image: '/limouse-banner.jpg',
          title: 'Đặt vé nhanh',
-         subtitle: 'Đặt vé Limousine chỉ từ 200.000đ',
+         subtitle: 'Đặt vé Limousine chỉ từ 300.000đ',
          subtitle2: 'Tư vấn báo giá miễn phí 24/7',
-         price: '1.200.000đ',
-         buttonText: 'Đặt nhanh - Tư vấn miễn phí',
-         link: 'https://zalo.me/0978971421',
-      },
-      {
-         image: '/banner3.jpg',
-         title: 'Đặt vé Sài Gòn <=> Vũng Tàu',
-         subtitle: 'Du lịch biển Vũng Tàu chỉ với 350.000đ',
-         price: '350.000đ',
+         price: '300.000đ',
          buttonText: 'Đặt nhanh - Tư vấn miễn phí',
          link: 'https://zalo.me/0978971421',
       },
@@ -98,10 +90,10 @@ export default function Home() {
                                        Du lịch biển Vũng Tàu chỉ với{' '}
                                        <span className="text-red-500">350.000đ</span>
                                     </>
-                                 ) : slide.subtitle.includes('200.000đ') ? (
+                                 ) : slide.subtitle.includes('300.000đ') ? (
                                     <>
                                        Đặt vé Limousine chỉ từ{' '}
-                                       <span className="text-red-500">200.000đ</span>
+                                       <span className="text-red-500">300.000đ</span>
                                     </>
                                  ) : (
                                     slide.subtitle
