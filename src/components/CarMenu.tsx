@@ -16,7 +16,7 @@ export default function CarTypeMenu() {
             {carTypes.map((type) => (
                <Link
                   key={type.id}
-                  href={`/cars/${type.slug}`}
+                  href={`/cars/${type.id}`}
                   className="block px-3 xl:px-4 py-2 text-sm xl:text-base text-gray-800 hover:bg-red-50 hover:text-red-600 transition-colors"
                >
                   {type.name}

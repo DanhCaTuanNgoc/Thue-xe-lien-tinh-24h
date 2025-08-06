@@ -228,13 +228,9 @@ export default function CarTypeManagement({
                               <span>{carType.name}</span>
                            </div>
                            <div className="text-sm text-slate-600 mt-1">
-                              Slug:{' '}
-                              <span className="font-mono bg-slate-200 px-2 py-1 rounded">
-                                 {carType.slug}
-                              </span>
                               {carType.description_price && (
                                  <span className="ml-3">
-                                    • {carType.description_price}
+                                    • Giá tham khảo: {carType.description_price}
                                  </span>
                               )}
                            </div>

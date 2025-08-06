@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState, useMemo } from 'react'
 import type { Car } from '../../../lib/models/car'
-import { fetchCarBySlug } from '../../../lib/repositories/carApi'
+import { fetchCarByType } from '../../../lib/repositories/carApi'
 
 function formatPrice(price: number | string) {
    if (typeof price === 'string') price = Number(price.replace(/,/g, ''))
@@ -9,7 +9,7 @@ function formatPrice(price: number | string) {
    return price.toLocaleString('en-US')
 }
 
-export default function CarSearchClient({ slug }: { slug: string }) {
+export default function CarSearchClient({ id }: { id: number }) {
    const [cars, setCars] = useState<Car[]>([])
    const [loading, setLoading] = useState(false)
 
@@ -21,12 +21,12 @@ export default function CarSearchClient({ slug }: { slug: string }) {
    // Tải tất cả dữ liệu xe khi component mount
    useEffect(() => {
       setLoading(true)
-      fetchCarBySlug(slug)
+      fetchCarByType(id)
          .then((data) => {
             setCars(data)
          })
          .finally(() => setLoading(false))
-   }, [slug])
+   }, [id])
 
    // Filter cars based on search criteria
    const filteredCars = useMemo(() => {

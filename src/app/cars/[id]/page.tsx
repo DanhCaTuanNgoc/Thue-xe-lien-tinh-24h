@@ -1,18 +1,17 @@
 import { createClient } from '@supabase/supabase-js'
 import Image from 'next/image'
 import CarSearchClient from './CarSearchClient'
-import { fetchCarTypeBySlug } from '@/lib/repositories/car_typeApi'
+import { fetchCarTypeById } from '@/lib/repositories/car_typeApi'
 
 const supabase = createClient(
    process.env.NEXT_PUBLIC_SUPABASE_URL!,
    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 )
 
-export default async function CarTypePage(props: { params: Promise<{ slug: string }> }) {
+export default async function CarTypePage(props: { params: Promise<{ id: number }> }) {
    const params = await props.params
-   const decodedSlug = decodeURIComponent(params.slug)
 
-   const data = await fetchCarTypeBySlug(decodedSlug)
+   const data = await fetchCarTypeById(params.id)
 
    if (!data) {
       return (
@@ -42,7 +41,7 @@ export default async function CarTypePage(props: { params: Promise<{ slug: strin
                         BẢNG GIÁ THUÊ {data.name?.toUpperCase()}
                      </h1>
                      <p className="text-sm sm:text-base md:text-xl lg:text-2xl font-semibold mb-3 sm:mb-4 drop-shadow-lg leading-tight">
-                        {data.description || (
+                        {
                            <>
                               Chỉ từ{' '}
                               <span className="text-red-500 font-bold">
@@ -50,12 +49,12 @@ export default async function CarTypePage(props: { params: Promise<{ slug: strin
                               </span>{' '}
                               Có Ngay {data.name}
                            </>
-                        )}
+                        }
                      </p>
                      <div className="flex justify-center">
                         <a
                            className="bg-red-600 hover:bg-red-700 text-white font-bold py-1.5 sm:py-2 px-3 sm:px-4 rounded-md sm:rounded-lg text-xs sm:text-sm md:text-base transition-colors duration-300 shadow-lg flex items-center gap-1 sm:gap-2 cursor-pointer"
-                           href={data.contact_url || 'https://zalo.me/0978971421'}
+                           href={'https://zalo.me/0978971421'}
                            target="_blank"
                         >
                            <svg
@@ -79,10 +78,10 @@ export default async function CarTypePage(props: { params: Promise<{ slug: strin
                   {`Bảng giá thuê ${data.name?.toLowerCase()} mới nhất`}
                </h1>
             </div>
-            {data.img_url && (
+            {data.image && (
                <div className="max-w mt-4 text-center items-center flex justify-center">
                   <Image
-                     src={data.img_url}
+                     src={data.image}
                      alt={data.name}
                      width={650}
                      height={800}
@@ -93,7 +92,7 @@ export default async function CarTypePage(props: { params: Promise<{ slug: strin
          </section>
          {/* Search Section */}
          <section className="max-w-5xl mx-auto pt-4 md:pt-8 pb-4">
-            <CarSearchClient slug={params.slug} />
+            <CarSearchClient id={params.id} />
          </section>
       </>
    )

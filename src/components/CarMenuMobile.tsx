@@ -20,7 +20,7 @@ export default function CarMenuMobile({ closeMobileMenu }: CarMenuMobileProps) {
             {carTypes.map((type) => (
                <Link
                   key={type.id}
-                  href={`/cars/${type.slug}`}
+                  href={`/cars/${type.id}`}
                   onClick={closeMobileMenu}
                   className="block py-2 px-4 text-gray-700 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
                >

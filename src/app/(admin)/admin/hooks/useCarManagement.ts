@@ -41,7 +41,7 @@ export function useCarManagement() {
             return
          }
 
-         if (!carForm.slug || !carForm.slug.trim()) {
+         if (!carForm.id_car_type) {
             alert('Vui lòng chọn loại xe!')
             setLoading(false)
             return
@@ -80,7 +80,7 @@ export function useCarManagement() {
             // ... trong handleCarSubmit:
             const formattedCarForm = {
                ...carForm,
-               price: carForm.price || 0,  
+               price: carForm.price || 0,
             }
             console.log('Adding new car')
             const newCar = await addCar(formattedCarForm as Omit<Car, 'id'>)

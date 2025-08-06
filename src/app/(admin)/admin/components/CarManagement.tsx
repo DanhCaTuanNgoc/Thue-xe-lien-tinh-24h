@@ -5,6 +5,7 @@ import type { Car } from '../../../../lib/models/car'
 import type { CarType } from '../../../../lib/models/car_type'
 import ExcelImport from './excel/ExcelImport'
 import ExcelExport from './excel/ExcelExport'
+import { deleteAllCars } from '../../../../lib/repositories/carApi'
 
 interface CarManagementProps {
    cars: Car[]
@@ -35,7 +36,7 @@ export default function CarManagement({
 }: CarManagementProps) {
    // State cho tìm kiếm
    const [searchLocation, setSearchLocation] = useState('')
-   const [selectedCarType, setSelectedCarType] = useState('')
+   const [selectedCarType, setSelectedCarType] = useState(Number)
    const [priceMin, setPriceMin] = useState('')
    const [priceMax, setPriceMax] = useState('')
 
@@ -50,7 +51,11 @@ export default function CarManagement({
       price?: number
       time?: string
       slug?: string // Thêm validation cho loại xe
+      id_car_type?: number
    }>({})
+
+   // State for deleting all cars
+   const [deletingAll, setDeletingAll] = useState(false)
 
    // Hàm kiểm tra ký tự hợp lệ cho text
    const isValidTextCharacter = (char: string) => {
@@ -124,22 +129,14 @@ export default function CarManagement({
    }
 
    // Hàm xử lý select loại xe với validation
-   const handleCarTypeChange = (value: string) => {
-      if (!value || value === '') {
-         setErrors((prev) => ({
-            ...prev,
-            slug: 'Vui lòng chọn loại xe',
-         }))
-         return
-      }
-
+   const handleCarTypeChange = (id: number) => {
       // Xóa lỗi nếu input hợp lệ
       setErrors((prev) => ({
          ...prev,
-         slug: undefined,
+         id_car_type: undefined,
       }))
 
-      onCarFormChange({ ...carForm, slug: value })
+      onCarFormChange({ ...carForm, id_car_type: id })
    }
 
    // Lọc xe theo các tiêu chí
@@ -152,7 +149,7 @@ export default function CarManagement({
             car.end_location.toLowerCase().includes(searchLocation.toLowerCase())
 
          // Lọc theo loại xe
-         const matchesCarType = !selectedCarType || car.slug === selectedCarType
+         const matchesCarType = !selectedCarType || car.id_car_type === selectedCarType
 
          // Lọc theo khoảng giá
          const matchesPrice = (() => {
@@ -185,6 +182,26 @@ export default function CarManagement({
 
    const handleImportError = (message: string) => {
       alert('Lỗi import: ' + message)
+   }
+
+   // Handler for deleting all cars
+   const handleDeleteAllCars = async () => {
+      if (
+         !window.confirm(
+            'Bạn có chắc chắn muốn xóa tất cả xe? Hành động này không thể hoàn tác!',
+         )
+      )
+         return
+      setDeletingAll(true)
+      try {
+         await deleteAllCars()
+         onReloadCars()
+      } catch (err) {
+         alert('Lỗi khi xóa tất cả xe!')
+         console.log(err)
+      } finally {
+         setDeletingAll(false)
+      }
    }
 
    return (
@@ -277,15 +294,15 @@ export default function CarManagement({
                   <select
                      required
                      className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 ${
-                        errors.slug ? 'border-red-500' : 'border-slate-200'
+                        errors.id_car_type ? 'border-red-500' : 'border-slate-200'
                      }`}
-                     value={carForm.slug || ''}
-                     onChange={(e) => handleCarTypeChange(e.target.value)}
+                     value={carForm.id_car_type}
+                     onChange={(e) => handleCarTypeChange(Number(e.target.value))}
                   >
                      <option value="">-- Chọn loại xe * --</option>
                      {carTypes.map((carType) => (
-                        <option key={carType.id} value={carType.slug}>
-                           {carType.name} ({carType.slug})
+                        <option key={carType.id} value={carType.id}>
+                           {carType.name}
                         </option>
                      ))}
                   </select>
@@ -411,11 +428,11 @@ export default function CarManagement({
                   <select
                      className="w-full border-2 border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800"
                      value={selectedCarType}
-                     onChange={(e) => setSelectedCarType(e.target.value)}
+                     onChange={(e) => setSelectedCarType(Number(e.target.value))}
                   >
                      <option value="">Tất cả loại xe</option>
                      {carTypes.map((carType) => (
-                        <option key={carType.id} value={carType.slug}>
+                        <option key={carType.id} value={carType.id}>
                            {carType.name}
                         </option>
                      ))}
@@ -449,10 +466,21 @@ export default function CarManagement({
 
          {/* Danh sách xe ở dưới */}
          <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
-            <h3 className="text-xl font-semibold mb-4 text-slate-800 flex items-center gap-2">
-               <span className="text-blue-600">📋</span>
-               Danh sách xe ({filteredCars.length})
-            </h3>
+            <div className="flex items-center justify-between mb-4">
+               <h3 className="text-xl font-semibold text-slate-800 flex items-center gap-2">
+                  <span className="text-blue-600">📋</span>
+                  Danh sách xe ({filteredCars.length})
+               </h3>
+               {cars.length > 0 && (
+                  <button
+                     className="bg-red-600 cursor-pointer text-white rounded-lg px-4 py-2 font-semibold hover:bg-red-700 transition-colors flex items-center gap-2 disabled:opacity-50"
+                     onClick={handleDeleteAllCars}
+                     disabled={deletingAll || loading}
+                  >
+                     {deletingAll ? 'Đang xóa tất cả...' : '🗑️ Xóa tất cả'}
+                  </button>
+               )}
+            </div>
             <div className="space-y-3">
                {filteredCars.map((car) => (
                   <div
@@ -469,17 +497,21 @@ export default function CarManagement({
                               </span>
                            </div>
                            <div className="text-sm text-slate-600 mt-1">
-                              {car.slug && (
+                              {car.id_car_type && (
                                  <span className="mr-2">
                                     Loại xe:{' '}
-                                    {carTypes.find((ct) => ct.slug === car.slug)?.name ||
-                                       car.slug}
+                                    {carTypes.find((ct) => ct.id === car.id_car_type)
+                                       ?.name || car.id_car_type}
                                  </span>
                               )}
                               {car.distance && (
                                  <span className="mr-2">• {car.distance}km</span>
                               )}
-                              {car.price && <span>• {formatPrice(car.price)} VNĐ</span>}
+                              {car.price && (
+                                 <span className="mr-2">
+                                    • {formatPrice(car.price)} VNĐ
+                                 </span>
+                              )}
                               {car.time && <span>• {car.time} ngày</span>}
                            </div>
                         </div>

@@ -33,11 +33,27 @@ export async function deleteCar(id: string) {
    return true
 }
 
+export async function deleteAllCars() {
+   const { error } = await supabase.from('cars').delete().neq('id', '')
+   if (error) throw error
+   return true
+}
+
 export async function fetchCarBySlug(slug: string): Promise<Car[]> {
    const { data, error } = await supabase
       .from('cars')
       .select('*')
       .eq('slug', slug)
+      .order('province')
+   if (error) throw error
+   return data as Car[]
+}
+
+export async function fetchCarByType(id: number): Promise<Car[]> {
+   const { data, error } = await supabase
+      .from('cars')
+      .select('*')
+      .eq('id_car_type', id)
       .order('province')
    if (error) throw error
    return data as Car[]
