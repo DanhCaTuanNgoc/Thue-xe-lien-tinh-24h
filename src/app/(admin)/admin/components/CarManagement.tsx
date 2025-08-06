@@ -49,7 +49,7 @@ export default function CarManagement({
       distance?: string
       price?: number
       time?: string
-      slug?: string // Thêm validation cho loại xe
+      id_car_type?: string // Thay đổi từ slug sang id_car_type
    }>({})
 
    // Hàm kiểm tra ký tự hợp lệ cho text
@@ -128,7 +128,7 @@ export default function CarManagement({
       if (!value || value === '') {
          setErrors((prev) => ({
             ...prev,
-            slug: 'Vui lòng chọn loại xe',
+            id_car_type: 'Vui lòng chọn loại xe',
          }))
          return
       }
@@ -136,10 +136,10 @@ export default function CarManagement({
       // Xóa lỗi nếu input hợp lệ
       setErrors((prev) => ({
          ...prev,
-         slug: undefined,
+         id_car_type: undefined,
       }))
 
-      onCarFormChange({ ...carForm, slug: value })
+      onCarFormChange({ ...carForm, id_car_type: parseInt(value) })
    }
 
    // Lọc xe theo các tiêu chí
@@ -152,7 +152,7 @@ export default function CarManagement({
             car.end_location.toLowerCase().includes(searchLocation.toLowerCase())
 
          // Lọc theo loại xe
-         const matchesCarType = !selectedCarType || car.slug === selectedCarType
+         const matchesCarType = !selectedCarType || car.id_car_type === parseInt(selectedCarType)
 
          // Lọc theo khoảng giá
          const matchesPrice = (() => {
@@ -212,8 +212,9 @@ export default function CarManagement({
                <ExcelImport
                   onImportComplete={handleImportComplete}
                   onError={handleImportError}
+                  carTypes={carTypes}
                />
-               <ExcelExport cars={cars} />
+               <ExcelExport cars={cars} carTypes={carTypes} />
             </div>
          )}
 
@@ -277,20 +278,20 @@ export default function CarManagement({
                   <select
                      required
                      className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 ${
-                        errors.slug ? 'border-red-500' : 'border-slate-200'
+                        errors.id_car_type ? 'border-red-500' : 'border-slate-200'
                      }`}
-                     value={carForm.slug || ''}
+                     value={carForm.id_car_type || ''}
                      onChange={(e) => handleCarTypeChange(e.target.value)}
                   >
                      <option value="">-- Chọn loại xe * --</option>
                      {carTypes.map((carType) => (
-                        <option key={carType.id} value={carType.slug}>
-                           {carType.name} ({carType.slug})
+                        <option key={carType.id} value={carType.id}>
+                           {carType.name}
                         </option>
                      ))}
                   </select>
-                  {errors.slug && (
-                     <p className="text-red-500 text-xs mt-1">{errors.slug}</p>
+                  {errors.id_car_type && (
+                     <p className="text-red-500 text-xs mt-1">{errors.id_car_type}</p>
                   )}
                   <input
                      required
@@ -415,7 +416,7 @@ export default function CarManagement({
                   >
                      <option value="">Tất cả loại xe</option>
                      {carTypes.map((carType) => (
-                        <option key={carType.id} value={carType.slug}>
+                        <option key={carType.id} value={carType.id}>
                            {carType.name}
                         </option>
                      ))}
@@ -469,11 +470,11 @@ export default function CarManagement({
                               </span>
                            </div>
                            <div className="text-sm text-slate-600 mt-1">
-                              {car.slug && (
+                              {car.id_car_type && (
                                  <span className="mr-2">
                                     Loại xe:{' '}
-                                    {carTypes.find((ct) => ct.slug === car.slug)?.name ||
-                                       car.slug}
+                                    {carTypes.find((ct) => ct.id === car.id_car_type)?.name ||
+                                       car.id_car_type}
                                  </span>
                               )}
                               {car.distance && (

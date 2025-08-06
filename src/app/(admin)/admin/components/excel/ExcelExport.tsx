@@ -3,12 +3,14 @@
 import React from 'react'
 import { exportToExcel } from '../../../../../lib/utils/excelUtils'
 import type { Car } from '../../../../../lib/models/car'
+import type { CarType } from '../../../../../lib/models/car_type'
 
 interface ExcelExportProps {
   cars: Car[]
+  carTypes: CarType[] // Thêm prop carTypes để hiển thị tên loại xe
 }
 
-export default function ExcelExport({ cars }: ExcelExportProps) {
+export default function ExcelExport({ cars, carTypes }: ExcelExportProps) {
   const handleExport = () => {
     if (cars.length === 0) {
       alert('Không có dữ liệu để xuất!')
@@ -16,12 +18,18 @@ export default function ExcelExport({ cars }: ExcelExportProps) {
     }
 
     try {
-      exportToExcel(cars)
+      exportToExcel(cars, carTypes)
       alert(`Đã xuất thành công ${cars.length} xe ra file Excel!`)
     } catch (error) {
       console.error('Lỗi xuất Excel:', error)
       alert('Lỗi xuất file Excel!')
     }
+  }
+
+  // Hàm lấy tên loại xe từ id_car_type
+  const getCarTypeName = (id_car_type: number) => {
+    const carType = carTypes.find(ct => ct.id === id_car_type)
+    return carType ? carType.name : `ID: ${id_car_type}`
   }
 
   return (
@@ -80,7 +88,7 @@ export default function ExcelExport({ cars }: ExcelExportProps) {
                       <td className="px-3 py-2 border text-slate-700">{car.province}</td>
                       <td className="px-3 py-2 border text-slate-700">{car.end_location}</td>
                       <td className="px-3 py-2 border text-slate-700">{car.distance || 0} km</td>
-                      <td className="px-3 py-2 border text-slate-700">{car.slug || '-'}</td>
+                      <td className="px-3 py-2 border text-slate-700">{car.id_car_type ? getCarTypeName(car.id_car_type) : '-'}</td>
                       <td className="px-3 py-2 border text-slate-700">{car.price || 0} VNĐ</td>
                       <td className="px-3 py-2 border text-slate-700">{car.time || 0} ngày</td>
                     </tr>

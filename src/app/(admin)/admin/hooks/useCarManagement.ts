@@ -41,7 +41,7 @@ export function useCarManagement() {
             return
          }
 
-         if (!carForm.slug || !carForm.slug.trim()) {
+         if (!carForm.id_car_type) {
             alert('Vui lòng chọn loại xe!')
             setLoading(false)
             return

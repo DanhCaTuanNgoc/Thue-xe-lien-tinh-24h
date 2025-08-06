@@ -3,7 +3,7 @@ export type Car = {
   province: string;
   end_location: string;
   distance?: number;
-  slug?: string;
+  id_car_type: number;
   price?: number;
   time?: number;
 }; 
