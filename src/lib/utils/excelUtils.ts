@@ -25,7 +25,7 @@ export function excelDataToCar(excelData: ExcelCarData): Omit<Car, 'id'> {
 
 // Chuyển đổi từ Car object sang Excel data
 export function carToExcelData(car: Car, carTypes: any[]): ExcelCarData {
-   const carType = carTypes.find(ct => ct.id === car.id_car_type)
+   const carType = carTypes.find((ct) => ct.id === car.id_car_type)
    return {
       tỉnh: car.province,
       'điểm đến': car.end_location,
@@ -157,7 +157,7 @@ export function readExcelFile(file: File): Promise<ExcelCarData[]> {
 // Xuất file Excel
 export function exportToExcel(cars: Car[], carTypes: any[]): void {
    // Chuyển đổi cars thành Excel data
-   const excelData = cars.map(car => carToExcelData(car, carTypes))
+   const excelData = cars.map((car) => carToExcelData(car, carTypes))
 
    // Tạo workbook và worksheet
    const workbook = XLSX.utils.book_new()
