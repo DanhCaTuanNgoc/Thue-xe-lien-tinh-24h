@@ -42,16 +42,18 @@ export default function CarSearchClient({ id }: { id: number }) {
             // If no price filters are set, return true
             if (!priceMin && !priceMax) return true
 
-            // Convert car price to number for comparison (remove commas first)
-            const carPriceString = String(car.price || '').replace(/,/g, '')
-            const carPrice = Number(carPriceString)
-            if (isNaN(carPrice)) return false
+            // Lấy giá thấp nhất giữa price_1 và price_2 để so sánh
+            const carPrice1 = car.price_1 || 0
+            const carPrice2 = car.price_2 || 0
+            const minCarPrice = carPrice1 > 0 && carPrice2 > 0 ? Math.min(carPrice1, carPrice2) : carPrice1 || carPrice2
+
+            if (minCarPrice === 0) return false
 
             // Check min price
-            if (priceMin && carPrice < Number(priceMin)) return false
+            if (priceMin && minCarPrice < Number(priceMin)) return false
 
             // Check max price
-            if (priceMax && carPrice > Number(priceMax)) return false
+            if (priceMax && minCarPrice > Number(priceMax)) return false
 
             return true
          })()
@@ -230,13 +232,20 @@ export default function CarSearchClient({ id }: { id: number }) {
                               {item.end_location}
                            </td>
                            <td className="px-4 py-2 border-b text-center text-gray-700">
-                              {item.time} chiều
+                              {item.price_1 && item.price_2 ? '2' : '1'} chiều
                            </td>
                            <td className="px-4 py-2 border-b text-center text-gray-700">
                               {item.distance}
                            </td>
                            <td className="px-4 py-2 border-b text-center text-gray-700">
-                              {formatPrice(item.price || 0)}đ
+                              {item.price_1 && item.price_2 
+                                 ? `${formatPrice(item.price_1)} - ${formatPrice(item.price_2)}đ`
+                                 : item.price_1 
+                                    ? `${formatPrice(item.price_1)}đ`
+                                    : item.price_2 
+                                       ? `${formatPrice(item.price_2)}đ`
+                                       : 'Liên hệ'
+                              }
                            </td>
                         </tr>
                      ))}

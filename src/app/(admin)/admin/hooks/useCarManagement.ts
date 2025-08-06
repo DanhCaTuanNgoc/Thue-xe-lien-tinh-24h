@@ -6,7 +6,6 @@ import {
    deleteCar,
 } from '../../../../lib/repositories/carApi'
 import type { Car } from '../../../../lib/models/car'
-import { formatNumberVND } from '../../../../lib/utils/formatCurrency'
 
 export function useCarManagement() {
    const [cars, setCars] = useState<Car[]>([])
@@ -54,14 +53,9 @@ export function useCarManagement() {
             return
          }
 
-         if (!carForm.price || Number(carForm.price) === 0) {
-            alert('Vui lòng nhập giá!')
-            setLoading(false)
-            return
-         }
-
-         if (!carForm.time || carForm.time === 0) {
-            alert('Vui lòng nhập thời gian!')
+         // Validate price fields - ít nhất một trong hai giá phải được nhập
+         if ((!carForm.price_1 || carForm.price_1 === 0) && (!carForm.price_2 || carForm.price_2 === 0)) {
+            alert('Vui lòng nhập ít nhất một giá!')
             setLoading(false)
             return
          }
@@ -71,16 +65,17 @@ export function useCarManagement() {
          if (editingCarId) {
             const formattedCarForm = {
                ...carForm,
-               price: carForm.price || 0,
+               price_1: carForm.price_1 || 0,
+               price_2: carForm.price_2 || 0,
             }
             console.log('Updating car with ID:', editingCarId)
             await updateCar(editingCarId, formattedCarForm)
             alert('Cập nhật xe thành công!')
          } else {
-            // ... trong handleCarSubmit:
             const formattedCarForm = {
                ...carForm,
-               price: carForm.price || 0,
+               price_1: carForm.price_1 || 0,
+               price_2: carForm.price_2 || 0,
             }
             console.log('Adding new car')
             const newCar = await addCar(formattedCarForm as Omit<Car, 'id'>)

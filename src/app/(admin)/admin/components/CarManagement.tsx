@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import type { Car } from '../../../../lib/models/car'
 import type { CarType } from '../../../../lib/models/car_type'
 import ExcelImport from './excel/ExcelImport'
@@ -48,9 +48,8 @@ export default function CarManagement({
       province?: string
       end_location?: string
       distance?: string
-      price?: number
-      time?: string
-      slug?: string // Thêm validation cho loại xe
+      price_1?: string
+      price_2?: string
       id_car_type?: number
    }>({})
 
@@ -99,21 +98,9 @@ export default function CarManagement({
       if (value && !/^\d+$/.test(value)) {
          setErrors((prev) => ({
             ...prev,
-            [field]: 'Chỉ được nhập số nguyên từ 0-9',
+            [field]: 'Chỉ được nhập số nguyên',
          }))
          return
-      }
-
-      if (!value.trim()) {
-         setErrors((prev) => ({
-            ...prev,
-            [field]: `Trường này là bắt buộc`,
-         }))
-      } else {
-         setErrors((prev) => ({
-            ...prev,
-            [field]: undefined,
-         }))
       }
 
       // Xóa lỗi nếu input hợp lệ
@@ -128,15 +115,17 @@ export default function CarManagement({
       })
    }
 
-   // Hàm xử lý select loại xe với validation
    const handleCarTypeChange = (id: number) => {
-      // Xóa lỗi nếu input hợp lệ
+      // Xóa lỗi nếu có
       setErrors((prev) => ({
          ...prev,
-         id_car_type: id,
+         id_car_type: undefined,
       }))
 
-      onCarFormChange({ ...carForm, id_car_type: id })
+      onCarFormChange({
+         ...carForm,
+         id_car_type: id || undefined,
+      })
    }
 
    // Lọc xe theo các tiêu chí
@@ -151,21 +140,23 @@ export default function CarManagement({
          // Lọc theo loại xe
          const matchesCarType = !selectedCarType || car.id_car_type === selectedCarType
 
-         // Lọc theo khoảng giá
+         // Lọc theo khoảng giá - sử dụng price_1 hoặc price_2
          const matchesPrice = (() => {
             // If no price filters are set, return true
             if (!priceMin && !priceMax) return true
 
-            // Convert car price to number for comparison (remove commas first)
-            const carPriceString = String(car.price || '').replace(/,/g, '')
-            const carPrice = Number(carPriceString)
-            if (isNaN(carPrice)) return false
+            // Lấy giá thấp nhất giữa price_1 và price_2 để so sánh
+            const carPrice1 = car.price_1 || 0
+            const carPrice2 = car.price_2 || 0
+            const minCarPrice = carPrice1 > 0 && carPrice2 > 0 ? Math.min(carPrice1, carPrice2) : carPrice1 || carPrice2
+
+            if (minCarPrice === 0) return false
 
             // Check min price
-            if (priceMin && carPrice < Number(priceMin)) return false
+            if (priceMin && minCarPrice < Number(priceMin)) return false
 
             // Check max price
-            if (priceMax && carPrice > Number(priceMax)) return false
+            if (priceMax && minCarPrice > Number(priceMax)) return false
 
             return true
          })()
@@ -204,6 +195,13 @@ export default function CarManagement({
       }
    }
 
+   // Reset errors when carForm is reset
+   useEffect(() => {
+      if (Object.keys(carForm).length === 0) {
+         setErrors({})
+      }
+   }, [carForm])
+
    return (
       <div className="space-y-6">
          {/* Excel Tools Toggle */}
@@ -237,29 +235,37 @@ export default function CarManagement({
 
          {/* Form thêm/sửa xe ở trên */}
          <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
-            <h2 className="text-xl font-semibold mb-4 text-slate-800 flex items-center gap-2">
-               <span className="text-blue-600">🚗</span>
-               {editingCarId ? 'Sửa thông tin xe' : 'Thêm xe mới'}
-            </h2>
+            <h3 className="text-xl font-semibold mb-4 text-slate-800 flex items-center gap-2">
+               <span className="text-green-600">🚗</span>
+               {editingCarId ? 'Sửa xe' : 'Thêm xe mới'}
+            </h3>
 
             <form onSubmit={onCarSubmit} className="space-y-4">
                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <input
                      required
-                     placeholder="Tỉnh*"
-                     className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                     placeholder="Tỉnh *"
+                     className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
+                        errors.province ? 'border-red-500' : 'border-slate-200'
+                     }`}
                      value={carForm.province || ''}
                      onChange={(e) => handleTextInputChange('province', e.target.value)}
                   />
+                  {errors.province && (
+                     <p className="text-red-500 text-xs mt-1">{errors.province}</p>
+                  )}
                   <input
                      required
-                     placeholder="Điểm đến*"
-                     className="border-2 border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500"
+                     placeholder="Điểm đến *"
+                     className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
+                        errors.end_location ? 'border-red-500' : 'border-slate-200'
+                     }`}
                      value={carForm.end_location || ''}
-                     onChange={(e) =>
-                        handleTextInputChange('end_location', e.target.value)
-                     }
+                     onChange={(e) => handleTextInputChange('end_location', e.target.value)}
                   />
+                  {errors.end_location && (
+                     <p className="text-red-500 text-xs mt-1">{errors.end_location}</p>
+                  )}
                   <input
                      type="number"
                      required
@@ -297,7 +303,7 @@ export default function CarManagement({
                      className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 ${
                         errors.id_car_type ? 'border-red-500' : 'border-slate-200'
                      }`}
-                     value={carForm.id_car_type}
+                     value={carForm.id_car_type || ''}
                      onChange={(e) => handleCarTypeChange(Number(e.target.value))}
                   >
                      <option value="">-- Chọn loại xe * --</option>
@@ -311,13 +317,13 @@ export default function CarManagement({
                      <p className="text-red-500 text-xs mt-1">{errors.id_car_type}</p>
                   )}
                   <input
-                     required
-                     placeholder="Giá (VNĐ)"
+                     type="number"
+                     placeholder="Giá 1 Chiều (VNĐ)"
                      className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
-                        errors.price ? 'border-red-500' : 'border-slate-200'
+                        errors.price_1 ? 'border-red-500' : 'border-slate-200'
                      }`}
-                     value={carForm.price || ''}
-                     onChange={(e) => handleNumberInputChange('price', e.target.value)}
+                     value={carForm.price_1 || ''}
+                     onChange={(e) => handleNumberInputChange('price_1', e.target.value)}
                      onKeyDown={(e) => {
                         // Cho phép: số, backspace, delete, arrow keys, tab, enter
                         const allowedKeys = [
@@ -338,18 +344,17 @@ export default function CarManagement({
                         }
                      }}
                   />
-                  {errors.price && (
-                     <p className="text-red-500 text-xs mt-1">{errors.price}</p>
+                  {errors.price_1 && (
+                     <p className="text-red-500 text-xs mt-1">{errors.price_1}</p>
                   )}
                   <input
                      type="number"
-                     required
-                     placeholder="Số chiều *"
+                     placeholder="Giá 2 Chiều (VNĐ)"
                      className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
-                        errors.time ? 'border-red-500' : 'border-slate-200'
+                        errors.price_2 ? 'border-red-500' : 'border-slate-200'
                      }`}
-                     value={carForm.time || ''}
-                     onChange={(e) => handleNumberInputChange('time', e.target.value)}
+                     value={carForm.price_2 || ''}
+                     onChange={(e) => handleNumberInputChange('price_2', e.target.value)}
                      onKeyDown={(e) => {
                         // Cho phép: số, backspace, delete, arrow keys, tab, enter
                         const allowedKeys = [
@@ -370,8 +375,8 @@ export default function CarManagement({
                         }
                      }}
                   />
-                  {errors.time && (
-                     <p className="text-red-500 text-xs mt-1">{errors.time}</p>
+                  {errors.price_2 && (
+                     <p className="text-red-500 text-xs mt-1">{errors.price_2}</p>
                   )}
                </div>
                <div className="flex gap-3">
@@ -508,12 +513,19 @@ export default function CarManagement({
                               {car.distance && (
                                  <span className="mr-2">• {car.distance}km</span>
                               )}
-                              {car.price && (
+                              {car.price_1 && car.price_2 ? (
                                  <span className="mr-2">
-                                    • {formatPrice(car.price)} VNĐ
+                                    • {formatPrice(car.price_1)} - {formatPrice(car.price_2)} VNĐ
                                  </span>
-                              )}
-                              {car.time && <span>• {car.time} chiều</span>}
+                              ) : car.price_1 ? (
+                                 <span className="mr-2">
+                                    • {formatPrice(car.price_1)} VNĐ
+                                 </span>
+                              ) : car.price_2 ? (
+                                 <span className="mr-2">
+                                    • {formatPrice(car.price_2)} VNĐ
+                                 </span>
+                              ) : null}
                            </div>
                         </div>
                         <div className="flex gap-2">

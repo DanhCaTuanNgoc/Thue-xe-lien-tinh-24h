@@ -8,8 +8,8 @@ export interface ExcelCarData {
    'điểm đến': string
    'quãng đường': number
    'loại xe': string
-   giá: number
-   'chiều': number
+   'giá 1 chiều': number
+   'giá 2 chiều': number
 }
 
 // Chuyển đổi từ Excel data sang Car object
@@ -19,8 +19,8 @@ export function excelDataToCar(excelData: ExcelCarData): Omit<Car, 'id'> {
       end_location: excelData['điểm đến'],
       distance: excelData['quãng đường'],
       id_car_type: 0, // Sẽ được set sau khi tìm car type
-      price: excelData.giá,
-      time: excelData['chiều'],
+      price_1: excelData['giá 1 chiều'],
+      price_2: excelData['giá 2 chiều'],
    }
 }
 
@@ -32,8 +32,8 @@ export function carToExcelData(car: Car, carTypes: CarType[]): ExcelCarData {
       'điểm đến': car.end_location,
       'quãng đường': car.distance || 0,
       'loại xe': carType ? carType.name : `ID: ${car.id_car_type}`,
-      giá: car.price || 0,
-      'chiều': car.time || 0,
+      'giá 1 chiều': car.price_1 || 0,
+      'giá 2 chiều': car.price_2 || 0,
    }
 }
 
@@ -109,8 +109,8 @@ export function readExcelFile(file: File): Promise<ExcelCarData[]> {
                      'điểm đến': String(row[1] || '').trim(),
                      'quãng đường': parseNumber(row[2], 'Quãng đường', index),
                      'loại xe': String(row[3] || '').trim(),
-                     giá: parseNumber(row[4], 'Giá', index),
-                     'chiều': parseNumber(row[5], 'Chiều', index),
+                     'giá 1 chiều': parseNumber(row[4], 'Giá 1 chiều', index),
+                     'giá 2 chiều': parseNumber(row[5], 'Giá 2 chiều', index),
                   }
 
                   // Validation
@@ -124,12 +124,9 @@ export function readExcelFile(file: File): Promise<ExcelCarData[]> {
                      throw new Error(`Dòng ${index + 2}: Quãng đường phải >= 0`)
                   }
 
-                  if (car.giá <= 0) {
-                     throw new Error(`Dòng ${index + 2}: Giá phải >= 0`)
-                  }
-
-                  if (car['chiều'] <= 0) {
-                     throw new Error(`Dòng ${index + 2}: Chiều phải >= 0`)
+                  // Ít nhất một trong hai giá phải > 0
+                  if (car['giá 1 chiều'] <= 0 && car['giá 2 chiều'] <= 0) {
+                     throw new Error(`Dòng ${index + 2}: Ít nhất một giá phải > 0`)
                   }
 
                   return car
@@ -175,16 +172,16 @@ export function exportToExcel(cars: Car[], carTypes: CarType[]): void {
 // Tạo template Excel
 export function createExcelTemplate(): void {
    // Tạo header row
-   const headers = ['tỉnh', 'điểm đến', 'quãng đường', 'loại xe', 'giá', 'chiều']
+   const headers = ['tỉnh', 'điểm đến', 'quãng đường', 'loại xe', 'giá 1 chiều', 'giá 2 chiều']
 
    // Tạo dữ liệu mẫu với tên loại xe
    const templateData = [
       headers, // Header row
-      ['Hà Nội', 'Hồ Chí Minh', 1700, 'Xe 4 chỗ', 500000, 2],
-      ['Hà Nội', 'Đà Nẵng', 800, 'Xe 7 chỗ', 300000, 1],
-      ['Hồ Chí Minh', 'Nha Trang', 450, 'Xe khách', 200000, 1],
-      ['Hà Nội', 'Hải Phòng', 120, 'Xe tải', 150000, 1],
-      ['Hồ Chí Minh', 'Vũng Tàu', 125, 'Xe bus', 180000, 1],
+      ['Hà Nội', 'Hồ Chí Minh', 1700, 'Xe 4 chỗ', 500000, 600000],
+      ['Hà Nội', 'Đà Nẵng', 800, 'Xe 7 chỗ', 300000, 0],
+      ['Hồ Chí Minh', 'Nha Trang', 450, 'Xe khách', 200000, 250000],
+      ['Hà Nội', 'Hải Phòng', 120, 'Xe tải', 150000, 0],
+      ['Hồ Chí Minh', 'Vũng Tàu', 125, 'Xe bus', 180000, 200000],
    ]
 
    // Tạo workbook

@@ -165,7 +165,7 @@ export default function ExcelImport({
                <ul className="text-sm text-blue-700 space-y-1">
                   <li>
                      • File Excel phải có 6 cột: tỉnh, điểm đến, quãng đường, loại xe,
-                     giá, chiều
+                     giá 1 chiều, giá 2 chiều
                   </li>
                   <li>• Dòng đầu tiên là header, dữ liệu bắt đầu từ dòng thứ 2</li>
                   <li>• Quãng đường, giá, chiều phải là số</li>

@@ -12,42 +12,44 @@ interface ExcelExportProps {
 
 export default function ExcelExport({ cars, carTypes }: ExcelExportProps) {
    const handleExport = () => {
-      if (cars.length === 0) {
-         alert('Không có dữ liệu để xuất!')
-         return
-      }
-
       try {
          exportToExcel(cars, carTypes)
-         alert(`Đã xuất thành công ${cars.length} xe ra file Excel!`)
+         alert('✅ Xuất Excel thành công!')
       } catch (error) {
          console.error('Lỗi xuất Excel:', error)
-         alert('Lỗi xuất file Excel!')
+         alert('❌ Lỗi xuất Excel! Vui lòng thử lại.')
       }
    }
 
-   // Hàm lấy tên loại xe từ id_car_type
+   // Hàm helper để lấy tên loại xe từ ID
    const getCarTypeName = (id_car_type: number) => {
       const carType = carTypes.find((ct) => ct.id === id_car_type)
       return carType ? carType.name : `ID: ${id_car_type}`
+   }
+
+   // Hàm helper để format giá
+   const formatPrice = (price: number | string) => {
+      if (typeof price === 'string') price = Number(price.replace(/,/g, ''))
+      if (isNaN(price)) return '0'
+      return price.toLocaleString('en-US')
    }
 
    return (
       <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
          <h3 className="text-xl font-semibold mb-4 text-slate-800 flex items-center gap-2">
             <span className="text-orange-600">📤</span>
-            Export Excel
+            Xuất Excel
          </h3>
 
          <div className="space-y-4">
-            {/* Thông tin */}
+            {/* Info */}
             <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
                <h4 className="font-semibold text-orange-800 mb-2">ℹ️ Thông tin:</h4>
                <ul className="text-sm text-orange-700 space-y-1">
                   <li>• Xuất toàn bộ danh sách xe hiện tại</li>
                   <li>• File sẽ có định dạng: danh_sach_xe_YYYY-MM-DD.xlsx</li>
                   <li>
-                     • Bao gồm 6 cột: tỉnh, điểm đến, quãng đường, loại xe, giá, chiều
+                     • Bao gồm 6 cột: tỉnh, điểm đến, quãng đường, loại xe, giá 1 chiều, giá 2 chiều
                     </li>
                </ul>
             </div>
@@ -91,10 +93,10 @@ export default function ExcelExport({ cars, carTypes }: ExcelExportProps) {
                                  Loại xe
                               </th>
                               <th className="px-3 py-2 text-left border text-slate-800">
-                                 Giá
+                                 Giá 1 chiều
                               </th>
                               <th className="px-3 py-2 text-left border text-slate-800">
-                                 Chiều
+                                 Giá 2 chiều
                               </th>
                            </tr>
                         </thead>
@@ -119,10 +121,10 @@ export default function ExcelExport({ cars, carTypes }: ExcelExportProps) {
                                        : '-'}
                                  </td>
                                  <td className="px-3 py-2 border text-slate-700">
-                                    {car.price || 0} VNĐ
+                                    {formatPrice(car.price_1 || 0)} VNĐ
                                  </td>
                                  <td className="px-3 py-2 border text-slate-700">
-                                    {car.time || 0} chiều
+                                    {formatPrice(car.price_2 || 0)} VNĐ
                                  </td>
                               </tr>
                            ))}
