@@ -1,5 +1,6 @@
 import * as XLSX from 'xlsx'
 import type { Car } from '../models/car'
+import type { CarType } from '../models/car_type'
 
 // Định nghĩa interface cho dữ liệu Excel
 export interface ExcelCarData {
@@ -24,7 +25,7 @@ export function excelDataToCar(excelData: ExcelCarData): Omit<Car, 'id'> {
 }
 
 // Chuyển đổi từ Car object sang Excel data
-export function carToExcelData(car: Car, carTypes: any[]): ExcelCarData {
+export function carToExcelData(car: Car, carTypes: CarType[]): ExcelCarData {
    const carType = carTypes.find((ct) => ct.id === car.id_car_type)
    return {
       tỉnh: car.province,
@@ -155,7 +156,7 @@ export function readExcelFile(file: File): Promise<ExcelCarData[]> {
 }
 
 // Xuất file Excel
-export function exportToExcel(cars: Car[], carTypes: any[]): void {
+export function exportToExcel(cars: Car[], carTypes: CarType[]): void {
    // Chuyển đổi cars thành Excel data
    const excelData = cars.map((car) => carToExcelData(car, carTypes))
 
