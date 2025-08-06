@@ -192,7 +192,7 @@ export default function CarSearchClient({ id }: { id: number }) {
                         Điểm đến
                      </th>
                      <th className="px-4 py-2 border-b font-bold text-center">
-                        Thời gian
+                        Số chiều
                      </th>
                      <th className="px-4 py-2 border-b font-bold text-center">
                         Khoảng cách (Km)
@@ -230,7 +230,7 @@ export default function CarSearchClient({ id }: { id: number }) {
                               {item.end_location}
                            </td>
                            <td className="px-4 py-2 border-b text-center text-gray-700">
-                              {item.time} ngày
+                              {item.time} chiều
                            </td>
                            <td className="px-4 py-2 border-b text-center text-gray-700">
                               {item.distance}

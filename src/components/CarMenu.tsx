@@ -7,7 +7,13 @@ export default function CarTypeMenu() {
    const [carTypes, setCarTypes] = useState<CarType[]>([])
 
    useEffect(() => {
-      fetchCarTypes().then(setCarTypes).catch(console.error)
+      fetchCarTypes()
+         .then((data) => {
+            // Sắp xếp theo id tăng dần
+            const sorted = [...data].sort((a, b) => a.id - b.id)
+            setCarTypes(sorted)
+         })
+         .catch(console.error)
    }, [])
 
    return (

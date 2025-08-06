@@ -344,7 +344,7 @@ export default function CarManagement({
                   <input
                      type="number"
                      required
-                     placeholder="Thời gian (ngày) *"
+                     placeholder="Số chiều *"
                      className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
                         errors.time ? 'border-red-500' : 'border-slate-200'
                      }`}
@@ -513,7 +513,7 @@ export default function CarManagement({
                                     • {formatPrice(car.price)} VNĐ
                                  </span>
                               )}
-                              {car.time && <span>• {car.time} ngày</span>}
+                              {car.time && <span>• {car.time} chiều</span>}
                            </div>
                         </div>
                         <div className="flex gap-2">

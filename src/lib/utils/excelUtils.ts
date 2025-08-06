@@ -9,7 +9,7 @@ export interface ExcelCarData {
    'quãng đường': number
    'loại xe': string
    giá: number
-   'thời gian': number
+   'chiều': number
 }
 
 // Chuyển đổi từ Excel data sang Car object
@@ -20,7 +20,7 @@ export function excelDataToCar(excelData: ExcelCarData): Omit<Car, 'id'> {
       distance: excelData['quãng đường'],
       id_car_type: 0, // Sẽ được set sau khi tìm car type
       price: excelData.giá,
-      time: excelData['thời gian'],
+      time: excelData['chiều'],
    }
 }
 
@@ -33,7 +33,7 @@ export function carToExcelData(car: Car, carTypes: CarType[]): ExcelCarData {
       'quãng đường': car.distance || 0,
       'loại xe': carType ? carType.name : `ID: ${car.id_car_type}`,
       giá: car.price || 0,
-      'thời gian': car.time || 0,
+      'chiều': car.time || 0,
    }
 }
 
@@ -110,7 +110,7 @@ export function readExcelFile(file: File): Promise<ExcelCarData[]> {
                      'quãng đường': parseNumber(row[2], 'Quãng đường', index),
                      'loại xe': String(row[3] || '').trim(),
                      giá: parseNumber(row[4], 'Giá', index),
-                     'thời gian': parseNumber(row[5], 'Thời gian', index),
+                     'chiều': parseNumber(row[5], 'Chiều', index),
                   }
 
                   // Validation
@@ -128,8 +128,8 @@ export function readExcelFile(file: File): Promise<ExcelCarData[]> {
                      throw new Error(`Dòng ${index + 2}: Giá phải >= 0`)
                   }
 
-                  if (car['thời gian'] <= 0) {
-                     throw new Error(`Dòng ${index + 2}: Thời gian phải >= 0`)
+                  if (car['chiều'] <= 0) {
+                     throw new Error(`Dòng ${index + 2}: Chiều phải >= 0`)
                   }
 
                   return car
@@ -175,7 +175,7 @@ export function exportToExcel(cars: Car[], carTypes: CarType[]): void {
 // Tạo template Excel
 export function createExcelTemplate(): void {
    // Tạo header row
-   const headers = ['tỉnh', 'điểm đến', 'quãng đường', 'loại xe', 'giá', 'thời gian']
+   const headers = ['tỉnh', 'điểm đến', 'quãng đường', 'loại xe', 'giá', 'chiều']
 
    // Tạo dữ liệu mẫu với tên loại xe
    const templateData = [
