@@ -93,7 +93,14 @@ export function useCarManagement() {
          await loadCars()
       } catch (err) {
          console.error('Error submitting car:', err)
-         alert('Lỗi thao tác xe! Vui lòng kiểm tra console để biết thêm chi tiết.')
+         const errorMessage = err instanceof Error ? err.message : 'Lỗi thao tác xe!'
+         
+         // Kiểm tra nếu là lỗi trùng lặp
+         if (errorMessage.includes('đã tồn tại')) {
+            alert(`❌ ${errorMessage}`)
+         } else {
+            alert('Lỗi thao tác xe! Vui lòng kiểm tra console để biết thêm chi tiết.')
+         }
       } finally {
          setLoading(false)
       }

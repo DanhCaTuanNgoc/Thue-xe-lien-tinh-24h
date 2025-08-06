@@ -73,7 +73,9 @@ export default function ExcelImport({ onImportComplete, onError, carTypes }: Exc
           
           successCount++
         } catch (error) {
-          const errorMessage = `Dòng ${i + 2}: ${(error as Error).message}`
+          const errorMessage = error instanceof Error && error.message.includes('đã tồn tại') 
+            ? `Dòng ${i + 2}: ${error.message}` 
+            : `Dòng ${i + 2}: ${(error as Error).message}`
           errors.push(errorMessage)
           skippedRows.push(i + 2)
           console.error(errorMessage, error)
@@ -147,6 +149,7 @@ export default function ExcelImport({ onImportComplete, onError, carTypes }: Exc
             <li>• Dòng đầu tiên là header, dữ liệu bắt đầu từ dòng thứ 2</li>
             <li>• Quãng đường, giá, thời gian phải là số</li>
             <li>• Loại xe phải khớp với tên loại xe trong hệ thống</li>
+            <li>• Hệ thống sẽ kiểm tra trùng lặp dựa trên tỉnh, điểm đến và loại xe</li>
           </ul>
         </div>
 
