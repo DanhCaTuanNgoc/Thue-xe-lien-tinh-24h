@@ -133,7 +133,7 @@ export default function CarManagement({
       // Xóa lỗi nếu input hợp lệ
       setErrors((prev) => ({
          ...prev,
-         id_car_type: undefined,
+         id_car_type: id,
       }))
 
       onCarFormChange({ ...carForm, id_car_type: id })
@@ -229,8 +229,9 @@ export default function CarManagement({
                <ExcelImport
                   onImportComplete={handleImportComplete}
                   onError={handleImportError}
+                  carTypes={carTypes}
                />
-               <ExcelExport cars={cars} />
+               <ExcelExport cars={cars} carTypes={carTypes} />
             </div>
          )}
 
@@ -295,6 +296,7 @@ export default function CarManagement({
                      required
                      className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 ${
                         errors.id_car_type ? 'border-red-500' : 'border-slate-200'
+                        errors.id_car_type ? 'border-red-500' : 'border-slate-200'
                      }`}
                      value={carForm.id_car_type}
                      onChange={(e) => handleCarTypeChange(Number(e.target.value))}
@@ -303,11 +305,13 @@ export default function CarManagement({
                      {carTypes.map((carType) => (
                         <option key={carType.id} value={carType.id}>
                            {carType.name}
+                        <option key={carType.id} value={carType.id}>
+                           {carType.name}
                         </option>
                      ))}
                   </select>
-                  {errors.slug && (
-                     <p className="text-red-500 text-xs mt-1">{errors.slug}</p>
+                  {errors.id_car_type && (
+                     <p className="text-red-500 text-xs mt-1">{errors.id_car_type}</p>
                   )}
                   <input
                      required
@@ -433,6 +437,7 @@ export default function CarManagement({
                      <option value="">Tất cả loại xe</option>
                      {carTypes.map((carType) => (
                         <option key={carType.id} value={carType.id}>
+                        <option key={carType.id} value={carType.id}>
                            {carType.name}
                         </option>
                      ))}
@@ -497,6 +502,7 @@ export default function CarManagement({
                               </span>
                            </div>
                            <div className="text-sm text-slate-600 mt-1">
+                              {car.id_car_type && (
                               {car.id_car_type && (
                                  <span className="mr-2">
                                     Loại xe:{' '}

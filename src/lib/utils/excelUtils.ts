@@ -17,19 +17,20 @@ export function excelDataToCar(excelData: ExcelCarData): Omit<Car, 'id'> {
       province: excelData.tỉnh,
       end_location: excelData['điểm đến'],
       distance: excelData['quãng đường'],
-      slug: excelData['loại xe'],
+      id_car_type: 0, // Sẽ được set sau khi tìm car type
       price: excelData.giá,
       time: excelData['thời gian'],
    }
 }
 
 // Chuyển đổi từ Car object sang Excel data
-export function carToExcelData(car: Car): ExcelCarData {
+export function carToExcelData(car: Car, carTypes: any[]): ExcelCarData {
+   const carType = carTypes.find(ct => ct.id === car.id_car_type)
    return {
       tỉnh: car.province,
       'điểm đến': car.end_location,
       'quãng đường': car.distance || 0,
-      'loại xe': car.slug || '',
+      'loại xe': carType ? carType.name : `ID: ${car.id_car_type}`,
       giá: car.price || 0,
       'thời gian': car.time || 0,
    }
@@ -154,9 +155,9 @@ export function readExcelFile(file: File): Promise<ExcelCarData[]> {
 }
 
 // Xuất file Excel
-export function exportToExcel(cars: Car[]): void {
+export function exportToExcel(cars: Car[], carTypes: any[]): void {
    // Chuyển đổi cars thành Excel data
-   const excelData = cars.map(carToExcelData)
+   const excelData = cars.map(car => carToExcelData(car, carTypes))
 
    // Tạo workbook và worksheet
    const workbook = XLSX.utils.book_new()
@@ -175,14 +176,14 @@ export function createExcelTemplate(): void {
    // Tạo header row
    const headers = ['tỉnh', 'điểm đến', 'quãng đường', 'loại xe', 'giá', 'thời gian']
 
-   // Tạo dữ liệu mẫu với slug tiếng Việt và ký tự đặc biệt
+   // Tạo dữ liệu mẫu với tên loại xe
    const templateData = [
       headers, // Header row
-      ['Hà Nội', 'Hồ Chí Minh', 1700, 'car-xe-khach', 500000, 2],
-      ['Hà Nội', 'Đà Nẵng', 800, 'car-xe-4-cho', 300000, 1],
-      ['Hồ Chí Minh', 'Nha Trang', 450, 'car-xe-bus', 200000, 1],
-      ['Hà Nội', 'Hải Phòng', 120, 'car-xe-4-cho-vip', 150000, 1],
-      ['Hồ Chí Minh', 'Vũng Tàu', 125, 'car-xe-khach-bus', 180000, 1],
+      ['Hà Nội', 'Hồ Chí Minh', 1700, 'Xe 4 chỗ', 500000, 2],
+      ['Hà Nội', 'Đà Nẵng', 800, 'Xe 7 chỗ', 300000, 1],
+      ['Hồ Chí Minh', 'Nha Trang', 450, 'Xe khách', 200000, 1],
+      ['Hà Nội', 'Hải Phòng', 120, 'Xe tải', 150000, 1],
+      ['Hồ Chí Minh', 'Vũng Tàu', 125, 'Xe bus', 180000, 1],
    ]
 
    // Tạo workbook

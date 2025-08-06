@@ -3,19 +3,27 @@
 import React, { useState, useRef } from 'react'
 import { readExcelFile, excelDataToCar, createExcelTemplate } from '../../../../../lib/utils/excelUtils' 
 import { addCar } from '../../../../../lib/repositories/carApi'
+import type { CarType } from '../../../../../lib/models/car_type'
 
 interface ExcelImportProps {
   onImportComplete: () => void
   onError: (message: string) => void
+  carTypes: CarType[] // Thêm prop carTypes để tìm ID từ tên
 }
 
-export default function ExcelImport({ onImportComplete, onError }: ExcelImportProps) {
+export default function ExcelImport({ onImportComplete, onError, carTypes }: ExcelImportProps) {
   const [isImporting, setIsImporting] = useState(false)
   const [importProgress, setImportProgress] = useState(0)
   const [totalRows, setTotalRows] = useState(0)
   const [currentRow, setCurrentRow] = useState(0)
   const [skipInvalidRows, setSkipInvalidRows] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Hàm tìm car type ID từ tên
+  const findCarTypeId = (carTypeName: string): number | null => {
+    const carType = carTypes.find(ct => ct.name.toLowerCase() === carTypeName.toLowerCase())
+    return carType ? carType.id : null
+  }
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -50,15 +58,24 @@ export default function ExcelImport({ onImportComplete, onError }: ExcelImportPr
         try {
           const carData = excelData[i]
           
+          // Tìm car type ID từ tên
+          const carTypeId = findCarTypeId(carData['loại xe'])
+          if (!carTypeId) {
+            throw new Error(`Loại xe "${carData['loại xe']}" không tồn tại trong hệ thống`)
+          }
+          
           // Chuyển đổi Excel data sang Car object
           const car = excelDataToCar(carData)
+          car.id_car_type = carTypeId // Set ID đã tìm được
           
           // Thêm xe vào database
           await addCar(car)
           
           successCount++
         } catch (error) {
-          const errorMessage = `Dòng ${i + 2}: ${(error as Error).message}`
+          const errorMessage = error instanceof Error && error.message.includes('đã tồn tại') 
+            ? `Dòng ${i + 2}: ${error.message}` 
+            : `Dòng ${i + 2}: ${(error as Error).message}`
           errors.push(errorMessage)
           skippedRows.push(i + 2)
           console.error(errorMessage, error)
@@ -131,8 +148,27 @@ export default function ExcelImport({ onImportComplete, onError }: ExcelImportPr
             <li>• File Excel phải có 6 cột: tỉnh, điểm đến, quãng đường, loại xe, giá, thời gian</li>
             <li>• Dòng đầu tiên là header, dữ liệu bắt đầu từ dòng thứ 2</li>
             <li>• Quãng đường, giá, thời gian phải là số</li>
-            <li>• Loại xe phải khớp với slug trong hệ thống</li>
+            <li>• Loại xe phải khớp với tên loại xe trong hệ thống</li>
+            <li>• Hệ thống sẽ kiểm tra trùng lặp dựa trên tỉnh, điểm đến và loại xe</li>
           </ul>
+        </div>
+
+        {/* Danh sách loại xe có sẵn */}
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <h4 className="font-semibold text-green-800 mb-2">🚙 Loại xe có sẵn trong hệ thống:</h4>
+          <div className="text-sm text-green-700">
+            {carTypes.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {carTypes.map(carType => (
+                  <span key={carType.id} className="bg-green-100 px-2 py-1 rounded text-green-800">
+                    {carType.name}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p className="text-yellow-600">Chưa có loại xe nào trong hệ thống</p>
+            )}
+          </div>
         </div>
 
         {/* Tùy chọn xử lý lỗi */}

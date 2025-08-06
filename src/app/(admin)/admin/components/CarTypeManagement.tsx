@@ -44,20 +44,13 @@ export default function CarTypeManagement({
 
    // Hàm xử lý input text với validation
    const handleTextInputChange = (field: string, value: string) => {
-      // Nếu là trường name, tự động tạo slug
-      if (field === 'name') {
-         const slug = `cars-${value.replace(/\s+/g, '')}`
+      // Xóa lỗi nếu input hợp lệ
+      setErrors((prev) => ({
+         ...prev,
+         [field]: undefined,
+      }))
 
-         // Xóa lỗi nếu input hợp lệ
-         setErrors((prev) => ({
-            ...prev,
-            name: undefined,
-         }))
-
-         onCarTypeFormChange({ ...carTypeForm, name: value, slug })
-      } else {
-         onCarTypeFormChange({ ...carTypeForm, [field]: value })
-      }
+      onCarTypeFormChange({ ...carTypeForm, [field]: value })
    }
 
    // Hàm xử lý input số cho giá
@@ -228,6 +221,10 @@ export default function CarTypeManagement({
                               <span>{carType.name}</span>
                            </div>
                            <div className="text-sm text-slate-600 mt-1">
+                              ID:{' '}
+                              <span className="font-mono bg-slate-200 px-2 py-1 rounded">
+                                 {carType.id}
+                              </span>
                               {carType.description_price && (
                                  <span className="ml-3">
                                     • Giá tham khảo: {carType.description_price}
