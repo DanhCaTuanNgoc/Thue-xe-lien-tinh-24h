@@ -75,7 +75,7 @@ export default async function CarTypePage(props: { params: Promise<{ id: number 
          <section className="max-w-5xl mx-auto pt-4 md:pt-8 !pb-0">
             <div className="text-left border-b border-gray-300 max-w">
                <h1 className="text-[20px] md:text-[30px] font-bold text-black mb-2 pl-4">
-                  {`Bảng giá thuê ${data.name?.toLowerCase()} mới nhất`}
+                  {`Bảng giá Sài Gòn đi các tỉnh ${data.name?.toLowerCase()} mới nhất`}
                </h1>
             </div>
             {data.image && (

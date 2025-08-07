@@ -45,7 +45,10 @@ export default function CarSearchClient({ id }: { id: number }) {
             // Lấy giá thấp nhất giữa price_1 và price_2 để so sánh
             const carPrice1 = car.price_1 || 0
             const carPrice2 = car.price_2 || 0
-            const minCarPrice = carPrice1 > 0 && carPrice2 > 0 ? Math.min(carPrice1, carPrice2) : carPrice1 || carPrice2
+            const minCarPrice =
+               carPrice1 > 0 && carPrice2 > 0
+                  ? Math.min(carPrice1, carPrice2)
+                  : carPrice1 || carPrice2
 
             if (minCarPrice === 0) return false
 
@@ -184,7 +187,11 @@ export default function CarSearchClient({ id }: { id: number }) {
                )}
             </div>
          </div> */}
-
+         {/* <div className="flex justify-left mt-4">
+            <div className="text-red-600 text-sm font-bold">
+               Ghi chú: Tất cả chuyến xe xuất phát từ Sài Gòn
+            </div>
+         </div> */}
          <div className="overflow-x-auto pt-4">
             <table className="min-w-full border border-gray-200 text-sm md:text-base">
                <thead>
@@ -193,13 +200,18 @@ export default function CarSearchClient({ id }: { id: number }) {
                      <th className="px-4 py-2 border-b font-bold text-center">
                         Điểm đến
                      </th>
-                     <th className="px-4 py-2 border-b font-bold text-center">
+                     {/* <th className="px-4 py-2 border-b font-bold text-center">
                         Số chiều
-                     </th>
+                     </th> */}
                      <th className="px-4 py-2 border-b font-bold text-center">
                         Khoảng cách (Km)
                      </th>
-                     <th className="px-4 py-2 border-b font-bold text-center">Giá</th>
+                     <th className="px-4 py-2 border-b font-bold text-center">
+                        Giá 1 chiều
+                     </th>
+                     <th className="px-4 py-2 border-b font-bold text-center">
+                        Giá 2 chiều
+                     </th>
                   </tr>
                </thead>
                <tbody>
@@ -231,21 +243,17 @@ export default function CarSearchClient({ id }: { id: number }) {
                            <td className="px-4 py-2 border-b text-gray-700">
                               {item.end_location}
                            </td>
-                           <td className="px-4 py-2 border-b text-center text-gray-700">
+                           {/* <td className="px-4 py-2 border-b text-center text-gray-700">
                               {item.price_1 && item.price_2 ? '2' : '1'} chiều
-                           </td>
+                           </td> */}
                            <td className="px-4 py-2 border-b text-center text-gray-700">
                               {item.distance}
                            </td>
                            <td className="px-4 py-2 border-b text-center text-gray-700">
-                              {item.price_1 && item.price_2 
-                                 ? `${formatPrice(item.price_1)} - ${formatPrice(item.price_2)}đ`
-                                 : item.price_1 
-                                    ? `${formatPrice(item.price_1)}đ`
-                                    : item.price_2 
-                                       ? `${formatPrice(item.price_2)}đ`
-                                       : 'Liên hệ'
-                              }
+                              {item.price_1 ? `${formatPrice(item.price_1)}đ` : 'Liên hệ'}
+                           </td>
+                           <td className="px-4 py-2 border-b text-center text-gray-700">
+                              {item.price_2 ? `${formatPrice(item.price_2)}đ` : 'Liên hệ'}
                            </td>
                         </tr>
                      ))}

@@ -148,7 +148,10 @@ export default function CarManagement({
             // Lấy giá thấp nhất giữa price_1 và price_2 để so sánh
             const carPrice1 = car.price_1 || 0
             const carPrice2 = car.price_2 || 0
-            const minCarPrice = carPrice1 > 0 && carPrice2 > 0 ? Math.min(carPrice1, carPrice2) : carPrice1 || carPrice2
+            const minCarPrice =
+               carPrice1 > 0 && carPrice2 > 0
+                  ? Math.min(carPrice1, carPrice2)
+                  : carPrice1 || carPrice2
 
             if (minCarPrice === 0) return false
 
@@ -261,7 +264,9 @@ export default function CarManagement({
                         errors.end_location ? 'border-red-500' : 'border-slate-200'
                      }`}
                      value={carForm.end_location || ''}
-                     onChange={(e) => handleTextInputChange('end_location', e.target.value)}
+                     onChange={(e) =>
+                        handleTextInputChange('end_location', e.target.value)
+                     }
                   />
                   {errors.end_location && (
                      <p className="text-red-500 text-xs mt-1">{errors.end_location}</p>
@@ -515,7 +520,8 @@ export default function CarManagement({
                               )}
                               {car.price_1 && car.price_2 ? (
                                  <span className="mr-2">
-                                    • {formatPrice(car.price_1)} - {formatPrice(car.price_2)} VNĐ
+                                    • Giá 1 chiều: {formatPrice(car.price_1)} VNĐ • Giá 2
+                                    chiều: {formatPrice(car.price_2)} VNĐ
                                  </span>
                               ) : car.price_1 ? (
                                  <span className="mr-2">
