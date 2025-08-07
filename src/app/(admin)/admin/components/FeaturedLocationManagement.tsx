@@ -334,7 +334,7 @@ export default function FeaturedLocationManagement({
                   <input
                      type="number"
                      required
-                     placeholder="Thời gian (ngày) *"
+                     placeholder="hỗ trợ ... chiều *"
                      className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
                         errors.duration_days ? 'border-red-500' : 'border-slate-200'
                      }`}
