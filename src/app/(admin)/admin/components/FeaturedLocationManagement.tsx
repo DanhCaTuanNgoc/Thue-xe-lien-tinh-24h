@@ -138,13 +138,7 @@ export default function FeaturedLocationManagement({
       e.preventDefault()
 
       // Kiểm tra các trường bắt buộc
-      const requiredFields = [
-         'title',
-         'name',
-         'price',
-         'distance_km',
-         'duration_days',
-      ]
+      const requiredFields = ['title', 'name', 'price', 'distance_km', 'duration_days']
       const missingFields = requiredFields.filter(
          (field) => !locationForm[field as keyof typeof locationForm],
       )
@@ -334,7 +328,7 @@ export default function FeaturedLocationManagement({
                   <input
                      type="number"
                      required
-                     placeholder="hỗ trợ ... chiều *"
+                     placeholder="Số chiều hỗ trợ *"
                      className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white text-slate-800 placeholder-slate-500 ${
                         errors.duration_days ? 'border-red-500' : 'border-slate-200'
                      }`}
@@ -531,7 +525,7 @@ export default function FeaturedLocationManagement({
                               )}
                               {location.duration_days && (
                                  <span className="mr-2">
-                                    • {location.duration_days} ngày
+                                    • {location.duration_days} chiều
                                  </span>
                               )}
                               {location.car_description && (

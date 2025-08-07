@@ -2,9 +2,9 @@ import { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
    return {
-      name: 'Thuê xe liên tỉnh 24H',
-      short_name: 'Thuê xe 24H',
-      description: 'Dịch vụ thuê xe liên tỉnh chất lượng cao, uy tín',
+      name: 'Du lịch liên tỉnh 24H',
+      short_name: 'Du lịch 24H',
+      description: 'Dịch vụ du lịch liên tỉnh chất lượng cao, uy tín',
       start_url: '/',
       display: 'standalone',
       background_color: '#ffffff',

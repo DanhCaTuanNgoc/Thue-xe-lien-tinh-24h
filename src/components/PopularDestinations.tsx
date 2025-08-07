@@ -93,7 +93,7 @@ export default function PopularDestinations() {
                         </div>
                         <div className="text-xs text-gray-500 mb-4">
                            <p>• Khoảng cách: {location.distance_km}km</p>
-                           <p>• Hỗ trợ: {location.duration_days} chiều</p>
+                           <p>• Hỗ trợ {location.duration_days} chiều</p>
                            <p>• {location.car_description}</p>
                         </div>
                         <Link
