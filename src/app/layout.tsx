@@ -33,6 +33,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   `,
                }}
             />
+            <script
+               dangerouslySetInnerHTML={{
+                  __html: `
+                    gtag('event', 'conversion', {
+                      'send_to': 'AW-17393577943/Wt3iCObXg4IbENff8-VA',
+                      'value': 1.0,
+                      'currency': 'VND',
+                      'transaction_id': ''
+                    });
+                  `,
+               }}
+            />
          </head>
          <body className={`${inter.className} overflow-x-hidden overscroll-none`}>
             <ClientLayoutShell>{children}</ClientLayoutShell>

@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+admin_user_rows.sql
+car_types_rows.sql
+cars_rows.sql
+featured_locations_rows.sql
